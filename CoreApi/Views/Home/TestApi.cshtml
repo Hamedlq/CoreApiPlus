@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = "TestApi";
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    @Scripts.Render("~/bundles/jquery")
+    <script>
+        $(document).ready(function() {
+            var loginData = {
+                grant_type: 'password',
+                username: '09151093488',
+                password: 'a12345',
+                response_type: 'token'
+            };
+
+            function getLoginData() {
+                loginData.username = $("#lusername").val();
+                loginData.password = $("#lpass").val();
+            }
+
+            var registerData = {
+                username: '',
+                Name: '',
+                Family: '',
+                Email: '',
+                MobilePhone: '',
+                Password: ''
+            };
+
+            function getRegisterData() {
+                registerData.username = $("#mobile").val();
+                registerData.Name = $("#name").val();
+                registerData.Family = $("#Family").val();
+                registerData.Email = $("#email").val();
+                registerData.MobilePhone = $("#mobile").val();
+                registerData.Password = $("#pass").val();
+            }
+
+            showError = function(error) {
+                alert(error);
+            }
+            $('#login').click(function() {
+                getLoginData();
+                $.ajax({
+                    crossDomain: true,
+                    type: 'POST',
+                    url: "/token",
+                    data: loginData
+                }).done(function(data) {
+                    alert(data.access_token);
+                    $("#token").text(data.access_token)
+                    // Cache the access token in session storage.
+                    if (typeof (Storage) !== "undefined") {
+                        localStorage.setItem("_apitoken", data.access_token);
+                    } else {
+                        alert("nostorage");
+                    }
+                }).fail(showError);
+            });
+            $('#register').click(function() {
+                getRegisterData();
+                $.ajax({
+                    crossDomain: true,
+                    type: 'POST',
+                    url: "/RegisterTaxiAgencyAdmin",
+                    data: registerData
+                }).done(function(data) {
+                    alert(data);
+                    // Cache the access token in session storage.
+                    //sessionStorage.setItem(tokenKey, data.access_token);
+                }).fail(showError);
+            });
+            $('#getvalueByToken').click(function() {
+                var token = localStorage.getItem("_apitoken");
+                var headers = { 'X-Requested-With': null };
+                if (token) {
+                    headers.Authorization = 'Bearer ' + token;
+                }
+                $.ajax({
+                    crossDomain: true,
+                    type: 'GET',
+                    url: '/api/geo/getagencies',
+                    headers: headers
+                }).done(function(data) {
+                    alert(data);
+                }).fail(showError);
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <div id="registerd">
+        نام<input type="text" id="name"/><br/>
+        نام خانوادگی<input type="text" id="Family" /><br />
+        موبایل<input type="text" id="mobile"/><br/>
+        ایمیل<input type="text" id="Email" /><br />
+        پسورد<input type="password" id="pass" /><br />
+        <button id="register">ثبت نام</button>
+    </div>
+    <br />
+    <div id="logind">
+        موبایل<input type="text" id="lusername" /><br />
+        پسورد<input type="password" id="lpass" /><br />
+        <button id="login">ورود</button>
+    </div>
+    <br />
+    <div>
+        <button id="getvalueByToken">گرفتن اطلاعات با توکن</button>
+    </div>
+
+
+    <label id="token"></label>
+
+</body>
+</html>

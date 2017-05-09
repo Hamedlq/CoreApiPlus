@@ -1,0 +1,306 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7CF64377-1A0C-44B3-8DAE-BBF7E037A614}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CoreExternalService</RootNamespace>
+    <AssemblyName>CoreExternalService</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Common.Logging, Version=3.3.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.3.0\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.3.0\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RestClient, Version=1.0.7.22244, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestClient.1.0.7.22244\lib\net45\RestClient.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="KavenegarService\IKavenegarService.cs" />
+    <Compile Include="KavenegarService\KavenegarService.cs" />
+    <Compile Include="Service References\ZarinPalServiceReference\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="ZarinPalService\ZarinPalService.cs" />
+    <Compile Include="ZarinPalService\IZarinPalService.cs" />
+    <Compile Include="GoogleService\GoogleService.cs" />
+    <Compile Include="GoogleService\IGoogleService.cs" />
+    <Compile Include="ISmsService.cs" />
+    <Compile Include="Models\GoogleRoute\GDirectionRequest.cs" />
+    <Compile Include="Models\GoogleRoute\GDirectionResponse.cs" />
+    <Compile Include="Models\GoogleRoute\Leg.cs" />
+    <Compile Include="Models\GoogleRoute\Pair.cs" />
+    <Compile Include="Models\GoogleRoute\Point.cs" />
+    <Compile Include="Models\GoogleRoute\PolyLinePoint.cs" />
+    <Compile Include="Models\GoogleRoute\Route.cs" />
+    <Compile Include="Models\GoogleRoute\Step.cs" />
+    <Compile Include="Models\SmsMessage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\SMSirSentAndReceivedMessages\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="SmsService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.AllMessage.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.ArrayOfLong.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.Branch.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.DeleteSchedulSendSmsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetAllMessagesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetBranchesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetDefualtLineNumberResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetListOfScheduleSendsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetReceivedMessageByLastMessageIDResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetReceivedMessagesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetSendToBranchesSendMethodsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetSendToBranchFilterConditionsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetSentMessagesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetSentMessageStatusByIDResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetSentMessageStatusResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetSMSLinesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetTrashedMessagesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetUserCreditResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetVipSentMessagesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetVipSentMessageStatusByIDResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.GetVipSentMessageStatusResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.ReceivedMessage.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SaveNewSchedulSendSms_DailyResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SaveNewSchedulSendSms_MonthlyResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SaveNewSchedulSendSms_WeeklyResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SaveVIP_SendCorespondentMessageResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.ScheduleSend.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SendMessageCustomerClubResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SendMessageResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SendMessageToOneCustomerClubResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SendMessageWithBachKeyResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SendMessageWithLineNumberAndBatchKeyResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SendMessageWithLineNumberResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SendSmartMadiranResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SendSmartResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SendToBranchFilterConditions.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SendToBranchSendMethod.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SendToParishResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SentMessage.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SentSmsDetails.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.SMSLineNumber.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.TrashedMessage.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.VipSendMessagesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.VipSendMessageWithBachKeyResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.VipSendMessageWithLineNumberAndBatchKeyResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.VipSendMessageWithLineNumberResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.WindowsService_SendAutomaticSMSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SMSirSentAndReceivedMessages\SendReceive.wsdl" />
+    <None Include="Service References\ZarinPalServiceReference\CoreExternalService.ZarinPalServiceReference.GetUnverifiedTransactionsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ZarinPalServiceReference\CoreExternalService.ZarinPalServiceReference.PaymentRequestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ZarinPalServiceReference\CoreExternalService.ZarinPalServiceReference.PaymentRequestWithExtraResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ZarinPalServiceReference\CoreExternalService.ZarinPalServiceReference.PaymentVerificationResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ZarinPalServiceReference\CoreExternalService.ZarinPalServiceReference.PaymentVerificationWithExtraResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ZarinPalServiceReference\CoreExternalService.ZarinPalServiceReference.RefreshAuthorityResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ZarinPalServiceReference\PaymentGatewayImplementationService.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\SMSirSentAndReceivedMessages\" />
+    <WCFMetadataStorage Include="Service References\ZarinPalServiceReference\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\SMSirSentAndReceivedMessages\SendReceive.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\SMSirSentAndReceivedMessages\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\SMSirSentAndReceivedMessages\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\SMSirSentAndReceivedMessages\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ZarinPalServiceReference\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ZarinPalServiceReference\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ZarinPalServiceReference\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

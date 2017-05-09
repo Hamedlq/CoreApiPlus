@@ -1,0 +1,1748 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MibarimModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="AboutUser">
+    <Key>
+      <PropertyRef Name="AboutId" />
+    </Key>
+    <Property Name="AboutId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ContactId" Type="bigint" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="AboutCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="AboutDesc" Type="text" />
+  </EntityType>
+  <EntityType Name="AspNetUsers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="UserRole" Type="nvarchar(max)" />
+    <Property Name="Gender" Type="int" />
+    <Property Name="Email" Type="nvarchar" MaxLength="256" />
+    <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+    <Property Name="PasswordHash" Type="nvarchar(max)" />
+    <Property Name="SecurityStamp" Type="nvarchar(max)" />
+    <Property Name="PhoneNumber" Type="nvarchar(max)" />
+    <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+    <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+    <Property Name="LockoutEndDateUtc" Type="datetime" />
+    <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+    <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+    <Property Name="MobileConfirmed" Type="bit" />
+    <Property Name="Code" Type="nvarchar" MaxLength="128" />
+  </EntityType>
+  <EntityType Name="BankInfo">
+    <Key>
+      <PropertyRef Name="BankId" />
+    </Key>
+    <Property Name="BankId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="BankUserId" Type="int" Nullable="false" />
+    <Property Name="BankCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="BankName" Type="nvarchar" MaxLength="50" />
+    <Property Name="BankAccountNo" Type="nvarchar" MaxLength="50" />
+    <Property Name="BankCardNo" Type="nvarchar" MaxLength="50" />
+    <Property Name="BankCardPic" Type="varbinary(max)" />
+    <Property Name="BankIsDeleted" Type="bit" Nullable="false" />
+    <Property Name="BankShabaNo" Type="nvarchar" MaxLength="50" />
+    <Property Name="BankCardImageId" Type="uniqueidentifier" />
+  </EntityType>
+  <EntityType Name="BookRequest">
+    <Key>
+      <PropertyRef Name="BookRequestId" />
+    </Key>
+    <Property Name="BookRequestId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TripId" Type="bigint" Nullable="false" />
+    <Property Name="BrCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="PayReqId" Type="bigint" />
+  </EntityType>
+  <EntityType Name="CarInfo">
+    <Key>
+      <PropertyRef Name="CarInfoId" />
+    </Key>
+    <Property Name="CarInfoId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="CarInfoCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="CarType" Type="nvarchar" MaxLength="50" />
+    <Property Name="CarColor" Type="nvarchar" MaxLength="50" />
+    <Property Name="CarPlateNo" Type="nvarchar" MaxLength="20" />
+    <Property Name="CarInfoIsDeleted" Type="bit" Nullable="false" />
+    <Property Name="CarFrontImageId" Type="uniqueidentifier" />
+    <Property Name="CarBackImageId" Type="uniqueidentifier" />
+  </EntityType>
+  <EntityType Name="CarPic">
+    <Key>
+      <PropertyRef Name="CarPicId" />
+    </Key>
+    <Property Name="CarPicId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CarPicCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="CarCardUserId" Type="int" Nullable="false" />
+    <Property Name="CarCardPic" Type="varbinary(max)" Nullable="false" />
+    <Property Name="CarCardIsDeleted" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Chat">
+    <Key>
+      <PropertyRef Name="ChatId" />
+    </Key>
+    <Property Name="ChatId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ContactId" Type="bigint" Nullable="false" />
+    <Property Name="ChatCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="ChatIsDeleted" Type="bit" Nullable="false" />
+    <Property Name="ChatUserId" Type="int" Nullable="false" />
+    <Property Name="ChatTxt" Type="nvarchar" MaxLength="500" />
+    <Property Name="IsChatSeen" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CityLocation">
+    <Key>
+      <PropertyRef Name="CityLocId" />
+    </Key>
+    <Property Name="CityLocId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CityLocCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="CityLocType" Type="int" Nullable="false" />
+    <Property Name="CityLocShortName" Type="nvarchar" MaxLength="8" Nullable="false" />
+    <Property Name="CityLocFullName" Type="nvarchar" MaxLength="50" />
+    <Property Name="CityLocLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="CityLocLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="CityLocGeo" Type="geography" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Comment">
+    <Key>
+      <PropertyRef Name="CommentId" />
+    </Key>
+    <Property Name="CommentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CmtCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="CmtIsDeleted" Type="bit" Nullable="false" />
+    <Property Name="CmtUserId" Type="int" Nullable="false" />
+    <Property Name="GroupId" Type="int" Nullable="false" />
+    <Property Name="Comment" Type="nvarchar" MaxLength="500" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Contact">
+    <Key>
+      <PropertyRef Name="ContactId" />
+    </Key>
+    <Property Name="ContactId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ContactCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="ContactIsDeleted" Type="bit" Nullable="false" />
+    <Property Name="ContactDriverUserId" Type="int" Nullable="false" />
+    <Property Name="ContactPassengerUserId" Type="int" Nullable="false" />
+    <Property Name="ContactLastMsg" Type="nvarchar" MaxLength="30" />
+    <Property Name="ContactLastMsgTime" Type="datetime" />
+    <Property Name="ContactIsRideAccepted" Type="bit" />
+    <Property Name="SmsSent" Type="bit" />
+    <Property Name="IsPassengerAccepted" Type="bit" />
+  </EntityType>
+  <EntityType Name="ContactScore">
+    <Key>
+      <PropertyRef Name="CsId" />
+    </Key>
+    <Property Name="CsId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CsUserId" Type="bigint" Nullable="false" />
+    <Property Name="CsCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="CsContactId" Type="bigint" Nullable="false" />
+    <Property Name="CsScore" Type="smallint" />
+    <Property Name="CsComment" Type="nvarchar" MaxLength="256" />
+  </EntityType>
+  <EntityType Name="ContactUs">
+    <Key>
+      <PropertyRef Name="ContactId" />
+    </Key>
+    <Property Name="ContactId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ContactName" Type="nvarchar" MaxLength="50" />
+    <Property Name="ContactEmail" Type="nvarchar" MaxLength="50" />
+    <Property Name="ContactTxt" Type="nvarchar(max)" />
+    <Property Name="ContactCreateTime" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Discount">
+    <Key>
+      <PropertyRef Name="DiscountId" />
+    </Key>
+    <Property Name="DiscountId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DiscountCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="DiscountTitle" Type="nvarchar" MaxLength="50" />
+    <Property Name="DiscountCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="DiscountStartTime" Type="datetime" Nullable="false" />
+    <Property Name="DiscountEndTime" Type="datetime" Nullable="false" />
+    <Property Name="DiscountDesc" Type="nvarchar" MaxLength="256" />
+    <Property Name="DiscountEvenId" Type="bigint" />
+  </EntityType>
+  <EntityType Name="DiscountUser">
+    <Key>
+      <PropertyRef Name="DuId" />
+    </Key>
+    <Property Name="DuId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="RouteRequestId" Type="bigint" />
+    <Property Name="DiscountId" Type="int" Nullable="false" />
+    <Property Name="DuCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="DuState" Type="smallint" Nullable="false" />
+    <Property Name="TransId" Type="bigint" />
+  </EntityType>
+  <EntityType Name="DriverRoute">
+    <Key>
+      <PropertyRef Name="DriverRouteId" />
+    </Key>
+    <Property Name="DriverRouteId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DrCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="UserId" Type="bigint" Nullable="false" />
+    <Property Name="DrIsDeleted" Type="bit" Nullable="false" />
+    <Property Name="CarinfoId" Type="int" />
+    <Property Name="StationRouteId" Type="bigint" Nullable="false" />
+    <Property Name="DrSrcStationId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Event">
+    <Key>
+      <PropertyRef Name="EventId" />
+    </Key>
+    <Property Name="EventId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EventCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="EventType" Type="smallint" Nullable="false" />
+    <Property Name="EventStartTime" Type="datetime" Nullable="false" />
+    <Property Name="EventEndTime" Type="datetime" Nullable="false" />
+    <Property Name="EventDeadLine" Type="datetime" Nullable="false" />
+    <Property Name="EventCoductorName" Type="nvarchar" MaxLength="125" />
+    <Property Name="EventName" Type="nvarchar" MaxLength="256" />
+    <Property Name="EventAddress" Type="nvarchar" MaxLength="256" Nullable="false" />
+    <Property Name="EventLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="EventLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="EventDesc" Type="text" Nullable="false" />
+    <Property Name="EventLink" Type="nvarchar" MaxLength="256" />
+    <Property Name="EventCoductorFamily" Type="nvarchar" MaxLength="256" />
+    <Property Name="EventCoductorMobile" Type="nvarchar" MaxLength="256" />
+    <Property Name="EventConfirmed" Type="smallint" />
+    <Property Name="IsConfirmed" Type="bit" />
+  </EntityType>
+  <EntityType Name="EventLog">
+    <Key>
+      <PropertyRef Name="LogId" />
+    </Key>
+    <Property Name="LogId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="LogCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LogController" Type="nvarchar" MaxLength="50" />
+    <Property Name="LogAction" Type="nvarchar" MaxLength="50" />
+    <Property Name="LogMessage" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="GoogleToken">
+    <Key>
+      <PropertyRef Name="GtokenId" />
+    </Key>
+    <Property Name="GtokenId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="GtokenCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="GtokenUserId" Type="bigint" Nullable="false" />
+    <Property Name="GtokenKey" Type="text" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Group">
+    <Key>
+      <PropertyRef Name="GroupId" />
+    </Key>
+    <Property Name="GroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="GCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="GIsDeleted" Type="bit" Nullable="false" />
+    <Property Name="GCreatorUser" Type="bigint" Nullable="false" />
+    <Property Name="GIsDriverConfirmed" Type="bit" />
+    <Property Name="GRouteRequestId" Type="bigint" />
+    <Property Name="GMidSrc" Type="geography" />
+    <Property Name="GMidDst" Type="geography" />
+    <Property Name="GAppointGeo" Type="geography" />
+    <Property Name="GAppointLatitude" Type="decimal" Precision="20" Scale="17" />
+    <Property Name="GAppointLongitude" Type="decimal" Precision="20" Scale="17" />
+    <Property Name="GAppointAddress" Type="nvarchar" MaxLength="200" />
+    <Property Name="AppointTime" Type="datetime" />
+    <Property Name="ConfirmedPrice" Type="money" />
+  </EntityType>
+  <EntityType Name="Image">
+    <Key>
+      <PropertyRef Name="ImageId" />
+    </Key>
+    <Property Name="ImageId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ImageType" Type="int" Nullable="false" />
+    <Property Name="ImageUserId" Type="int" Nullable="false" />
+    <Property Name="ImageCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="ImageFile" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Invite">
+    <Key>
+      <PropertyRef Name="InviteId" />
+    </Key>
+    <Property Name="InviteId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="InviteCode" Type="nvarchar" MaxLength="11" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="InviterUserId" Type="int" />
+  </EntityType>
+  <EntityType Name="LicenseInfo">
+    <Key>
+      <PropertyRef Name="UserLicenseId" />
+    </Key>
+    <Property Name="UserLicenseId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="UserLicenseCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LicenseNo" Type="nvarchar" MaxLength="50" />
+    <Property Name="LicensePic" Type="varbinary(max)" />
+    <Property Name="IsDeleted" Type="bit" Nullable="false" />
+    <Property Name="LicenseImageId" Type="uniqueidentifier" />
+  </EntityType>
+  <EntityType Name="MainStation">
+    <Key>
+      <PropertyRef Name="MainStationId" />
+    </Key>
+    <Property Name="MainStationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MainStName" Type="nvarchar" MaxLength="32" Nullable="false" />
+    <Property Name="MainStLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="MainStLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="MainStGeo" Type="geography" Nullable="false" />
+    <Property Name="MainStRadius" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MapImage">
+    <Key>
+      <PropertyRef Name="MapShareGuid" />
+    </Key>
+    <Property Name="MapShareGuid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="RouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="ShareImage" Type="varbinary(max)" />
+    <Property Name="ShareCaption" Type="nvarchar" MaxLength="300" />
+    <Property Name="SharePath" Type="nvarchar" MaxLength="300" />
+    <Property Name="SeenCount" Type="bigint" />
+  </EntityType>
+  <EntityType Name="Notification">
+    <Key>
+      <PropertyRef Name="NotificationId" />
+    </Key>
+    <Property Name="NotificationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NotifUserId" Type="int" Nullable="false" />
+    <Property Name="NotifCommentId" Type="bigint" Nullable="false" />
+    <Property Name="IsNotificationSent" Type="bit" Nullable="false" />
+    <Property Name="IsNotificationSeen" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PayReq">
+    <Key>
+      <PropertyRef Name="PayReqId" />
+    </Key>
+    <Property Name="PayReqId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PayReqCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="PayReqUserId" Type="int" Nullable="false" />
+    <Property Name="PayReqValue" Type="int" Nullable="false" />
+    <Property Name="PayReqAuthority" Type="nvarchar" MaxLength="512" />
+    <Property Name="PayReqStatus" Type="nvarchar" MaxLength="10" />
+    <Property Name="PayReqRefID" Type="nvarchar" MaxLength="512" />
+  </EntityType>
+  <EntityType Name="RecommendPath">
+    <Key>
+      <PropertyRef Name="RecommendPathId" />
+    </Key>
+    <Property Name="RecommendPathId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RecommendPathIndex" Type="int" Nullable="false" />
+    <Property Name="RecommendSrcLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendSrcLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendSrcGeo" Type="geography" Nullable="false" />
+    <Property Name="RecommendDstLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendDstLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendDstGeo" Type="geography" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RecommendRoute">
+    <Key>
+      <PropertyRef Name="RecommendRouteId" />
+    </Key>
+    <Property Name="RecommendRouteId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RecommendPathId" Type="bigint" Nullable="false" />
+    <Property Name="RecommendPathSeq" Type="int" Nullable="false" />
+    <Property Name="RecommendLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendGeo" Type="geography" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RouteGroup">
+    <Key>
+      <PropertyRef Name="RouteGroupId" />
+    </Key>
+    <Property Name="RouteGroupId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RGCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="RGIsDeleted" Type="bit" Nullable="false" />
+    <Property Name="GroupId" Type="int" Nullable="false" />
+    <Property Name="RGHolderRRId" Type="bigint" Nullable="false" />
+    <Property Name="RGRouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="RGIsConfirmed" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RouteRequest">
+    <Key>
+      <PropertyRef Name="RouteRequestId" />
+    </Key>
+    <Property Name="RouteRequestId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RouteRequestType" Type="int" Nullable="false" />
+    <Property Name="RouteRequestUserId" Type="int" Nullable="false" />
+    <Property Name="RRIsConfirmed" Type="smallint" Nullable="false" />
+    <Property Name="RRIsDeleted" Type="bit" Nullable="false" />
+    <Property Name="RequestCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="RequestLastModifyTime" Type="datetime" Nullable="false" />
+    <Property Name="SrcGAddress" Type="nvarchar" MaxLength="200" />
+    <Property Name="SrcDetailAddress" Type="nvarchar" MaxLength="200" />
+    <Property Name="SrcLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="SrcLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="SrcGeo" Type="geography" Nullable="false" />
+    <Property Name="DstGAddress" Type="nvarchar" MaxLength="200" />
+    <Property Name="DstDetailAddress" Type="nvarchar" MaxLength="100" />
+    <Property Name="DstLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DstLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DstGeo" Type="geography" Nullable="false" />
+    <Property Name="AccompanyCount" Type="int" Nullable="false" />
+    <Property Name="IsDrive" Type="bit" Nullable="false" />
+    <Property Name="CarInfoId" Type="int" Nullable="false" />
+    <Property Name="ConfirmatedText" Type="nvarchar(max)" />
+    <Property Name="SrcDstDistance" Type="float" />
+    <Property Name="RecommendPathId" Type="bigint" />
+    <Property Name="RouteRequestState" Type="smallint" />
+    <Property Name="RouteRequestUId" Type="uniqueidentifier" />
+  </EntityType>
+  <EntityType Name="RouteRequestGPath">
+    <Key>
+      <PropertyRef Name="RoutePathId" />
+    </Key>
+    <Property Name="RoutePathId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RoutePathIndex" Type="int" Nullable="false" />
+    <Property Name="RouteRequestUId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="RoutePathSteps" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RouteRequestGRoute">
+    <Key>
+      <PropertyRef Name="RouteRequestRouteId" />
+    </Key>
+    <Property Name="RouteRequestRouteId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RoutePathId" Type="bigint" Nullable="false" />
+    <Property Name="RRRSeq" Type="int" Nullable="false" />
+    <Property Name="RRRLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RRRLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RRRDuration" Type="bigint" Nullable="false" />
+    <Property Name="RRRGeo" Type="geography" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RouteSuggest">
+    <Key>
+      <PropertyRef Name="RouteSuggestId" />
+    </Key>
+    <Property Name="RouteSuggestId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RSuggestCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="SuggestRouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="SelfRouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="SSrcDistance" Type="float" Nullable="false" />
+    <Property Name="SDstDistance" Type="float" Nullable="false" />
+    <Property Name="IsSuggestDeleted" Type="bit" Nullable="false" />
+    <Property Name="IsSuggestSent" Type="bit" Nullable="false" />
+    <Property Name="IsSuggestSeen" Type="bit" Nullable="false" />
+    <Property Name="IsSuggestAccepted" Type="bit" Nullable="false" />
+    <Property Name="IsSuggestRejected" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RRPricing">
+    <Key>
+      <PropertyRef Name="RRPricingId" />
+    </Key>
+    <Property Name="RRPricingId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="RRPricingIsDeleted" Type="bit" Nullable="false" />
+    <Property Name="RRPricingCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="RRPricingOption" Type="int" Nullable="false" />
+    <Property Name="RRPricingMinMax" Type="money" />
+  </EntityType>
+  <EntityType Name="RRTiming">
+    <Key>
+      <PropertyRef Name="RRTimingId" />
+    </Key>
+    <Property Name="RRTimingId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="RRTimingCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="RRTimingIsDeleted" Type="bit" Nullable="false" />
+    <Property Name="RRTimingOption" Type="int" Nullable="false" />
+    <Property Name="RRTheTime" Type="time" Precision="7" />
+    <Property Name="RRTheDate" Type="date" />
+    <Property Name="RRDayofWeek" Type="int" />
+  </EntityType>
+  <EntityType Name="Station">
+    <Key>
+      <PropertyRef Name="StationId" />
+    </Key>
+    <Property Name="StationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MainStationId" Type="bigint" Nullable="false" />
+    <Property Name="StAdd" Type="nvarchar" MaxLength="512" />
+    <Property Name="StLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="Stlng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="StGeo" Type="geography" />
+  </EntityType>
+  <EntityType Name="StationRoute">
+    <Key>
+      <PropertyRef Name="StationRouteId" />
+    </Key>
+    <Property Name="StationRouteId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SrcMStationId" Type="bigint" Nullable="false" />
+    <Property Name="DstMStationId" Type="bigint" Nullable="false" />
+    <Property Name="DriverPrice" Type="bigint" />
+    <Property Name="PassPrice" Type="bigint" />
+    <Property Name="Duration" Type="bigint" />
+  </EntityType>
+  <EntityType Name="Trans">
+    <Key>
+      <PropertyRef Name="TransId" />
+    </Key>
+    <Property Name="TransId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TransCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="TransType" Type="smallint" Nullable="false" />
+    <Property Name="TransUserId" Type="int" Nullable="false" />
+    <Property Name="TransValue" Type="float" Nullable="false" />
+    <Property Name="TransDescription" Type="nvarchar" MaxLength="512" />
+    <Property Name="TransPair" Type="bigint" />
+  </EntityType>
+  <EntityType Name="Trip">
+    <Key>
+      <PropertyRef Name="TripId" />
+    </Key>
+    <Property Name="TripId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DriverRouteId" Type="bigint" Nullable="false" />
+    <Property Name="TCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="TStartTime" Type="datetime" Nullable="false" />
+    <Property Name="TState" Type="smallint" Nullable="false" />
+    <Property Name="TEmptySeat" Type="smallint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TripLocation">
+    <Key>
+      <PropertyRef Name="TripLocationId" />
+    </Key>
+    <Property Name="TripLocationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TlCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="TlUserId" Type="int" Nullable="false" />
+    <Property Name="TlLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="TlLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="TlGeo" Type="geography" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TripRoute">
+    <Key>
+      <PropertyRef Name="TripRouteId" />
+    </Key>
+    <Property Name="TripRouteId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TrCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="TrModifyTime" Type="datetime" Nullable="false" />
+    <Property Name="TrTripId" Type="bigint" Nullable="false" />
+    <Property Name="TrRouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="TrState" Type="smallint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UserInfo">
+    <Key>
+      <PropertyRef Name="UserInfoId" />
+    </Key>
+    <Property Name="UserInfoId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="NationalCode" Type="nvarchar" MaxLength="20" />
+    <Property Name="UserPic" Type="varbinary(max)" />
+    <Property Name="UserInfoCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="UserInfoIsDeleted" Type="bit" Nullable="false" />
+    <Property Name="UserImageId" Type="uniqueidentifier" />
+    <Property Name="NationalCardImageId" Type="uniqueidentifier" />
+    <Property Name="VerifiedLevel" Type="smallint" />
+    <Property Name="TripId" Type="bigint" />
+    <Property Name="Smscount" Type="int" />
+    <Property Name="ValidatingTry" Type="int" />
+  </EntityType>
+  <EntityType Name="Withdraw">
+    <Key>
+      <PropertyRef Name="WithdrawId" />
+    </Key>
+    <Property Name="WithdrawId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModification" Type="datetime" Nullable="false" />
+    <Property Name="WithdrawDate" Type="datetime" />
+    <Property Name="TransId" Type="bigint" />
+    <Property Name="UserBalance" Type="float" Nullable="false" />
+    <Property Name="WithdrawAmount" Type="float" Nullable="false" />
+    <Property Name="WithdrawState" Type="int" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vw_PathRoute' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vw_PathRoute">
+    <Key>
+      <PropertyRef Name="RecommendDstLng" />
+      <PropertyRef Name="RecommendDstLat" />
+      <PropertyRef Name="RecommendSrcLng" />
+      <PropertyRef Name="RecommendSrcLat" />
+      <PropertyRef Name="RecommendLng" />
+      <PropertyRef Name="RecommendLat" />
+      <PropertyRef Name="IsDrive" />
+      <PropertyRef Name="RouteRequestId" />
+      <PropertyRef Name="SrcLatitude" />
+      <PropertyRef Name="SrcLongitude" />
+      <PropertyRef Name="DstLatitude" />
+      <PropertyRef Name="DstLongitude" />
+      <PropertyRef Name="RecommendPathId" />
+      <PropertyRef Name="RecommendPathSeq" />
+    </Key>
+    <Property Name="RecommendSrcGeo" Type="geography" Nullable="false" />
+    <Property Name="RecommendDstGeo" Type="geography" Nullable="false" />
+    <Property Name="RecommendDstLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendDstLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendSrcLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendSrcLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendGeo" Type="geography" Nullable="false" />
+    <Property Name="RecommendLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="IsDrive" Type="bit" Nullable="false" />
+    <Property Name="RouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="SrcLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="SrcLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DstLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DstLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendPathId" Type="bigint" Nullable="false" />
+    <Property Name="RecommendPathSeq" Type="int" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwBookPay' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwBookPay">
+    <Key>
+      <PropertyRef Name="BookRequestId" />
+      <PropertyRef Name="TripId" />
+      <PropertyRef Name="PayReqValue" />
+      <PropertyRef Name="PayReqUserId" />
+      <PropertyRef Name="BrCreateTime" />
+    </Key>
+    <Property Name="BookRequestId" Type="bigint" Nullable="false" />
+    <Property Name="TripId" Type="bigint" Nullable="false" />
+    <Property Name="PayReqId" Type="bigint" />
+    <Property Name="PayReqRefID" Type="nvarchar" MaxLength="512" />
+    <Property Name="PayReqValue" Type="int" Nullable="false" />
+    <Property Name="PayReqUserId" Type="int" Nullable="false" />
+    <Property Name="BrCreateTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwCarInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwCarInfo">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="CarInfoId" />
+      <PropertyRef Name="CarCardPic" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="CarPlateNo" Type="nvarchar" MaxLength="20" />
+    <Property Name="CarColor" Type="nvarchar" MaxLength="50" />
+    <Property Name="CarType" Type="nvarchar" MaxLength="50" />
+    <Property Name="CarInfoId" Type="int" Nullable="false" />
+    <Property Name="CarCardPic" Type="varbinary(max)" Nullable="false" />
+    <Property Name="CarBackImageId" Type="uniqueidentifier" />
+    <Property Name="CarFrontImageId" Type="uniqueidentifier" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwChat' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwChat">
+    <Key>
+      <PropertyRef Name="ChatCreateTime" />
+      <PropertyRef Name="ChatIsDeleted" />
+      <PropertyRef Name="ChatUserId" />
+      <PropertyRef Name="ContactId" />
+      <PropertyRef Name="ChatId" />
+    </Key>
+    <Property Name="ChatCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="ChatIsDeleted" Type="bit" Nullable="false" />
+    <Property Name="ChatUserId" Type="int" Nullable="false" />
+    <Property Name="ChatTxt" Type="nvarchar" MaxLength="500" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Gender" Type="int" />
+    <Property Name="ContactId" Type="bigint" Nullable="false" />
+    <Property Name="ChatId" Type="bigint" Nullable="false" />
+    <Property Name="UserImageId" Type="uniqueidentifier" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwComment' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwComment">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="CommentId" />
+      <PropertyRef Name="CmtCreateTime" />
+      <PropertyRef Name="GroupId" />
+    </Key>
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="CommentId" Type="bigint" Nullable="false" />
+    <Property Name="CmtCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="GroupId" Type="bigint" Nullable="false" />
+    <Property Name="Comment" Type="nvarchar" MaxLength="500" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwCommentNotification' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwCommentNotification">
+    <Key>
+      <PropertyRef Name="UserName" />
+      <PropertyRef Name="IsNotificationSeen" />
+      <PropertyRef Name="IsNotificationSent" />
+      <PropertyRef Name="NotificationId" />
+      <PropertyRef Name="RouteRequestId" />
+    </Key>
+    <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+    <Property Name="IsNotificationSeen" Type="bit" Nullable="false" />
+    <Property Name="IsNotificationSent" Type="bit" Nullable="false" />
+    <Property Name="NotificationId" Type="bigint" Nullable="false" />
+    <Property Name="RouteRequestId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwCompany' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwCompany">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="CompanyName" Type="nvarchar" MaxLength="256" />
+    <Property Name="CompanyImageId" Type="uniqueidentifier" />
+    <Property Name="Code" Type="nvarchar" MaxLength="128" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwContactScore' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwContactScore">
+    <Key>
+      <PropertyRef Name="CsUserId" />
+      <PropertyRef Name="ContactId" />
+      <PropertyRef Name="ContactDriverUserId" />
+      <PropertyRef Name="ContactPassengerUserId" />
+    </Key>
+    <Property Name="CsUserId" Type="bigint" Nullable="false" />
+    <Property Name="ContactId" Type="bigint" Nullable="false" />
+    <Property Name="ContactDriverUserId" Type="int" Nullable="false" />
+    <Property Name="ContactPassengerUserId" Type="int" Nullable="false" />
+    <Property Name="ContactIsRideAccepted" Type="bit" />
+    <Property Name="IsPassengerAccepted" Type="bit" />
+    <Property Name="CsScore" Type="smallint" />
+    <Property Name="CsComment" Type="nvarchar" MaxLength="256" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwContactTrip' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwContactTrip">
+    <Key>
+      <PropertyRef Name="RouteRequestId" />
+      <PropertyRef Name="ContactId" />
+      <PropertyRef Name="IsDrive" />
+      <PropertyRef Name="ContactPassengerUserId" />
+      <PropertyRef Name="ContactDriverUserId" />
+    </Key>
+    <Property Name="RouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="ContactId" Type="bigint" Nullable="false" />
+    <Property Name="IsDrive" Type="bit" Nullable="false" />
+    <Property Name="TripId" Type="bigint" />
+    <Property Name="IsPassengerAccepted" Type="bit" />
+    <Property Name="ContactIsRideAccepted" Type="bit" />
+    <Property Name="ContactPassengerUserId" Type="int" Nullable="false" />
+    <Property Name="ContactDriverUserId" Type="int" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwDiscountUser' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwDiscountUser">
+    <Key>
+      <PropertyRef Name="DiscountCode" />
+      <PropertyRef Name="DiscountCreateTime" />
+      <PropertyRef Name="DiscountStartTime" />
+      <PropertyRef Name="DiscountEndTime" />
+      <PropertyRef Name="DiscountId" />
+      <PropertyRef Name="DuCreateTime" />
+      <PropertyRef Name="DuState" />
+      <PropertyRef Name="DuId" />
+    </Key>
+    <Property Name="DiscountCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="DiscountTitle" Type="nvarchar" MaxLength="50" />
+    <Property Name="DiscountCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="DiscountStartTime" Type="datetime" Nullable="false" />
+    <Property Name="DiscountEndTime" Type="datetime" Nullable="false" />
+    <Property Name="DiscountDesc" Type="nvarchar" MaxLength="256" />
+    <Property Name="DiscountEvenId" Type="bigint" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="RouteRequestId" Type="bigint" />
+    <Property Name="DiscountId" Type="int" Nullable="false" />
+    <Property Name="DuCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="DuState" Type="smallint" Nullable="false" />
+    <Property Name="TransId" Type="bigint" />
+    <Property Name="DuId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwDoubleSuggest' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwDoubleSuggest">
+    <Key>
+      <PropertyRef Name="SelfRouteRequestId" />
+      <PropertyRef Name="OtherRouteRequestId" />
+      <PropertyRef Name="SelfIsSuggestAccepted" />
+      <PropertyRef Name="SelfIsSuggestRejected" />
+      <PropertyRef Name="OtherIsSuggestAccepted" />
+      <PropertyRef Name="OtherIsSuggestRejected" />
+    </Key>
+    <Property Name="SelfRouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="OtherRouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="SelfIsSuggestAccepted" Type="bit" Nullable="false" />
+    <Property Name="SelfIsSuggestRejected" Type="bit" Nullable="false" />
+    <Property Name="OtherIsSuggestAccepted" Type="bit" Nullable="false" />
+    <Property Name="OtherIsSuggestRejected" Type="bit" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwDriverRoute' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwDriverRoute">
+    <Key>
+      <PropertyRef Name="DrSrcStationId" />
+      <PropertyRef Name="SrcStLat" />
+      <PropertyRef Name="SrcStlng" />
+      <PropertyRef Name="SrcMainStName" />
+      <PropertyRef Name="DriverRouteId" />
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="DstMainStName" />
+      <PropertyRef Name="DstMainStLat" />
+      <PropertyRef Name="DstMainStLng" />
+    </Key>
+    <Property Name="DrSrcStationId" Type="bigint" Nullable="false" />
+    <Property Name="CarColor" Type="nvarchar" MaxLength="50" />
+    <Property Name="CarPlateNo" Type="nvarchar" MaxLength="20" />
+    <Property Name="CarType" Type="nvarchar" MaxLength="50" />
+    <Property Name="SrcStAdd" Type="nvarchar" MaxLength="512" />
+    <Property Name="SrcStLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="SrcStlng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="SrcMainStName" Type="nvarchar" MaxLength="32" Nullable="false" />
+    <Property Name="DriverRouteId" Type="bigint" Nullable="false" />
+    <Property Name="UserId" Type="bigint" Nullable="false" />
+    <Property Name="DstMainStName" Type="nvarchar" MaxLength="32" Nullable="false" />
+    <Property Name="DstMainStLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DstMainStLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DriverPrice" Type="bigint" />
+    <Property Name="PassPrice" Type="bigint" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwDriverTrip' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwDriverTrip">
+    <Key>
+      <PropertyRef Name="TCreateTime" />
+      <PropertyRef Name="TStartTime" />
+      <PropertyRef Name="TState" />
+      <PropertyRef Name="TEmptySeat" />
+      <PropertyRef Name="DriverRouteId" />
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="UserName" />
+      <PropertyRef Name="TripId" />
+    </Key>
+    <Property Name="TCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="TStartTime" Type="datetime" Nullable="false" />
+    <Property Name="TState" Type="smallint" Nullable="false" />
+    <Property Name="TEmptySeat" Type="smallint" Nullable="false" />
+    <Property Name="DriverRouteId" Type="bigint" Nullable="false" />
+    <Property Name="UserId" Type="bigint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="Gender" Type="int" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+    <Property Name="UserImageId" Type="uniqueidentifier" />
+    <Property Name="CarType" Type="nvarchar" MaxLength="50" />
+    <Property Name="CarColor" Type="nvarchar" MaxLength="50" />
+    <Property Name="CarPlateNo" Type="nvarchar" MaxLength="20" />
+    <Property Name="TripId" Type="bigint" Nullable="false" />
+    <Property Name="SrcMainStName" Type="nvarchar" MaxLength="32" />
+    <Property Name="SrcMainStationId" Type="bigint" />
+    <Property Name="SrcMainStLat" Type="decimal" Precision="20" Scale="17" />
+    <Property Name="SrcMainStLng" Type="decimal" Precision="20" Scale="17" />
+    <Property Name="SrcMainStGeo" Type="geography" />
+    <Property Name="SrcStAdd" Type="nvarchar" MaxLength="512" />
+    <Property Name="SrcStLat" Type="decimal" Precision="20" Scale="17" />
+    <Property Name="SrcStlng" Type="decimal" Precision="20" Scale="17" />
+    <Property Name="DstMainStName" Type="nvarchar" MaxLength="32" />
+    <Property Name="DstMainStLat" Type="decimal" Precision="20" Scale="17" />
+    <Property Name="DstMainStLng" Type="decimal" Precision="20" Scale="17" />
+    <Property Name="DriverPrice" Type="bigint" />
+    <Property Name="PassPrice" Type="bigint" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwGroup' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwGroup">
+    <Key>
+      <PropertyRef Name="RGRouteRequestId" />
+      <PropertyRef Name="GroupId" />
+    </Key>
+    <Property Name="RGRouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="GroupId" Type="int" Nullable="false" />
+    <Property Name="GAppointLatitude" Type="decimal" Precision="20" Scale="17" />
+    <Property Name="GAppointLongitude" Type="decimal" Precision="20" Scale="17" />
+    <Property Name="GAppointAddress" Type="nvarchar" MaxLength="200" />
+    <Property Name="AppointTime" Type="datetime" />
+    <Property Name="ConfirmedPrice" Type="money" />
+    <Property Name="GRouteRequestId" Type="bigint" />
+    <Property Name="GIsDriverConfirmed" Type="bit" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwLicenseInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwLicenseInfo">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="LicenseNo" Type="nvarchar" MaxLength="50" />
+    <Property Name="LicensePic" Type="varbinary(max)" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="LicenseImageId" Type="uniqueidentifier" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwPath' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwPath">
+    <Key>
+      <PropertyRef Name="RecommendSrcLat" />
+      <PropertyRef Name="RecommendSrcLng" />
+      <PropertyRef Name="RecommendDstLat" />
+      <PropertyRef Name="RecommendDstLng" />
+      <PropertyRef Name="RecommendPathSeq" />
+      <PropertyRef Name="RecommendLat" />
+      <PropertyRef Name="RecommendLng" />
+      <PropertyRef Name="RecommendPathId" />
+    </Key>
+    <Property Name="RecommendSrcLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendSrcLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendSrcGeo" Type="geography" Nullable="false" />
+    <Property Name="RecommendDstLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendDstLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendDstGeo" Type="geography" Nullable="false" />
+    <Property Name="RecommendPathSeq" Type="int" Nullable="false" />
+    <Property Name="RecommendLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="RecommendGeo" Type="geography" Nullable="false" />
+    <Property Name="RecommendPathId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwRouteGroup' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwRouteGroup">
+    <Key>
+      <PropertyRef Name="RGCreateTime" />
+      <PropertyRef Name="RRPricingOption" />
+      <PropertyRef Name="IsDrive" />
+      <PropertyRef Name="RGHolderRRId" />
+      <PropertyRef Name="RouteRequestId" />
+      <PropertyRef Name="RGIsConfirmed" />
+      <PropertyRef Name="RRIsDeleted" />
+      <PropertyRef Name="SrcLatitude" />
+      <PropertyRef Name="SrcLongitude" />
+      <PropertyRef Name="DstLatitude" />
+      <PropertyRef Name="DstLongitude" />
+      <PropertyRef Name="AccompanyCount" />
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="GroupId" />
+    </Key>
+    <Property Name="RGCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="RRPricingOption" Type="int" Nullable="false" />
+    <Property Name="RRPricingMinMax" Type="money" />
+    <Property Name="IsDrive" Type="bit" Nullable="false" />
+    <Property Name="RGHolderRRId" Type="bigint" Nullable="false" />
+    <Property Name="RouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="RGIsConfirmed" Type="bit" Nullable="false" />
+    <Property Name="RRIsDeleted" Type="bit" Nullable="false" />
+    <Property Name="SrcLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="SrcLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DstLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DstLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="AccompanyCount" Type="int" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="GroupId" Type="int" Nullable="false" />
+    <Property Name="CarType" Type="nvarchar" MaxLength="50" />
+    <Property Name="CarColor" Type="nvarchar" MaxLength="50" />
+    <Property Name="CarPlateNo" Type="nvarchar" MaxLength="20" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwRouteProfile' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwRouteProfile">
+    <Key>
+      <PropertyRef Name="RouteRequestId" />
+      <PropertyRef Name="SrcLongitude" />
+      <PropertyRef Name="SrcLatitude" />
+      <PropertyRef Name="DstLatitude" />
+      <PropertyRef Name="DstLongitude" />
+      <PropertyRef Name="IsDrive" />
+    </Key>
+    <Property Name="RouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="SrcGAddress" Type="nvarchar" MaxLength="200" />
+    <Property Name="SrcLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="SrcLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DstGAddress" Type="nvarchar" MaxLength="200" />
+    <Property Name="DstLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DstLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="IsDrive" Type="bit" Nullable="false" />
+    <Property Name="RouteRequestUId" Type="uniqueidentifier" />
+    <Property Name="RRPricingMinMax" Type="money" />
+    <Property Name="UserImageId" Type="uniqueidentifier" />
+    <Property Name="VerifiedLevel" Type="smallint" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="Gender" Type="int" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="256" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwRouteRequest' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwRouteRequest">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="UserName" />
+      <PropertyRef Name="RouteRequestType" />
+      <PropertyRef Name="SrcLatitude" />
+      <PropertyRef Name="SrcLongitude" />
+      <PropertyRef Name="DstLatitude" />
+      <PropertyRef Name="DstLongitude" />
+      <PropertyRef Name="AccompanyCount" />
+      <PropertyRef Name="RouteRequestId" />
+      <PropertyRef Name="RRPricingOption" />
+      <PropertyRef Name="RRIsConfirmed" />
+      <PropertyRef Name="IsDrive" />
+      <PropertyRef Name="CarInfoId" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+    <Property Name="RouteRequestType" Type="int" Nullable="false" />
+    <Property Name="SrcGAddress" Type="nvarchar" MaxLength="200" />
+    <Property Name="SrcDetailAddress" Type="nvarchar" MaxLength="200" />
+    <Property Name="SrcLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="SrcLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DstGAddress" Type="nvarchar" MaxLength="200" />
+    <Property Name="DstDetailAddress" Type="nvarchar" MaxLength="100" />
+    <Property Name="DstLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DstLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="AccompanyCount" Type="int" Nullable="false" />
+    <Property Name="RouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="RRPricingOption" Type="int" Nullable="false" />
+    <Property Name="RRPricingMinMax" Type="money" />
+    <Property Name="ConfirmatedText" Type="nvarchar(max)" />
+    <Property Name="RRIsConfirmed" Type="smallint" Nullable="false" />
+    <Property Name="IsDrive" Type="bit" Nullable="false" />
+    <Property Name="CarInfoId" Type="int" Nullable="false" />
+    <Property Name="CarType" Type="nvarchar" MaxLength="50" />
+    <Property Name="CarColor" Type="nvarchar" MaxLength="50" />
+    <Property Name="CarPlateNo" Type="nvarchar" MaxLength="20" />
+    <Property Name="RouteRequestState" Type="smallint" />
+    <Property Name="RouteRequestUId" Type="uniqueidentifier" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwRouteSuggest' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwRouteSuggest">
+    <Key>
+      <PropertyRef Name="SSrcDistance" />
+      <PropertyRef Name="SDstDistance" />
+      <PropertyRef Name="SrcLatitude" />
+      <PropertyRef Name="SrcLongitude" />
+      <PropertyRef Name="DstLatitude" />
+      <PropertyRef Name="DstLongitude" />
+      <PropertyRef Name="AccompanyCount" />
+      <PropertyRef Name="CarInfoId" />
+      <PropertyRef Name="IsSuggestSent" />
+      <PropertyRef Name="IsSuggestSeen" />
+      <PropertyRef Name="IsSuggestAccepted" />
+      <PropertyRef Name="IsSuggestRejected" />
+      <PropertyRef Name="RRPricingOption" />
+      <PropertyRef Name="RouteRequestId" />
+      <PropertyRef Name="SelfRouteRequestId" />
+      <PropertyRef Name="IsDrive" />
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="SSrcDistance" Type="float" Nullable="false" />
+    <Property Name="SDstDistance" Type="float" Nullable="false" />
+    <Property Name="SrcGAddress" Type="nvarchar" MaxLength="200" />
+    <Property Name="SrcDetailAddress" Type="nvarchar" MaxLength="200" />
+    <Property Name="SrcLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="SrcLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DstGAddress" Type="nvarchar" MaxLength="200" />
+    <Property Name="DstDetailAddress" Type="nvarchar" MaxLength="100" />
+    <Property Name="DstLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DstLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="AccompanyCount" Type="int" Nullable="false" />
+    <Property Name="CarInfoId" Type="int" Nullable="false" />
+    <Property Name="CarType" Type="nvarchar" MaxLength="50" />
+    <Property Name="CarColor" Type="nvarchar" MaxLength="50" />
+    <Property Name="IsSuggestSent" Type="bit" Nullable="false" />
+    <Property Name="IsSuggestSeen" Type="bit" Nullable="false" />
+    <Property Name="IsSuggestAccepted" Type="bit" Nullable="false" />
+    <Property Name="IsSuggestRejected" Type="bit" Nullable="false" />
+    <Property Name="RRPricingMinMax" Type="money" />
+    <Property Name="RRPricingOption" Type="int" Nullable="false" />
+    <Property Name="Gender" Type="int" />
+    <Property Name="RouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="SelfRouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="IsDrive" Type="bit" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="CarPlateNo" Type="nvarchar" MaxLength="20" />
+    <Property Name="RecommendPathId" Type="bigint" />
+    <Property Name="UserImageId" Type="uniqueidentifier" />
+    <Property Name="SuggestRouteRequestUId" Type="uniqueidentifier" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwRRPricing' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwRRPricing">
+    <Key>
+      <PropertyRef Name="RouteRequestId" />
+      <PropertyRef Name="RRPricingIsDeleted" />
+      <PropertyRef Name="RRPricingOption" />
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="RRPricingId" />
+    </Key>
+    <Property Name="RouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="RRPricingIsDeleted" Type="bit" Nullable="false" />
+    <Property Name="RRPricingOption" Type="int" Nullable="false" />
+    <Property Name="RRPricingMinMax" Type="money" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="RRPricingId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwRRTiming' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwRRTiming">
+    <Key>
+      <PropertyRef Name="RouteRequestId" />
+      <PropertyRef Name="RRTimingOption" />
+      <PropertyRef Name="RRTimingId" />
+    </Key>
+    <Property Name="RouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="RRTimingOption" Type="int" Nullable="false" />
+    <Property Name="RRTheTime" Type="time" Precision="7" />
+    <Property Name="RRTheDate" Type="date" />
+    <Property Name="RRDayofWeek" Type="int" />
+    <Property Name="RRTimingId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwStationRoute' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwStationRoute">
+    <Key>
+      <PropertyRef Name="SrcMStationId" />
+      <PropertyRef Name="DstMStationId" />
+      <PropertyRef Name="StationRouteId" />
+      <PropertyRef Name="SrcMainStName" />
+      <PropertyRef Name="DstMainStName" />
+      <PropertyRef Name="DstMainStLat" />
+      <PropertyRef Name="SrcMainStLat" />
+      <PropertyRef Name="SrcMainStLng" />
+      <PropertyRef Name="DstMainStLng" />
+    </Key>
+    <Property Name="SrcMStationId" Type="bigint" Nullable="false" />
+    <Property Name="DstMStationId" Type="bigint" Nullable="false" />
+    <Property Name="StationRouteId" Type="bigint" Nullable="false" />
+    <Property Name="Duration" Type="bigint" />
+    <Property Name="DriverPrice" Type="bigint" />
+    <Property Name="PassPrice" Type="bigint" />
+    <Property Name="SrcMainStName" Type="nvarchar" MaxLength="32" Nullable="false" />
+    <Property Name="DstMainStName" Type="nvarchar" MaxLength="32" Nullable="false" />
+    <Property Name="DstMainStLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="SrcMainStLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="SrcMainStLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DstMainStLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwSuggestNotification' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwSuggestNotification">
+    <Key>
+      <PropertyRef Name="UserName" />
+      <PropertyRef Name="IsSuggestSent" />
+      <PropertyRef Name="IsSuggestSeen" />
+      <PropertyRef Name="RouteRequestId" />
+      <PropertyRef Name="RouteSuggestId" />
+    </Key>
+    <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+    <Property Name="IsSuggestSent" Type="bit" Nullable="false" />
+    <Property Name="IsSuggestSeen" Type="bit" Nullable="false" />
+    <Property Name="RouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="RouteSuggestId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwTripRoute' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwTripRoute">
+    <Key>
+      <PropertyRef Name="TrTripId" />
+      <PropertyRef Name="RouteRequestUserId" />
+      <PropertyRef Name="SrcLatitude" />
+      <PropertyRef Name="SrcLongitude" />
+      <PropertyRef Name="DstLongitude" />
+      <PropertyRef Name="DstLatitude" />
+      <PropertyRef Name="IsDrive" />
+      <PropertyRef Name="UserName" />
+      <PropertyRef Name="TrState" />
+      <PropertyRef Name="TripRouteId" />
+      <PropertyRef Name="RouteRequestId" />
+      <PropertyRef Name="TrModifyTime" />
+    </Key>
+    <Property Name="TrTripId" Type="bigint" Nullable="false" />
+    <Property Name="RouteRequestUserId" Type="int" Nullable="false" />
+    <Property Name="SrcLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="SrcLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DstLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="DstLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="IsDrive" Type="bit" Nullable="false" />
+    <Property Name="RecommendPathId" Type="bigint" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+    <Property Name="UserImageId" Type="uniqueidentifier" />
+    <Property Name="RRPricingMinMax" Type="money" />
+    <Property Name="TrState" Type="smallint" Nullable="false" />
+    <Property Name="TripRouteId" Type="bigint" Nullable="false" />
+    <Property Name="RouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="TrModifyTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwTwoRouteSuggest' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwTwoRouteSuggest">
+    <Key>
+      <PropertyRef Name="SelfRouteRequestId" />
+      <PropertyRef Name="SuggestRouteRequestId" />
+      <PropertyRef Name="SelfRRUserId" />
+      <PropertyRef Name="SuggestRRUserId" />
+      <PropertyRef Name="IsSuggestSent" />
+      <PropertyRef Name="IsSuggestSeen" />
+      <PropertyRef Name="IsSuggestAccepted" />
+      <PropertyRef Name="IsSuggestRejected" />
+      <PropertyRef Name="SAccompanyCount" />
+      <PropertyRef Name="RouteSuggestId" />
+    </Key>
+    <Property Name="SelfRouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="SuggestRouteRequestId" Type="bigint" Nullable="false" />
+    <Property Name="SelfRRUserId" Type="int" Nullable="false" />
+    <Property Name="SuggestRRUserId" Type="int" Nullable="false" />
+    <Property Name="IsSuggestSent" Type="bit" Nullable="false" />
+    <Property Name="IsSuggestSeen" Type="bit" Nullable="false" />
+    <Property Name="IsSuggestAccepted" Type="bit" Nullable="false" />
+    <Property Name="IsSuggestRejected" Type="bit" Nullable="false" />
+    <Property Name="SAccompanyCount" Type="int" Nullable="false" />
+    <Property Name="SuggestRouteRequestUId" Type="uniqueidentifier" />
+    <Property Name="SelfRouteRequestUId" Type="uniqueidentifier" />
+    <Property Name="RouteSuggestId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwUserInfo">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="UserName" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="NationalCode" Type="nvarchar" MaxLength="20" />
+    <Property Name="UserPic" Type="varbinary(max)" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="Gender" Type="int" />
+    <Property Name="UserRole" Type="nvarchar(max)" />
+    <Property Name="Email" Type="nvarchar" MaxLength="256" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+    <Property Name="UserImageId" Type="uniqueidentifier" />
+    <Property Name="VerifiedLevel" Type="smallint" />
+    <Property Name="TripId" Type="bigint" />
+    <Property Name="NationalCardImageId" Type="uniqueidentifier" />
+    <Property Name="Smscount" Type="int" />
+  </EntityType>
+  <Association Name="FK_RRTiming_RouteRequest">
+    <End Role="RouteRequest" Type="Self.RouteRequest" Multiplicity="1" />
+    <End Role="RRTiming" Type="Self.RRTiming" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RouteRequest">
+        <PropertyRef Name="RouteRequestId" />
+      </Principal>
+      <Dependent Role="RRTiming">
+        <PropertyRef Name="RouteRequestId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserInfo_AspNetUsers">
+    <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+    <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUsers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserInfo">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="GenerateSimilarRoutes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="routeId" Type="int" Mode="In" />
+    <Parameter Name="DistanceCoeffiecient" Type="int" Mode="In" />
+    <Parameter Name="SameGender" Type="bit" Mode="In" />
+  </Function>
+  <Function Name="GetLocalRoutes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Lat" Type="decimal" Mode="In" />
+    <Parameter Name="Lng" Type="decimal" Mode="In" />
+    <Parameter Name="RouteDistance" Type="int" Mode="In" />
+    <Parameter Name="PointDistance" Type="int" Mode="In" />
+  </Function>
+  <EntityContainer Name="MibarimModelStoreContainer">
+    <EntitySet Name="AboutUser" EntityType="Self.AboutUser" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BankInfo" EntityType="Self.BankInfo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BookRequest" EntityType="Self.BookRequest" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CarInfo" EntityType="Self.CarInfo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CarPic" EntityType="Self.CarPic" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Chat" EntityType="Self.Chat" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CityLocation" EntityType="Self.CityLocation" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Comment" EntityType="Self.Comment" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Contact" EntityType="Self.Contact" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ContactScore" EntityType="Self.ContactScore" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ContactUs" EntityType="Self.ContactUs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Discount" EntityType="Self.Discount" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DiscountUser" EntityType="Self.DiscountUser" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DriverRoute" EntityType="Self.DriverRoute" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="EventLog" EntityType="Self.EventLog" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="GoogleToken" EntityType="Self.GoogleToken" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Group" EntityType="Self.Group" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Image" EntityType="Self.Image" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Invite" EntityType="Self.Invite" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LicenseInfo" EntityType="Self.LicenseInfo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MainStation" EntityType="Self.MainStation" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MapImage" EntityType="Self.MapImage" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Notification" EntityType="Self.Notification" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PayReq" EntityType="Self.PayReq" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RecommendPath" EntityType="Self.RecommendPath" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RecommendRoute" EntityType="Self.RecommendRoute" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RouteGroup" EntityType="Self.RouteGroup" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RouteRequest" EntityType="Self.RouteRequest" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RouteRequestGPath" EntityType="Self.RouteRequestGPath" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RouteRequestGRoute" EntityType="Self.RouteRequestGRoute" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RouteSuggest" EntityType="Self.RouteSuggest" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RRPricing" EntityType="Self.RRPricing" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RRTiming" EntityType="Self.RRTiming" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Station" EntityType="Self.Station" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="StationRoute" EntityType="Self.StationRoute" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Trans" EntityType="Self.Trans" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Trip" EntityType="Self.Trip" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TripLocation" EntityType="Self.TripLocation" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TripRoute" EntityType="Self.TripRoute" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserInfo" EntityType="Self.UserInfo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Withdraw" EntityType="Self.Withdraw" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="vw_PathRoute" EntityType="Self.vw_PathRoute" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vw_PathRoute].[RecommendSrcGeo] AS [RecommendSrcGeo], 
+    [vw_PathRoute].[RecommendDstGeo] AS [RecommendDstGeo], 
+    [vw_PathRoute].[RecommendDstLng] AS [RecommendDstLng], 
+    [vw_PathRoute].[RecommendDstLat] AS [RecommendDstLat], 
+    [vw_PathRoute].[RecommendSrcLng] AS [RecommendSrcLng], 
+    [vw_PathRoute].[RecommendSrcLat] AS [RecommendSrcLat], 
+    [vw_PathRoute].[RecommendGeo] AS [RecommendGeo], 
+    [vw_PathRoute].[RecommendLng] AS [RecommendLng], 
+    [vw_PathRoute].[RecommendLat] AS [RecommendLat], 
+    [vw_PathRoute].[IsDrive] AS [IsDrive], 
+    [vw_PathRoute].[RouteRequestId] AS [RouteRequestId], 
+    [vw_PathRoute].[SrcLatitude] AS [SrcLatitude], 
+    [vw_PathRoute].[SrcLongitude] AS [SrcLongitude], 
+    [vw_PathRoute].[DstLatitude] AS [DstLatitude], 
+    [vw_PathRoute].[DstLongitude] AS [DstLongitude], 
+    [vw_PathRoute].[RecommendPathId] AS [RecommendPathId], 
+    [vw_PathRoute].[RecommendPathSeq] AS [RecommendPathSeq]
+    FROM [dbo].[vw_PathRoute] AS [vw_PathRoute]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwBookPay" EntityType="Self.vwBookPay" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwBookPay].[BookRequestId] AS [BookRequestId], 
+    [vwBookPay].[TripId] AS [TripId], 
+    [vwBookPay].[PayReqId] AS [PayReqId], 
+    [vwBookPay].[PayReqRefID] AS [PayReqRefID], 
+    [vwBookPay].[PayReqValue] AS [PayReqValue], 
+    [vwBookPay].[PayReqUserId] AS [PayReqUserId], 
+    [vwBookPay].[BrCreateTime] AS [BrCreateTime]
+    FROM [dbo].[vwBookPay] AS [vwBookPay]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwCarInfo" EntityType="Self.vwCarInfo" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwCarInfo].[UserId] AS [UserId], 
+    [vwCarInfo].[CarPlateNo] AS [CarPlateNo], 
+    [vwCarInfo].[CarColor] AS [CarColor], 
+    [vwCarInfo].[CarType] AS [CarType], 
+    [vwCarInfo].[CarInfoId] AS [CarInfoId], 
+    [vwCarInfo].[CarCardPic] AS [CarCardPic], 
+    [vwCarInfo].[CarBackImageId] AS [CarBackImageId], 
+    [vwCarInfo].[CarFrontImageId] AS [CarFrontImageId]
+    FROM [dbo].[vwCarInfo] AS [vwCarInfo]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwChat" EntityType="Self.vwChat" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwChat].[ChatCreateTime] AS [ChatCreateTime], 
+    [vwChat].[ChatIsDeleted] AS [ChatIsDeleted], 
+    [vwChat].[ChatUserId] AS [ChatUserId], 
+    [vwChat].[ChatTxt] AS [ChatTxt], 
+    [vwChat].[Family] AS [Family], 
+    [vwChat].[Name] AS [Name], 
+    [vwChat].[Gender] AS [Gender], 
+    [vwChat].[ContactId] AS [ContactId], 
+    [vwChat].[ChatId] AS [ChatId], 
+    [vwChat].[UserImageId] AS [UserImageId]
+    FROM [dbo].[vwChat] AS [vwChat]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwComment" EntityType="Self.vwComment" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwComment].[Name] AS [Name], 
+    [vwComment].[Family] AS [Family], 
+    [vwComment].[UserId] AS [UserId], 
+    [vwComment].[CommentId] AS [CommentId], 
+    [vwComment].[CmtCreateTime] AS [CmtCreateTime], 
+    [vwComment].[GroupId] AS [GroupId], 
+    [vwComment].[Comment] AS [Comment]
+    FROM [dbo].[vwComment] AS [vwComment]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwCommentNotification" EntityType="Self.vwCommentNotification" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwCommentNotification].[UserName] AS [UserName], 
+    [vwCommentNotification].[IsNotificationSeen] AS [IsNotificationSeen], 
+    [vwCommentNotification].[IsNotificationSent] AS [IsNotificationSent], 
+    [vwCommentNotification].[NotificationId] AS [NotificationId], 
+    [vwCommentNotification].[RouteRequestId] AS [RouteRequestId]
+    FROM [dbo].[vwCommentNotification] AS [vwCommentNotification]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwCompany" EntityType="Self.vwCompany" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwCompany].[Id] AS [Id], 
+    [vwCompany].[CompanyName] AS [CompanyName], 
+    [vwCompany].[CompanyImageId] AS [CompanyImageId], 
+    [vwCompany].[Code] AS [Code]
+    FROM [dbo].[vwCompany] AS [vwCompany]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwContactScore" EntityType="Self.vwContactScore" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwContactScore].[CsUserId] AS [CsUserId], 
+    [vwContactScore].[ContactId] AS [ContactId], 
+    [vwContactScore].[ContactDriverUserId] AS [ContactDriverUserId], 
+    [vwContactScore].[ContactPassengerUserId] AS [ContactPassengerUserId], 
+    [vwContactScore].[ContactIsRideAccepted] AS [ContactIsRideAccepted], 
+    [vwContactScore].[IsPassengerAccepted] AS [IsPassengerAccepted], 
+    [vwContactScore].[CsScore] AS [CsScore], 
+    [vwContactScore].[CsComment] AS [CsComment]
+    FROM [dbo].[vwContactScore] AS [vwContactScore]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwContactTrip" EntityType="Self.vwContactTrip" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwContactTrip].[RouteRequestId] AS [RouteRequestId], 
+    [vwContactTrip].[UserId] AS [UserId], 
+    [vwContactTrip].[ContactId] AS [ContactId], 
+    [vwContactTrip].[IsDrive] AS [IsDrive], 
+    [vwContactTrip].[TripId] AS [TripId], 
+    [vwContactTrip].[IsPassengerAccepted] AS [IsPassengerAccepted], 
+    [vwContactTrip].[ContactIsRideAccepted] AS [ContactIsRideAccepted], 
+    [vwContactTrip].[ContactPassengerUserId] AS [ContactPassengerUserId], 
+    [vwContactTrip].[ContactDriverUserId] AS [ContactDriverUserId]
+    FROM [dbo].[vwContactTrip] AS [vwContactTrip]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwDiscountUser" EntityType="Self.vwDiscountUser" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwDiscountUser].[DiscountCode] AS [DiscountCode], 
+    [vwDiscountUser].[DiscountTitle] AS [DiscountTitle], 
+    [vwDiscountUser].[DiscountCreateTime] AS [DiscountCreateTime], 
+    [vwDiscountUser].[DiscountStartTime] AS [DiscountStartTime], 
+    [vwDiscountUser].[DiscountEndTime] AS [DiscountEndTime], 
+    [vwDiscountUser].[DiscountDesc] AS [DiscountDesc], 
+    [vwDiscountUser].[DiscountEvenId] AS [DiscountEvenId], 
+    [vwDiscountUser].[UserId] AS [UserId], 
+    [vwDiscountUser].[RouteRequestId] AS [RouteRequestId], 
+    [vwDiscountUser].[DiscountId] AS [DiscountId], 
+    [vwDiscountUser].[DuCreateTime] AS [DuCreateTime], 
+    [vwDiscountUser].[DuState] AS [DuState], 
+    [vwDiscountUser].[TransId] AS [TransId], 
+    [vwDiscountUser].[DuId] AS [DuId]
+    FROM [dbo].[vwDiscountUser] AS [vwDiscountUser]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwDoubleSuggest" EntityType="Self.vwDoubleSuggest" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwDoubleSuggest].[SelfRouteRequestId] AS [SelfRouteRequestId], 
+    [vwDoubleSuggest].[OtherRouteRequestId] AS [OtherRouteRequestId], 
+    [vwDoubleSuggest].[SelfIsSuggestAccepted] AS [SelfIsSuggestAccepted], 
+    [vwDoubleSuggest].[SelfIsSuggestRejected] AS [SelfIsSuggestRejected], 
+    [vwDoubleSuggest].[OtherIsSuggestAccepted] AS [OtherIsSuggestAccepted], 
+    [vwDoubleSuggest].[OtherIsSuggestRejected] AS [OtherIsSuggestRejected]
+    FROM [dbo].[vwDoubleSuggest] AS [vwDoubleSuggest]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwDriverRoute" EntityType="Self.vwDriverRoute" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwDriverRoute].[DrSrcStationId] AS [DrSrcStationId], 
+    [vwDriverRoute].[CarColor] AS [CarColor], 
+    [vwDriverRoute].[CarPlateNo] AS [CarPlateNo], 
+    [vwDriverRoute].[CarType] AS [CarType], 
+    [vwDriverRoute].[SrcStAdd] AS [SrcStAdd], 
+    [vwDriverRoute].[SrcStLat] AS [SrcStLat], 
+    [vwDriverRoute].[SrcStlng] AS [SrcStlng], 
+    [vwDriverRoute].[SrcMainStName] AS [SrcMainStName], 
+    [vwDriverRoute].[DriverRouteId] AS [DriverRouteId], 
+    [vwDriverRoute].[UserId] AS [UserId], 
+    [vwDriverRoute].[DstMainStName] AS [DstMainStName], 
+    [vwDriverRoute].[DstMainStLat] AS [DstMainStLat], 
+    [vwDriverRoute].[DstMainStLng] AS [DstMainStLng], 
+    [vwDriverRoute].[DriverPrice] AS [DriverPrice], 
+    [vwDriverRoute].[PassPrice] AS [PassPrice]
+    FROM [dbo].[vwDriverRoute] AS [vwDriverRoute]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwDriverTrip" EntityType="Self.vwDriverTrip" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwDriverTrip].[TCreateTime] AS [TCreateTime], 
+    [vwDriverTrip].[TStartTime] AS [TStartTime], 
+    [vwDriverTrip].[TState] AS [TState], 
+    [vwDriverTrip].[TEmptySeat] AS [TEmptySeat], 
+    [vwDriverTrip].[DriverRouteId] AS [DriverRouteId], 
+    [vwDriverTrip].[UserId] AS [UserId], 
+    [vwDriverTrip].[Name] AS [Name], 
+    [vwDriverTrip].[Family] AS [Family], 
+    [vwDriverTrip].[Gender] AS [Gender], 
+    [vwDriverTrip].[UserName] AS [UserName], 
+    [vwDriverTrip].[UserImageId] AS [UserImageId], 
+    [vwDriverTrip].[CarType] AS [CarType], 
+    [vwDriverTrip].[CarColor] AS [CarColor], 
+    [vwDriverTrip].[CarPlateNo] AS [CarPlateNo], 
+    [vwDriverTrip].[TripId] AS [TripId], 
+    [vwDriverTrip].[SrcMainStName] AS [SrcMainStName], 
+    [vwDriverTrip].[SrcMainStationId] AS [SrcMainStationId], 
+    [vwDriverTrip].[SrcMainStLat] AS [SrcMainStLat], 
+    [vwDriverTrip].[SrcMainStLng] AS [SrcMainStLng], 
+    [vwDriverTrip].[SrcMainStGeo] AS [SrcMainStGeo], 
+    [vwDriverTrip].[SrcStAdd] AS [SrcStAdd], 
+    [vwDriverTrip].[SrcStLat] AS [SrcStLat], 
+    [vwDriverTrip].[SrcStlng] AS [SrcStlng], 
+    [vwDriverTrip].[DstMainStName] AS [DstMainStName], 
+    [vwDriverTrip].[DstMainStLat] AS [DstMainStLat], 
+    [vwDriverTrip].[DstMainStLng] AS [DstMainStLng], 
+    [vwDriverTrip].[DriverPrice] AS [DriverPrice], 
+    [vwDriverTrip].[PassPrice] AS [PassPrice]
+    FROM [dbo].[vwDriverTrip] AS [vwDriverTrip]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwGroup" EntityType="Self.vwGroup" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwGroup].[RGRouteRequestId] AS [RGRouteRequestId], 
+    [vwGroup].[GroupId] AS [GroupId], 
+    [vwGroup].[GAppointLatitude] AS [GAppointLatitude], 
+    [vwGroup].[GAppointLongitude] AS [GAppointLongitude], 
+    [vwGroup].[GAppointAddress] AS [GAppointAddress], 
+    [vwGroup].[AppointTime] AS [AppointTime], 
+    [vwGroup].[ConfirmedPrice] AS [ConfirmedPrice], 
+    [vwGroup].[GRouteRequestId] AS [GRouteRequestId], 
+    [vwGroup].[GIsDriverConfirmed] AS [GIsDriverConfirmed]
+    FROM [dbo].[vwGroup] AS [vwGroup]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwLicenseInfo" EntityType="Self.vwLicenseInfo" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwLicenseInfo].[LicenseNo] AS [LicenseNo], 
+    [vwLicenseInfo].[LicensePic] AS [LicensePic], 
+    [vwLicenseInfo].[UserId] AS [UserId], 
+    [vwLicenseInfo].[LicenseImageId] AS [LicenseImageId]
+    FROM [dbo].[vwLicenseInfo] AS [vwLicenseInfo]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwPath" EntityType="Self.vwPath" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwPath].[RecommendSrcLat] AS [RecommendSrcLat], 
+    [vwPath].[RecommendSrcLng] AS [RecommendSrcLng], 
+    [vwPath].[RecommendSrcGeo] AS [RecommendSrcGeo], 
+    [vwPath].[RecommendDstLat] AS [RecommendDstLat], 
+    [vwPath].[RecommendDstLng] AS [RecommendDstLng], 
+    [vwPath].[RecommendDstGeo] AS [RecommendDstGeo], 
+    [vwPath].[RecommendPathSeq] AS [RecommendPathSeq], 
+    [vwPath].[RecommendLat] AS [RecommendLat], 
+    [vwPath].[RecommendLng] AS [RecommendLng], 
+    [vwPath].[RecommendGeo] AS [RecommendGeo], 
+    [vwPath].[RecommendPathId] AS [RecommendPathId]
+    FROM [dbo].[vwPath] AS [vwPath]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwRouteGroup" EntityType="Self.vwRouteGroup" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwRouteGroup].[RGCreateTime] AS [RGCreateTime], 
+    [vwRouteGroup].[Name] AS [Name], 
+    [vwRouteGroup].[Family] AS [Family], 
+    [vwRouteGroup].[RRPricingOption] AS [RRPricingOption], 
+    [vwRouteGroup].[RRPricingMinMax] AS [RRPricingMinMax], 
+    [vwRouteGroup].[IsDrive] AS [IsDrive], 
+    [vwRouteGroup].[RGHolderRRId] AS [RGHolderRRId], 
+    [vwRouteGroup].[RouteRequestId] AS [RouteRequestId], 
+    [vwRouteGroup].[RGIsConfirmed] AS [RGIsConfirmed], 
+    [vwRouteGroup].[RRIsDeleted] AS [RRIsDeleted], 
+    [vwRouteGroup].[SrcLatitude] AS [SrcLatitude], 
+    [vwRouteGroup].[SrcLongitude] AS [SrcLongitude], 
+    [vwRouteGroup].[DstLatitude] AS [DstLatitude], 
+    [vwRouteGroup].[DstLongitude] AS [DstLongitude], 
+    [vwRouteGroup].[AccompanyCount] AS [AccompanyCount], 
+    [vwRouteGroup].[UserId] AS [UserId], 
+    [vwRouteGroup].[GroupId] AS [GroupId], 
+    [vwRouteGroup].[CarType] AS [CarType], 
+    [vwRouteGroup].[CarColor] AS [CarColor], 
+    [vwRouteGroup].[CarPlateNo] AS [CarPlateNo]
+    FROM [dbo].[vwRouteGroup] AS [vwRouteGroup]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwRouteProfile" EntityType="Self.vwRouteProfile" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwRouteProfile].[RouteRequestId] AS [RouteRequestId], 
+    [vwRouteProfile].[UserId] AS [UserId], 
+    [vwRouteProfile].[SrcGAddress] AS [SrcGAddress], 
+    [vwRouteProfile].[SrcLongitude] AS [SrcLongitude], 
+    [vwRouteProfile].[SrcLatitude] AS [SrcLatitude], 
+    [vwRouteProfile].[DstGAddress] AS [DstGAddress], 
+    [vwRouteProfile].[DstLatitude] AS [DstLatitude], 
+    [vwRouteProfile].[DstLongitude] AS [DstLongitude], 
+    [vwRouteProfile].[IsDrive] AS [IsDrive], 
+    [vwRouteProfile].[RouteRequestUId] AS [RouteRequestUId], 
+    [vwRouteProfile].[RRPricingMinMax] AS [RRPricingMinMax], 
+    [vwRouteProfile].[UserImageId] AS [UserImageId], 
+    [vwRouteProfile].[VerifiedLevel] AS [VerifiedLevel], 
+    [vwRouteProfile].[Name] AS [Name], 
+    [vwRouteProfile].[Family] AS [Family], 
+    [vwRouteProfile].[Gender] AS [Gender], 
+    [vwRouteProfile].[UserName] AS [UserName]
+    FROM [dbo].[vwRouteProfile] AS [vwRouteProfile]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwRouteRequest" EntityType="Self.vwRouteRequest" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwRouteRequest].[UserId] AS [UserId], 
+    [vwRouteRequest].[UserName] AS [UserName], 
+    [vwRouteRequest].[RouteRequestType] AS [RouteRequestType], 
+    [vwRouteRequest].[SrcGAddress] AS [SrcGAddress], 
+    [vwRouteRequest].[SrcDetailAddress] AS [SrcDetailAddress], 
+    [vwRouteRequest].[SrcLatitude] AS [SrcLatitude], 
+    [vwRouteRequest].[SrcLongitude] AS [SrcLongitude], 
+    [vwRouteRequest].[DstGAddress] AS [DstGAddress], 
+    [vwRouteRequest].[DstDetailAddress] AS [DstDetailAddress], 
+    [vwRouteRequest].[DstLatitude] AS [DstLatitude], 
+    [vwRouteRequest].[DstLongitude] AS [DstLongitude], 
+    [vwRouteRequest].[AccompanyCount] AS [AccompanyCount], 
+    [vwRouteRequest].[RouteRequestId] AS [RouteRequestId], 
+    [vwRouteRequest].[RRPricingOption] AS [RRPricingOption], 
+    [vwRouteRequest].[RRPricingMinMax] AS [RRPricingMinMax], 
+    [vwRouteRequest].[ConfirmatedText] AS [ConfirmatedText], 
+    [vwRouteRequest].[RRIsConfirmed] AS [RRIsConfirmed], 
+    [vwRouteRequest].[IsDrive] AS [IsDrive], 
+    [vwRouteRequest].[CarInfoId] AS [CarInfoId], 
+    [vwRouteRequest].[CarType] AS [CarType], 
+    [vwRouteRequest].[CarColor] AS [CarColor], 
+    [vwRouteRequest].[CarPlateNo] AS [CarPlateNo], 
+    [vwRouteRequest].[RouteRequestState] AS [RouteRequestState], 
+    [vwRouteRequest].[RouteRequestUId] AS [RouteRequestUId]
+    FROM [dbo].[vwRouteRequest] AS [vwRouteRequest]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwRouteSuggest" EntityType="Self.vwRouteSuggest" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwRouteSuggest].[Name] AS [Name], 
+    [vwRouteSuggest].[Family] AS [Family], 
+    [vwRouteSuggest].[SSrcDistance] AS [SSrcDistance], 
+    [vwRouteSuggest].[SDstDistance] AS [SDstDistance], 
+    [vwRouteSuggest].[SrcGAddress] AS [SrcGAddress], 
+    [vwRouteSuggest].[SrcDetailAddress] AS [SrcDetailAddress], 
+    [vwRouteSuggest].[SrcLatitude] AS [SrcLatitude], 
+    [vwRouteSuggest].[SrcLongitude] AS [SrcLongitude], 
+    [vwRouteSuggest].[DstGAddress] AS [DstGAddress], 
+    [vwRouteSuggest].[DstDetailAddress] AS [DstDetailAddress], 
+    [vwRouteSuggest].[DstLatitude] AS [DstLatitude], 
+    [vwRouteSuggest].[DstLongitude] AS [DstLongitude], 
+    [vwRouteSuggest].[AccompanyCount] AS [AccompanyCount], 
+    [vwRouteSuggest].[CarInfoId] AS [CarInfoId], 
+    [vwRouteSuggest].[CarType] AS [CarType], 
+    [vwRouteSuggest].[CarColor] AS [CarColor], 
+    [vwRouteSuggest].[IsSuggestSent] AS [IsSuggestSent], 
+    [vwRouteSuggest].[IsSuggestSeen] AS [IsSuggestSeen], 
+    [vwRouteSuggest].[IsSuggestAccepted] AS [IsSuggestAccepted], 
+    [vwRouteSuggest].[IsSuggestRejected] AS [IsSuggestRejected], 
+    [vwRouteSuggest].[RRPricingMinMax] AS [RRPricingMinMax], 
+    [vwRouteSuggest].[RRPricingOption] AS [RRPricingOption], 
+    [vwRouteSuggest].[Gender] AS [Gender], 
+    [vwRouteSuggest].[RouteRequestId] AS [RouteRequestId], 
+    [vwRouteSuggest].[SelfRouteRequestId] AS [SelfRouteRequestId], 
+    [vwRouteSuggest].[IsDrive] AS [IsDrive], 
+    [vwRouteSuggest].[UserId] AS [UserId], 
+    [vwRouteSuggest].[CarPlateNo] AS [CarPlateNo], 
+    [vwRouteSuggest].[RecommendPathId] AS [RecommendPathId], 
+    [vwRouteSuggest].[UserImageId] AS [UserImageId], 
+    [vwRouteSuggest].[SuggestRouteRequestUId] AS [SuggestRouteRequestUId]
+    FROM [dbo].[vwRouteSuggest] AS [vwRouteSuggest]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwRRPricing" EntityType="Self.vwRRPricing" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwRRPricing].[RouteRequestId] AS [RouteRequestId], 
+    [vwRRPricing].[RRPricingIsDeleted] AS [RRPricingIsDeleted], 
+    [vwRRPricing].[RRPricingOption] AS [RRPricingOption], 
+    [vwRRPricing].[RRPricingMinMax] AS [RRPricingMinMax], 
+    [vwRRPricing].[UserId] AS [UserId], 
+    [vwRRPricing].[RRPricingId] AS [RRPricingId]
+    FROM [dbo].[vwRRPricing] AS [vwRRPricing]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwRRTiming" EntityType="Self.vwRRTiming" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwRRTiming].[RouteRequestId] AS [RouteRequestId], 
+    [vwRRTiming].[RRTimingOption] AS [RRTimingOption], 
+    [vwRRTiming].[RRTheTime] AS [RRTheTime], 
+    [vwRRTiming].[RRTheDate] AS [RRTheDate], 
+    [vwRRTiming].[RRDayofWeek] AS [RRDayofWeek], 
+    [vwRRTiming].[RRTimingId] AS [RRTimingId]
+    FROM [dbo].[vwRRTiming] AS [vwRRTiming]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwStationRoute" EntityType="Self.vwStationRoute" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwStationRoute].[SrcMStationId] AS [SrcMStationId], 
+    [vwStationRoute].[DstMStationId] AS [DstMStationId], 
+    [vwStationRoute].[StationRouteId] AS [StationRouteId], 
+    [vwStationRoute].[Duration] AS [Duration], 
+    [vwStationRoute].[DriverPrice] AS [DriverPrice], 
+    [vwStationRoute].[PassPrice] AS [PassPrice], 
+    [vwStationRoute].[SrcMainStName] AS [SrcMainStName], 
+    [vwStationRoute].[DstMainStName] AS [DstMainStName], 
+    [vwStationRoute].[DstMainStLat] AS [DstMainStLat], 
+    [vwStationRoute].[SrcMainStLat] AS [SrcMainStLat], 
+    [vwStationRoute].[SrcMainStLng] AS [SrcMainStLng], 
+    [vwStationRoute].[DstMainStLng] AS [DstMainStLng]
+    FROM [dbo].[vwStationRoute] AS [vwStationRoute]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwSuggestNotification" EntityType="Self.vwSuggestNotification" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwSuggestNotification].[UserName] AS [UserName], 
+    [vwSuggestNotification].[IsSuggestSent] AS [IsSuggestSent], 
+    [vwSuggestNotification].[IsSuggestSeen] AS [IsSuggestSeen], 
+    [vwSuggestNotification].[RouteRequestId] AS [RouteRequestId], 
+    [vwSuggestNotification].[RouteSuggestId] AS [RouteSuggestId]
+    FROM [dbo].[vwSuggestNotification] AS [vwSuggestNotification]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwTripRoute" EntityType="Self.vwTripRoute" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwTripRoute].[TrTripId] AS [TrTripId], 
+    [vwTripRoute].[RouteRequestUserId] AS [RouteRequestUserId], 
+    [vwTripRoute].[SrcLatitude] AS [SrcLatitude], 
+    [vwTripRoute].[SrcLongitude] AS [SrcLongitude], 
+    [vwTripRoute].[DstLongitude] AS [DstLongitude], 
+    [vwTripRoute].[DstLatitude] AS [DstLatitude], 
+    [vwTripRoute].[IsDrive] AS [IsDrive], 
+    [vwTripRoute].[RecommendPathId] AS [RecommendPathId], 
+    [vwTripRoute].[Name] AS [Name], 
+    [vwTripRoute].[Family] AS [Family], 
+    [vwTripRoute].[UserName] AS [UserName], 
+    [vwTripRoute].[UserImageId] AS [UserImageId], 
+    [vwTripRoute].[RRPricingMinMax] AS [RRPricingMinMax], 
+    [vwTripRoute].[TrState] AS [TrState], 
+    [vwTripRoute].[TripRouteId] AS [TripRouteId], 
+    [vwTripRoute].[RouteRequestId] AS [RouteRequestId], 
+    [vwTripRoute].[TrModifyTime] AS [TrModifyTime]
+    FROM [dbo].[vwTripRoute] AS [vwTripRoute]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwTwoRouteSuggest" EntityType="Self.vwTwoRouteSuggest" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwTwoRouteSuggest].[SelfRouteRequestId] AS [SelfRouteRequestId], 
+    [vwTwoRouteSuggest].[SuggestRouteRequestId] AS [SuggestRouteRequestId], 
+    [vwTwoRouteSuggest].[SelfRRUserId] AS [SelfRRUserId], 
+    [vwTwoRouteSuggest].[SuggestRRUserId] AS [SuggestRRUserId], 
+    [vwTwoRouteSuggest].[IsSuggestSent] AS [IsSuggestSent], 
+    [vwTwoRouteSuggest].[IsSuggestSeen] AS [IsSuggestSeen], 
+    [vwTwoRouteSuggest].[IsSuggestAccepted] AS [IsSuggestAccepted], 
+    [vwTwoRouteSuggest].[IsSuggestRejected] AS [IsSuggestRejected], 
+    [vwTwoRouteSuggest].[SAccompanyCount] AS [SAccompanyCount], 
+    [vwTwoRouteSuggest].[SuggestRouteRequestUId] AS [SuggestRouteRequestUId], 
+    [vwTwoRouteSuggest].[SelfRouteRequestUId] AS [SelfRouteRequestUId], 
+    [vwTwoRouteSuggest].[RouteSuggestId] AS [RouteSuggestId]
+    FROM [dbo].[vwTwoRouteSuggest] AS [vwTwoRouteSuggest]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwUserInfo" EntityType="Self.vwUserInfo" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwUserInfo].[UserId] AS [UserId], 
+    [vwUserInfo].[NationalCode] AS [NationalCode], 
+    [vwUserInfo].[UserPic] AS [UserPic], 
+    [vwUserInfo].[Name] AS [Name], 
+    [vwUserInfo].[Family] AS [Family], 
+    [vwUserInfo].[Gender] AS [Gender], 
+    [vwUserInfo].[UserRole] AS [UserRole], 
+    [vwUserInfo].[Email] AS [Email], 
+    [vwUserInfo].[UserName] AS [UserName], 
+    [vwUserInfo].[UserImageId] AS [UserImageId], 
+    [vwUserInfo].[VerifiedLevel] AS [VerifiedLevel], 
+    [vwUserInfo].[TripId] AS [TripId], 
+    [vwUserInfo].[NationalCardImageId] AS [NationalCardImageId], 
+    [vwUserInfo].[Smscount] AS [Smscount]
+    FROM [dbo].[vwUserInfo] AS [vwUserInfo]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_RRTiming_RouteRequest" Association="Self.FK_RRTiming_RouteRequest">
+      <End Role="RouteRequest" EntitySet="RouteRequest" />
+      <End Role="RRTiming" EntitySet="RRTiming" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserInfo_AspNetUsers" Association="Self.FK_UserInfo_AspNetUsers">
+      <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+      <End Role="UserInfo" EntitySet="UserInfo" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

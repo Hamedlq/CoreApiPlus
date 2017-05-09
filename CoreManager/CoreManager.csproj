@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7630D6E2-E979-4A52-A8AB-0E58B9B65372}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CoreManager</RootNamespace>
+    <AssemblyName>CoreManager</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\Libs\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\CoreApi\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\CoreApi\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\CoreApi\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\CoreApi\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\CoreApi\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Device" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.Owin">
+      <HintPath>..\CoreApi\packages\Microsoft.AspNet.WebApi.Owin.5.2.3\lib\net45\System.Web.Http.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\ClusterModel.cs" />
+    <Compile Include="Models\ClusterListModel.cs" />
+    <Compile Include="Models\ContactScoreModel.cs" />
+    <Compile Include="Models\ContactStateModel.cs" />
+    <Compile Include="Models\InviteModel.cs" />
+    <Compile Include="Models\NotifModel.cs" />
+    <Compile Include="Models\PassengerModels\PassFilterModel.cs" />
+    <Compile Include="Models\PassengerModels\DriverRouteModel.cs" />
+    <Compile Include="Models\PassengerModels\PassRouteModel.cs" />
+    <Compile Include="Models\RouteModels\StationRouteModel.cs" />
+    <Compile Include="Models\RouteModels\UserRouteModel.cs" />
+    <Compile Include="Models\UserInitialInfo.cs" />
+    <Compile Include="Models\WithdrawRequestModel.cs" />
+    <Compile Include="Models\DiscountModel.cs" />
+    <Compile Include="Models\LocalRouteUserModel.cs" />
+    <Compile Include="Models\AboutUserModel.cs" />
+    <Compile Include="Models\ShareResponse.cs" />
+    <Compile Include="Models\RouteEventModel.cs" />
+    <Compile Include="Models\ImageResponse.cs" />
+    <Compile Include="Models\PaymentDetailModel.cs" />
+    <Compile Include="Models\ChargeModel.cs" />
+    <Compile Include="Models\ImageRequest.cs" />
+    <Compile Include="Models\EventRequestModel.cs" />
+    <Compile Include="Models\ServiceWage.cs" />
+    <Compile Include="Models\PathPriceResponse.cs" />
+    <Compile Include="Models\TripRouteModel.cs" />
+    <Compile Include="Models\TripResponse.cs" />
+    <Compile Include="Models\TripRequest.cs" />
+    <Compile Include="Models\UserInfoModel.cs" />
+    <Compile Include="Models\UserLocation.cs" />
+    <Compile Include="PaymentManager\PaymentManager.cs" />
+    <Compile Include="PaymentManager\IPaymentManager.cs" />
+    <Compile Include="GroupManager\GroupManager.cs" />
+    <Compile Include="GroupManager\IGroupManager.cs" />
+    <Compile Include="Helper\toShamsiDate.cs" />
+    <Compile Include="LogProvider\ILogProvider.cs" />
+    <Compile Include="LogProvider\LogProvider.cs" />
+    <Compile Include="LogProvider\LogMappper.cs" />
+    <Compile Include="Models\AppointConfirmModel.cs" />
+    <Compile Include="Models\AppointmentModel.cs" />
+    <Compile Include="Models\ContactModel.cs" />
+    <Compile Include="Models\Gtoken.cs" />
+    <Compile Include="Models\ScoreModel.cs" />
+    <Compile Include="Models\LocalRouteModel.cs" />
+    <Compile Include="Models\CityLocation.cs" />
+    <Compile Include="Models\CommentModel.cs" />
+    <Compile Include="Models\ContactUsModel.cs" />
+    <Compile Include="Models\EventModel.cs" />
+    <Compile Include="Models\MetaData.cs" />
+    <Compile Include="Models\NotificationModel.cs" />
+    <Compile Include="Models\PathPoint.cs" />
+    <Compile Include="Models\Point.cs" />
+    <Compile Include="Models\RouteModels\SuggestBriefRouteModel.cs" />
+    <Compile Include="Models\RouteModels\RouteSuggestRequestModel.cs" />
+    <Compile Include="Models\RouteModels\TimingModel.cs" />
+    <Compile Include="Models\SrcDstModel.cs" />
+    <Compile Include="NotificationManager\INotificationManager.cs" />
+    <Compile Include="NotificationManager\NotificationManager.cs" />
+    <Compile Include="AdminManager\IAdminManager.cs" />
+    <Compile Include="AdminManager\AdminManager.cs" />
+    <Compile Include="AdminManager\AdminMapper.cs" />
+    <Compile Include="TransactionManager\ITransactionManager.cs" />
+    <Compile Include="TransactionManager\TransactionManager.cs" />
+    <Compile Include="ResponseProvider\IResponseProvider.cs" />
+    <Compile Include="ResponseProvider\ResponseProvider.cs" />
+    <Compile Include="Models\AccountBindingModels.cs" />
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ConfirmationModel.cs" />
+    <Compile Include="Models\Enums.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\MessageResponse.cs" />
+    <Compile Include="Models\ResponseModel.cs" />
+    <Compile Include="Models\RouteModels\BriefRouteModel.cs" />
+    <Compile Include="Models\RouteModels\GroupModel.cs" />
+    <Compile Include="Models\RouteModels\RouteGroupModel.cs" />
+    <Compile Include="Models\RouteModels\RouteRequestModels.cs" />
+    <Compile Include="Models\RouteModels\RouteResponseModel.cs" />
+    <Compile Include="Models\RouteModels\RouteSuggestModel.cs" />
+    <Compile Include="Models\UserModels.cs" />
+    <Compile Include="Models\Validators.cs" />
+    <Compile Include="PricingManager\IPricingManager.cs" />
+    <Compile Include="PricingManager\PricingManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\getResource.cs" />
+    <Compile Include="Resources\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RouteGroupManager\IRouteGroupManager.cs" />
+    <Compile Include="RouteGroupManager\RouteGroupManager.cs" />
+    <Compile Include="RouteGroupManager\RouteGroupMapper.cs" />
+    <Compile Include="RouteManager\IRouteManager.cs" />
+    <Compile Include="RouteManager\RouteManager.cs" />
+    <Compile Include="RouteManager\RouteMapper.cs" />
+    <Compile Include="TimingService\InDateTimeTiming.cs" />
+    <Compile Include="TimingService\ITimingOption.cs" />
+    <Compile Include="TimingService\ITimingService.cs" />
+    <Compile Include="TimingService\ITimingStrategy.cs" />
+    <Compile Include="TimingService\NowTiming.cs" />
+    <Compile Include="TimingService\TimingService.cs" />
+    <Compile Include="TimingService\TimingStrategy.cs" />
+    <Compile Include="TimingService\TodayTiming.cs" />
+    <Compile Include="TimingService\WeeklyTiming.cs" />
+    <Compile Include="UserManager\AgencyDriver.cs" />
+    <Compile Include="UserManager\IUserManager.cs" />
+    <Compile Include="UserManager\UserMapper.cs" />
+    <Compile Include="UserManager\UserManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Messages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CoreDA\CoreDA.csproj">
+      <Project>{1e2d3a10-c163-4534-b943-717089cd26e7}</Project>
+      <Name>CoreDA</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoreExternalService\CoreExternalService.csproj">
+      <Project>{7cf64377-1a0c-44b3-8dae-bbf7e037a614}</Project>
+      <Name>CoreExternalService</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
