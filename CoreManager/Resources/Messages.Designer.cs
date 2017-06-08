@@ -810,6 +810,24 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to سفر فعال نیست.
+        /// </summary>
+        public static string TripAlreadyDisabled {
+            get {
+                return ResourceManager.GetString("TripAlreadyDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سفر فعال است.
+        /// </summary>
+        public static string TripAlreadyEnabled {
+            get {
+                return ResourceManager.GetString("TripAlreadyEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to امکان غیرفعال کردن سفر وجود ندارد. لطفا با پشتیبانی تماس بگیرید.
         /// </summary>
         public static string TripAlreadySet {

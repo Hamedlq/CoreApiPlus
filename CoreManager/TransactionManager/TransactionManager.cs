@@ -117,7 +117,6 @@ namespace CoreManager.TransactionManager
                 {
                     remain = (float)trips.Sum(x => x.TransValue);
                 }
-
             }
             return remain;
         }

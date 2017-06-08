@@ -26,6 +26,7 @@ namespace CoreDA
         public Nullable<long> TripId { get; set; }
         public Nullable<int> Smscount { get; set; }
         public Nullable<int> ValidatingTry { get; set; }
+        public Nullable<System.Guid> UserUId { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
     }

@@ -49,6 +49,7 @@ namespace CoreManager.RouteManager
         LocalRouteUserModel GetRouteInfo(int userId, Guid routeUId);
         void InsertRideRequest(RouteRequestModel model, int userId);
         ContactModel GetContactByRoutes(int routeId, int selfRouteId);
+        DriverRouteModel GetRouteInfo(int userId, long driverRouteId);
         void DoCalc();
         ContactStateModel ToggleContactState(int userId, long contactId);
         ScoreModel GetUserScoresByRouteId(int userId, int routeRequestId);
@@ -58,10 +59,15 @@ namespace CoreManager.RouteManager
         PaymentDetailModel RequestBooking(int userId, long modelTripId);
         List<StationRouteModel> GetStationRoutes();
         List<StationRouteModel> GetPassengerStationRoutes();
-        bool SetUserRoute(int userId, long modelStRouteId);
+        bool SetUserRoute(int userId, long modelStRouteId, long stationId);
         List<DriverRouteModel> GetDriverRoutes(int userId);
-        bool SetDriverTrip(int userId, DriverRouteModel model);
+        TripTimeModel SetDriverTrip(int userId, DriverRouteModel model);
         string InvokeTrips();
         bool DeleteDriverRoute(int userId, long modelDriverRouteId);
+        bool DisableDriverTrip(int userId, DriverRouteModel model);
+        DriverTripModel GetUserTrips(int userId);
+        DriverTripModel SetTripLocation(int userId, DriverTripModel model);
+        PassRouteModel SetPassLocation(int userId, PassRouteModel model);
+        List<SubStationModel> GetStations(long stRouteId);
     }
 }

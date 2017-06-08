@@ -28,6 +28,7 @@ namespace CoreManager.UserManager
             pi.Email = ui.Email;
             pi.UserPic = ui.UserPic;
             pi.UserImageId = ui.UserImageId;
+            pi.UserUId = ui.UserUId;
             return pi;
         }
         public static UserInfoModel CastPersonalInfoToUserInfoModel(vwUserInfo ui)

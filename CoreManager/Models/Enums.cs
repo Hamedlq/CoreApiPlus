@@ -19,6 +19,7 @@ namespace CoreManager.Models
         TaxiAgencyDriver,
         WebUser,
         MobileUser,
+        MobileDriver
 
     };
 
@@ -145,16 +146,34 @@ namespace CoreManager.Models
     public enum TripState
     {
         Scheduled = 1,
-        CanceledByUser = 3,
-        InRiding = 5,
-        DriverNotCome = 7,
-        PassengerNotCome = 9,
-        InProccess = 11,
-        Rated = 13,
-        Finished = 15,
-        Canceled = 17
-
+        CanceledByUser = 5,
+        InPreTripTime = 10,
+        InTripTime = 15,
+        InRiding = 20,
+        PassengerCall = 25,
+        DriverNotCome = 30,
+        PassengerNotCome = 35,
+        InDriving = 40,
+        InRanking = 45,
+        Finished = 50,
+        FinishedByTime = 55,
+        Canceled = 60
     }
+    /*public enum TripState
+    {
+        Scheduled = 1,
+        CanceledByUser = 3,
+        InPreTripTime = 4,
+        InTripTime = 5,
+        InRiding = 7,
+        PassengerCall = 8,
+        DriverNotCome = 9,
+        PassengerNotCome = 11,
+        InDriving = 13,
+        InRanking = 15,
+        Finished = 17,
+        Canceled = 19
+    }*/
     public enum TripRouteState
     {
         TripRouteAlerted = 1,

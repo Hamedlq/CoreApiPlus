@@ -108,8 +108,12 @@
   <ItemGroup>
     <Compile Include="Models\ClusterModel.cs" />
     <Compile Include="Models\ClusterListModel.cs" />
+    <Compile Include="Models\PassengerModels\DriverTripModel.cs" />
+    <Compile Include="Models\RouteModels\SubStationModel.cs" />
+    <Compile Include="Models\TripTimeModel.cs" />
     <Compile Include="Models\ContactScoreModel.cs" />
     <Compile Include="Models\ContactStateModel.cs" />
+    <Compile Include="Models\FanapModel.cs" />
     <Compile Include="Models\InviteModel.cs" />
     <Compile Include="Models\NotifModel.cs" />
     <Compile Include="Models\PassengerModels\PassFilterModel.cs" />

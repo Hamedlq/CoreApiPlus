@@ -18,7 +18,7 @@ namespace CoreDA
         public long MainStationId { get; set; }
         public string StAdd { get; set; }
         public decimal StLat { get; set; }
-        public decimal Stlng { get; set; }
+        public decimal StLng { get; set; }
         public System.Data.Entity.Spatial.DbGeography StGeo { get; set; }
     }
 }

@@ -10,17 +10,22 @@ namespace CoreManager.Models
     public class PassRouteModel
     {
         public long TripId { set; get; }
+        public int TripState { set; get; }
         public string Name { set; get; }
         public string Family { set; get; }
+        public string MobileNo { set; get; }
         public Guid? UserImageId { set; get; }
         public string  TimingString{ set; get; }
         public string  PricingString{ set; get; }
         public string  CarString{ set; get; }
+        public string  CarPlate{ set; get; }
         public string SrcAddress { set; get; }
+        public string SrcLink { set; get; }
         public string SrcDistance { set; get; }
         public string SrcLatitude { set; get; }
         public string SrcLongitude { set; get; }
         public string DstAddress { set; get; }
+        public string DstLink { set; get; }
         public string DstDistance { set; get; }
         public string DstLatitude { set; get; }
         public string DstLongitude { set; get; }

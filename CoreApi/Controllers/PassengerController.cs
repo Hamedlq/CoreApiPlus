@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -110,6 +111,26 @@ namespace CoreApi.Controllers
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
+
+        [HttpPost]
+        [Route("SetPassLocation")]
+        [Authorize]
+        public IHttpActionResult SetPassLocation(PassRouteModel model)
+        {
+            try
+            {
+                int ff;
+                int.TryParse(User.Identity.GetUserId(), out ff);
+                var res = _routemanager.SetPassLocation(ff, model);
+                return Json(_responseProvider.GenerateRouteResponse(res, "SetPassLocation"));
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "SetPassLocation", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
 
     }
 }

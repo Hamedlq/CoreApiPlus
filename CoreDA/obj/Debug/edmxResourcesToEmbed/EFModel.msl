@@ -287,20 +287,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="vwCarInfoes">
-      <EntityTypeMapping TypeName="MibarimModel.vwCarInfo">
-        <MappingFragment StoreEntitySet="vwCarInfo">
-          <ScalarProperty Name="CarFrontImageId" ColumnName="CarFrontImageId" />
-          <ScalarProperty Name="CarBackImageId" ColumnName="CarBackImageId" />
-          <ScalarProperty Name="CarCardPic" ColumnName="CarCardPic" />
-          <ScalarProperty Name="CarInfoId" ColumnName="CarInfoId" />
-          <ScalarProperty Name="CarType" ColumnName="CarType" />
-          <ScalarProperty Name="CarColor" ColumnName="CarColor" />
-          <ScalarProperty Name="CarPlateNo" ColumnName="CarPlateNo" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="vwChats">
       <EntityTypeMapping TypeName="MibarimModel.vwChat">
         <MappingFragment StoreEntitySet="vwChat">
@@ -441,18 +427,6 @@
           <ScalarProperty Name="SelfRRUserId" ColumnName="SelfRRUserId" />
           <ScalarProperty Name="SuggestRouteRequestId" ColumnName="SuggestRouteRequestId" />
           <ScalarProperty Name="SelfRouteRequestId" ColumnName="SelfRouteRequestId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="TripLocations">
-      <EntityTypeMapping TypeName="MibarimModel.TripLocation">
-        <MappingFragment StoreEntitySet="TripLocation">
-          <ScalarProperty Name="TlGeo" ColumnName="TlGeo" />
-          <ScalarProperty Name="TlLng" ColumnName="TlLng" />
-          <ScalarProperty Name="TlLat" ColumnName="TlLat" />
-          <ScalarProperty Name="TlUserId" ColumnName="TlUserId" />
-          <ScalarProperty Name="TlCreateTime" ColumnName="TlCreateTime" />
-          <ScalarProperty Name="TripLocationId" ColumnName="TripLocationId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -624,26 +598,6 @@
           <ScalarProperty Name="RecommendSrcGeo" ColumnName="RecommendSrcGeo" />
           <ScalarProperty Name="RecommendSrcLng" ColumnName="RecommendSrcLng" />
           <ScalarProperty Name="RecommendSrcLat" ColumnName="RecommendSrcLat" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="vwUserInfoes">
-      <EntityTypeMapping TypeName="MibarimModel.vwUserInfo">
-        <MappingFragment StoreEntitySet="vwUserInfo">
-          <ScalarProperty Name="Smscount" ColumnName="Smscount" />
-          <ScalarProperty Name="NationalCardImageId" ColumnName="NationalCardImageId" />
-          <ScalarProperty Name="TripId" ColumnName="TripId" />
-          <ScalarProperty Name="VerifiedLevel" ColumnName="VerifiedLevel" />
-          <ScalarProperty Name="UserImageId" ColumnName="UserImageId" />
-          <ScalarProperty Name="UserName" ColumnName="UserName" />
-          <ScalarProperty Name="Email" ColumnName="Email" />
-          <ScalarProperty Name="UserRole" ColumnName="UserRole" />
-          <ScalarProperty Name="Gender" ColumnName="Gender" />
-          <ScalarProperty Name="Family" ColumnName="Family" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="UserPic" ColumnName="UserPic" />
-          <ScalarProperty Name="NationalCode" ColumnName="NationalCode" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -824,24 +778,6 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
-    <EntitySetMapping Name="UserInfoes">
-      <EntityTypeMapping TypeName="MibarimModel.UserInfo">
-        <MappingFragment StoreEntitySet="UserInfo">
-          <ScalarProperty Name="ValidatingTry" ColumnName="ValidatingTry" />
-          <ScalarProperty Name="Smscount" ColumnName="Smscount" />
-          <ScalarProperty Name="TripId" ColumnName="TripId" />
-          <ScalarProperty Name="VerifiedLevel" ColumnName="VerifiedLevel" />
-          <ScalarProperty Name="NationalCardImageId" ColumnName="NationalCardImageId" />
-          <ScalarProperty Name="UserImageId" ColumnName="UserImageId" />
-          <ScalarProperty Name="UserInfoIsDeleted" ColumnName="UserInfoIsDeleted" />
-          <ScalarProperty Name="UserInfoCreateTime" ColumnName="UserInfoCreateTime" />
-          <ScalarProperty Name="UserPic" ColumnName="UserPic" />
-          <ScalarProperty Name="NationalCode" ColumnName="NationalCode" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="UserInfoId" ColumnName="UserInfoId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="vwComments">
       <EntityTypeMapping TypeName="MibarimModel.vwComment">
         <MappingFragment StoreEntitySet="vwComment">
@@ -997,18 +933,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Stations">
-      <EntityTypeMapping TypeName="MibarimModel.Station">
-        <MappingFragment StoreEntitySet="Station">
-          <ScalarProperty Name="StGeo" ColumnName="StGeo" />
-          <ScalarProperty Name="Stlng" ColumnName="Stlng" />
-          <ScalarProperty Name="StLat" ColumnName="StLat" />
-          <ScalarProperty Name="StAdd" ColumnName="StAdd" />
-          <ScalarProperty Name="MainStationId" ColumnName="MainStationId" />
-          <ScalarProperty Name="StationId" ColumnName="StationId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="StationRoutes">
       <EntityTypeMapping TypeName="MibarimModel.StationRoute">
         <MappingFragment StoreEntitySet="StationRoute">
@@ -1140,6 +1064,103 @@
           <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
           <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
           <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserInfoes">
+      <EntityTypeMapping TypeName="MibarimModel.UserInfo">
+        <MappingFragment StoreEntitySet="UserInfo">
+          <ScalarProperty Name="UserUId" ColumnName="UserUId" />
+          <ScalarProperty Name="ValidatingTry" ColumnName="ValidatingTry" />
+          <ScalarProperty Name="Smscount" ColumnName="Smscount" />
+          <ScalarProperty Name="TripId" ColumnName="TripId" />
+          <ScalarProperty Name="VerifiedLevel" ColumnName="VerifiedLevel" />
+          <ScalarProperty Name="NationalCardImageId" ColumnName="NationalCardImageId" />
+          <ScalarProperty Name="UserImageId" ColumnName="UserImageId" />
+          <ScalarProperty Name="UserInfoIsDeleted" ColumnName="UserInfoIsDeleted" />
+          <ScalarProperty Name="UserInfoCreateTime" ColumnName="UserInfoCreateTime" />
+          <ScalarProperty Name="UserPic" ColumnName="UserPic" />
+          <ScalarProperty Name="NationalCode" ColumnName="NationalCode" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="UserInfoId" ColumnName="UserInfoId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwUserInfoes">
+      <EntityTypeMapping TypeName="MibarimModel.vwUserInfo">
+        <MappingFragment StoreEntitySet="vwUserInfo">
+          <ScalarProperty Name="UserUId" ColumnName="UserUId" />
+          <ScalarProperty Name="Smscount" ColumnName="Smscount" />
+          <ScalarProperty Name="NationalCardImageId" ColumnName="NationalCardImageId" />
+          <ScalarProperty Name="TripId" ColumnName="TripId" />
+          <ScalarProperty Name="VerifiedLevel" ColumnName="VerifiedLevel" />
+          <ScalarProperty Name="UserImageId" ColumnName="UserImageId" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="UserRole" ColumnName="UserRole" />
+          <ScalarProperty Name="Gender" ColumnName="Gender" />
+          <ScalarProperty Name="Family" ColumnName="Family" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="UserPic" ColumnName="UserPic" />
+          <ScalarProperty Name="NationalCode" ColumnName="NationalCode" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Fanaps">
+      <EntityTypeMapping TypeName="MibarimModel.Fanap">
+        <MappingFragment StoreEntitySet="Fanap">
+          <ScalarProperty Name="joindate" ColumnName="joindate" />
+          <ScalarProperty Name="score" ColumnName="score" />
+          <ScalarProperty Name="birthDate" ColumnName="birthDate" />
+          <ScalarProperty Name="nickName" ColumnName="nickName" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="fuserId" ColumnName="fuserId" />
+          <ScalarProperty Name="refresh_token" ColumnName="refresh_token" />
+          <ScalarProperty Name="access_token" ColumnName="access_token" />
+          <ScalarProperty Name="authorization_code" ColumnName="authorization_code" />
+          <ScalarProperty Name="userId" ColumnName="userId" />
+          <ScalarProperty Name="FanapId" ColumnName="FanapId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Stations">
+      <EntityTypeMapping TypeName="MibarimModel.Station">
+        <MappingFragment StoreEntitySet="Station">
+          <ScalarProperty Name="StGeo" ColumnName="StGeo" />
+          <ScalarProperty Name="StLng" ColumnName="StLng" />
+          <ScalarProperty Name="StLat" ColumnName="StLat" />
+          <ScalarProperty Name="StAdd" ColumnName="StAdd" />
+          <ScalarProperty Name="MainStationId" ColumnName="MainStationId" />
+          <ScalarProperty Name="StationId" ColumnName="StationId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwCarInfoes">
+      <EntityTypeMapping TypeName="MibarimModel.vwCarInfo">
+        <MappingFragment StoreEntitySet="vwCarInfo">
+          <ScalarProperty Name="CarFrontImageId" ColumnName="CarFrontImageId" />
+          <ScalarProperty Name="CarBackImageId" ColumnName="CarBackImageId" />
+          <ScalarProperty Name="CarCardPic" ColumnName="CarCardPic" />
+          <ScalarProperty Name="CarInfoId" ColumnName="CarInfoId" />
+          <ScalarProperty Name="CarType" ColumnName="CarType" />
+          <ScalarProperty Name="CarColor" ColumnName="CarColor" />
+          <ScalarProperty Name="CarPlateNo" ColumnName="CarPlateNo" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TripLocations">
+      <EntityTypeMapping TypeName="MibarimModel.TripLocation">
+        <MappingFragment StoreEntitySet="TripLocation">
+          <ScalarProperty Name="TlGeo" ColumnName="TlGeo" />
+          <ScalarProperty Name="TlLng" ColumnName="TlLng" />
+          <ScalarProperty Name="TlLat" ColumnName="TlLat" />
+          <ScalarProperty Name="TripState" ColumnName="TripState" />
+          <ScalarProperty Name="TripId" ColumnName="TripId" />
+          <ScalarProperty Name="TlUserId" ColumnName="TlUserId" />
+          <ScalarProperty Name="TlCreateTime" ColumnName="TlCreateTime" />
+          <ScalarProperty Name="TripLocationId" ColumnName="TripLocationId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

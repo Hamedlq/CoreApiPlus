@@ -401,4 +401,10 @@
   <data name="TripExists" xml:space="preserve">
     <value>سفری برای مسیر تعریف شده است</value>
   </data>
+  <data name="TripAlreadyDisabled" xml:space="preserve">
+    <value>سفر فعال نیست</value>
+  </data>
+  <data name="TripAlreadyEnabled" xml:space="preserve">
+    <value>سفر فعال است</value>
+  </data>
 </root>

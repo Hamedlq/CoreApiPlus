@@ -147,6 +147,19 @@ namespace CoreApi.Controllers
             var result = OtploginUser(model);
             return result;
         }
+        [AllowAnonymous]
+        [Route("RegisterMobileDriver")]
+        public IHttpActionResult RegisterMobileDriver(OtploginModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(_responseProvider.GenerateBadRequestResponse(ModelState));
+                //return BadRequest(ModelState);
+            }
+            model.UserRole = UserRoles.MobileDriver;
+            var result = OtploginUser(model);
+            return result;
+        }
         private IHttpActionResult OtploginUser(OtploginModel model)
         {
             IdentityResult result;
@@ -424,17 +437,8 @@ namespace CoreApi.Controllers
         [Authorize]
         public IHttpActionResult GetUserInitialInfo()
         {
-            /*int ff;
-            if (User != null && int.TryParse(User.Identity.GetUserId(),out ff))
-            {*/
                 var res = _userManager.GetUserInitialInfo(int.Parse(User.Identity.GetUserId()));
                 return Json(res);
-            //}
-            /*else
-            {
-                var res = new UserInitialInfo(){IsUserRegistered = true};
-                return Json(res);
-            }*/
         }
 
         [HttpPost]

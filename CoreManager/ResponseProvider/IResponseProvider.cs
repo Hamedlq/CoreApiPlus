@@ -28,6 +28,7 @@ namespace CoreManager.ResponseProvider
         //string GenerateInvalidUserPassResponse();
         ResponseModel GenerateRouteResponse(List<RouteResponseModel> list);
         ResponseModel GenerateRouteResponse(List<StationRouteModel> list);
+        ResponseModel GenerateRouteResponse(List<SubStationModel> list);
         ResponseModel GenerateRouteResponse(List<PersoanlInfoModel> list);
         ResponseModel GenerateRouteResponse(List<PassRouteModel> list);
         ResponseModel GenerateRouteResponse(List<DriverRouteModel> list);

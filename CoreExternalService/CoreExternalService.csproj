@@ -67,8 +67,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="FanapService\IFanapService.cs" />
+    <Compile Include="FanapService\FanapService.cs" />
     <Compile Include="KavenegarService\IKavenegarService.cs" />
     <Compile Include="KavenegarService\KavenegarService.cs" />
+    <Compile Include="Models\FanapTokenResponse.cs" />
+    <Compile Include="Models\FanapUserInfo.cs" />
+    <Compile Include="Models\FanapPlatformRegisterResponse.cs" />
     <Compile Include="Service References\ZarinPalServiceReference\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

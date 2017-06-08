@@ -28,5 +28,6 @@ namespace CoreDA
         public Nullable<long> TripId { get; set; }
         public Nullable<System.Guid> NationalCardImageId { get; set; }
         public Nullable<int> Smscount { get; set; }
+        public Nullable<System.Guid> UserUId { get; set; }
     }
 }

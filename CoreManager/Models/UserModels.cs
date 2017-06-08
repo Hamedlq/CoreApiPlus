@@ -35,6 +35,7 @@ namespace CoreManager.Models
         public string Mobile { set; get; }
         [StringLength(50, ErrorMessageResourceType = typeof(Messages), ErrorMessageResourceName = "MaxLength")]
         public string Code { set; get; }
+        public Guid? UserUId { set; get; }
 
     }
     public class LicenseInfoModel

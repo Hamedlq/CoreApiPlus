@@ -57,6 +57,7 @@ namespace CoreManager.Models
         public Guid? CompanyImageId;
 
         public bool IsUserRegistered { set; get; }
+        public int UserId { set; get; }
 
     }
 }

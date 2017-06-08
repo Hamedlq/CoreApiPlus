@@ -69,5 +69,9 @@ namespace CoreManager.UserManager
         string InsertUserScore(int userId, ContactScoreModel model);
         UserInitialInfo GetUserInitialInfo(int userId);
         void RegisterUserInfo(ApplicationUser user, PersoanlInfoModel model);
+        UserInfoModel UpdateFanapUserInfo(FanapModel model);
+        bool RegisterFanap(string nickname);
+
+        UserInitialInfo GetDriverInitialInfo(int userId);
     }
 }

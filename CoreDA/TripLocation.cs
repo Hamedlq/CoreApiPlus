@@ -17,6 +17,8 @@ namespace CoreDA
         public long TripLocationId { get; set; }
         public System.DateTime TlCreateTime { get; set; }
         public int TlUserId { get; set; }
+        public long TripId { get; set; }
+        public short TripState { get; set; }
         public decimal TlLat { get; set; }
         public decimal TlLng { get; set; }
         public System.Data.Entity.Spatial.DbGeography TlGeo { get; set; }

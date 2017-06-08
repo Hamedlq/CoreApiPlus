@@ -645,6 +645,7 @@ namespace CoreManager.UserManager
                             UserInfoCreateTime = DateTime.Now,
                             UserId = model.Id,
                             UserInfoIsDeleted = false,
+                            UserUId = Guid.NewGuid(),
                             Smscount = 1
                         };
                         dataModel.UserInfoes.Add(ui);
@@ -1190,7 +1191,16 @@ namespace CoreManager.UserManager
                 }
                 if (uis == null || string.IsNullOrEmpty(uis.Name))
                 {
-                    ui.IsUserRegistered = false;
+                    var fanap = dataModel.Fanaps.FirstOrDefault(x => x.userId == userId);
+                    if (fanap != null)
+                    {
+                        ui.IsUserRegistered = true;
+                    }
+                    else
+                    {
+                        ui.IsUserRegistered = false;
+                    }
+                    
                 }
                 else
                 {
@@ -1348,6 +1358,16 @@ namespace CoreManager.UserManager
             if (model.WithdrawAmount > remain)
             {
                 return false;
+            }
+            using (var dataModel = new MibarimEntities())
+            {
+                var withdraw =
+                    dataModel.Withdraws.Where(
+                        x => x.UserId == userId && x.WithdrawState == (int) WithdrawStates.Submitted).Sum(x=>x.WithdrawAmount);
+                if (model.WithdrawAmount > remain+withdraw)
+                {
+                    return false;
+                }
             }
             return true;
         }
@@ -1533,6 +1553,75 @@ namespace CoreManager.UserManager
         {
             CreateSupportContact(user);
             HandleInvite(user, model.Code);
+        }
+
+        public UserInfoModel UpdateFanapUserInfo(FanapModel model)
+        {
+            var userInfomodel = new UserInfoModel();
+            var fanapService = new FanapService();
+            using (var dataModel = new MibarimEntities())
+            {
+                var userfanap = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserUId ==model.StateGUid);
+                if (userfanap != null)
+                {
+
+                    var fanap = dataModel.Fanaps.FirstOrDefault(x => x.userId == userfanap.UserId);
+                    if (fanap == null)
+                    {
+                        fanap=new Fanap();
+                    }
+                    fanap.userId = userfanap.UserId;
+                    fanap.authorization_code = model.Code;
+                    var cont = fanapService.GetAuthenticationToken(model.Code);
+                    fanap.access_token = cont.access_token;
+                    fanap.refresh_token = cont.refresh_token;
+                    dataModel.Fanaps.Add(fanap);
+                    dataModel.SaveChanges();
+                    if (cont.access_token != null)
+                    {
+                        var userInfo = fanapService.RegisterWithSso(cont.access_token,"mibarim_"+ fanap.FanapId);
+                        fanap.nickName = userInfo.nickName;
+                        fanap.birthDate = userInfo.birthDate;
+                        fanap.fuserId = userInfo.userId;
+                        userInfomodel.Name = userInfo.firstName;
+                        userInfomodel.Family = userInfo.lastName;
+                        userInfomodel.UserId = fanap.userId;
+                        fanap.score = userInfo.score.ToString();
+                        dataModel.SaveChanges();
+                    }
+                    return userInfomodel;
+                }
+            }
+
+            return userInfomodel;
+        }
+        
+        public bool RegisterFanap(string nickname)
+        {
+            var fanapService = new FanapService();
+            var fanaptokenService = fanapService.RegisterUserToFanapPlatform(nickname);
+            return true;
+        }
+
+        public UserInitialInfo GetDriverInitialInfo(int userId)
+        {
+            var res = new UserInitialInfo();
+            using (var dataModel = new MibarimEntities())
+            {
+                var userd = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == userId);
+                if (userd == null || string.IsNullOrEmpty(userd.Name))
+                {
+                    res.IsUserRegistered = false;
+                }
+                else
+                {
+                    res.IsUserRegistered = true;
+                    var istrip = dataModel.vwDriverTrips.Where(x => x.UserId == userId && x.TState==(int)TripState.InRiding);
+
+                }
+
+            }
+            return res;
         }
 
         private string InviteCodeGenerator(long inviteId)

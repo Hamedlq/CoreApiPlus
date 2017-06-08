@@ -100,6 +100,11 @@ namespace CoreManager.ResponseProvider
             var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "RouteResponse", Messages = list.Select(x => Json.Encode(x)).ToList(), Warnings = _warnings, Infos = _infos };
             return responseModel;
         }
+        public ResponseModel GenerateRouteResponse(List<SubStationModel> list)
+        {
+            var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "SubStationModel", Messages = list.Select(x => Json.Encode(x)).ToList(), Warnings = _warnings, Infos = _infos };
+            return responseModel;
+        }
         public ResponseModel GenerateRouteResponse(List<PersoanlInfoModel> list)
         {
             //Working solution

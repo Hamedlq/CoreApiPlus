@@ -222,6 +222,22 @@
     <Property Name="LogAction" Type="nvarchar" MaxLength="50" />
     <Property Name="LogMessage" Type="nvarchar(max)" />
   </EntityType>
+  <EntityType Name="Fanap">
+    <Key>
+      <PropertyRef Name="FanapId" />
+    </Key>
+    <Property Name="FanapId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="userId" Type="int" Nullable="false" />
+    <Property Name="authorization_code" Type="nvarchar" MaxLength="64" />
+    <Property Name="access_token" Type="nvarchar" MaxLength="128" />
+    <Property Name="refresh_token" Type="nvarchar" MaxLength="128" />
+    <Property Name="fuserId" Type="bigint" />
+    <Property Name="name" Type="nvarchar" MaxLength="128" />
+    <Property Name="nickName" Type="nvarchar" MaxLength="128" />
+    <Property Name="birthDate" Type="nvarchar" MaxLength="64" />
+    <Property Name="score" Type="nvarchar" MaxLength="32" />
+    <Property Name="joindate" Type="nvarchar" MaxLength="64" />
+  </EntityType>
   <EntityType Name="GoogleToken">
     <Key>
       <PropertyRef Name="GtokenId" />
@@ -461,7 +477,7 @@
     <Property Name="MainStationId" Type="bigint" Nullable="false" />
     <Property Name="StAdd" Type="nvarchar" MaxLength="512" />
     <Property Name="StLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
-    <Property Name="Stlng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+    <Property Name="StLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
     <Property Name="StGeo" Type="geography" />
   </EntityType>
   <EntityType Name="StationRoute">
@@ -505,6 +521,8 @@
     <Property Name="TripLocationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="TlCreateTime" Type="datetime" Nullable="false" />
     <Property Name="TlUserId" Type="int" Nullable="false" />
+    <Property Name="TripId" Type="bigint" Nullable="false" />
+    <Property Name="TripState" Type="smallint" Nullable="false" />
     <Property Name="TlLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
     <Property Name="TlLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
     <Property Name="TlGeo" Type="geography" Nullable="false" />
@@ -536,6 +554,7 @@
     <Property Name="TripId" Type="bigint" />
     <Property Name="Smscount" Type="int" />
     <Property Name="ValidatingTry" Type="int" />
+    <Property Name="UserUId" Type="uniqueidentifier" />
   </EntityType>
   <EntityType Name="Withdraw">
     <Key>
@@ -612,14 +631,13 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwCarInfo' does not have a primar
     <Key>
       <PropertyRef Name="UserId" />
       <PropertyRef Name="CarInfoId" />
-      <PropertyRef Name="CarCardPic" />
     </Key>
     <Property Name="UserId" Type="int" Nullable="false" />
     <Property Name="CarPlateNo" Type="nvarchar" MaxLength="20" />
     <Property Name="CarColor" Type="nvarchar" MaxLength="50" />
     <Property Name="CarType" Type="nvarchar" MaxLength="50" />
     <Property Name="CarInfoId" Type="int" Nullable="false" />
-    <Property Name="CarCardPic" Type="varbinary(max)" Nullable="false" />
+    <Property Name="CarCardPic" Type="varbinary(max)" />
     <Property Name="CarBackImageId" Type="uniqueidentifier" />
     <Property Name="CarFrontImageId" Type="uniqueidentifier" />
   </EntityType>
@@ -1222,6 +1240,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     <Property Name="TripId" Type="bigint" />
     <Property Name="NationalCardImageId" Type="uniqueidentifier" />
     <Property Name="Smscount" Type="int" />
+    <Property Name="UserUId" Type="uniqueidentifier" />
   </EntityType>
   <Association Name="FK_RRTiming_RouteRequest">
     <End Role="RouteRequest" Type="Self.RouteRequest" Multiplicity="1" />
@@ -1276,6 +1295,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     <EntitySet Name="DriverRoute" EntityType="Self.DriverRoute" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="EventLog" EntityType="Self.EventLog" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Fanap" EntityType="Self.Fanap" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="GoogleToken" EntityType="Self.GoogleToken" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Group" EntityType="Self.Group" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Image" EntityType="Self.Image" Schema="dbo" store:Type="Tables" />
@@ -1733,7 +1753,8 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vwUserInfo].[VerifiedLevel] AS [VerifiedLevel], 
     [vwUserInfo].[TripId] AS [TripId], 
     [vwUserInfo].[NationalCardImageId] AS [NationalCardImageId], 
-    [vwUserInfo].[Smscount] AS [Smscount]
+    [vwUserInfo].[Smscount] AS [Smscount], 
+    [vwUserInfo].[UserUId] AS [UserUId]
     FROM [dbo].[vwUserInfo] AS [vwUserInfo]</DefiningQuery>
     </EntitySet>
     <AssociationSet Name="FK_RRTiming_RouteRequest" Association="Self.FK_RRTiming_RouteRequest">

@@ -118,6 +118,9 @@
     <Compile Include="EventLog.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Fanap.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="GenerateSimilarRoutes_Result.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
