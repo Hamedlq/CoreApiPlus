@@ -234,7 +234,7 @@ namespace CoreManager.NotificationManager
                         .OrderByDescending(x => x.GtokenCreateTime).ToList();
                 if (gtoken.Count > 0)
                 {
-                    _gService.SendNotification(gtoken.FirstOrDefault().GtokenKey, notif.EncodedTitle, notif.EncodedBody, notif.Action, notif.Tab.ToString(),notif.RequestCode,notif.NotificationId);
+                    _gService.SendNotification(gtoken.FirstOrDefault().GtokenKey, notif.EncodedTitle, notif.EncodedBody, notif.Action, notif.Tab.ToString(),notif.RequestCode,notif.NotificationId,notif.Url);
                 }
                 
             }

@@ -189,7 +189,8 @@ namespace CoreManager.Models
         ReceivePay = 3,
         TransferMoney = 4,
         WithdrawMoney = 5,
-        GiftChargeAccount = 6
+        GiftChargeAccount = 6,
+        CreditChargeAccount = 7
     }
 
     public enum RouteRequestState

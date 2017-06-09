@@ -1164,5 +1164,25 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="vwPayRoutes">
+      <EntityTypeMapping TypeName="MibarimModel.vwPayRoute">
+        <MappingFragment StoreEntitySet="vwPayRoute">
+          <ScalarProperty Name="DrSrcStationId" ColumnName="DrSrcStationId" />
+          <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
+          <ScalarProperty Name="DriverRouteId" ColumnName="DriverRouteId" />
+          <ScalarProperty Name="DrIsDeleted" ColumnName="DrIsDeleted" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="TEmptySeat" ColumnName="TEmptySeat" />
+          <ScalarProperty Name="TState" ColumnName="TState" />
+          <ScalarProperty Name="TStartTime" ColumnName="TStartTime" />
+          <ScalarProperty Name="TripId" ColumnName="TripId" />
+          <ScalarProperty Name="PayReqId" ColumnName="PayReqId" />
+          <ScalarProperty Name="PayReqRefID" ColumnName="PayReqRefID" />
+          <ScalarProperty Name="PayReqStatus" ColumnName="PayReqStatus" />
+          <ScalarProperty Name="PayReqValue" ColumnName="PayReqValue" />
+          <ScalarProperty Name="PayReqUserId" ColumnName="PayReqUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

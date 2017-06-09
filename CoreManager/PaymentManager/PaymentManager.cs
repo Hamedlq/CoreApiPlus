@@ -24,7 +24,9 @@ namespace CoreManager.PaymentManager
         private readonly INotificationManager _notifManager;
         private readonly ITransactionManager _transactionManager;
         private readonly IZarinPalService _zarinPalService;
-        public PaymentManager(IResponseProvider responseProvider, ITimingService timingService, INotificationManager notifManager, ITransactionManager transactionManager)
+
+        public PaymentManager(IResponseProvider responseProvider, ITimingService timingService,
+            INotificationManager notifManager, ITransactionManager transactionManager)
         {
             _responseProvider = responseProvider;
             _timingService = timingService;
@@ -35,14 +37,14 @@ namespace CoreManager.PaymentManager
 
         public PaymentDetailModel ChargeAccount(int userId, int chargeValue, string userNameFamilyString)
         {
-            var paymentDetailModel=new PaymentDetailModel();
-            var desc = string.Format(getResource.getMessage("PaymentDesc"), userNameFamilyString,chargeValue);
+            var paymentDetailModel = new PaymentDetailModel();
+            var desc = string.Format(getResource.getMessage("PaymentDesc"), userNameFamilyString, chargeValue);
             string authority;
-            int status = _zarinPalService.RequestAuthoruty(chargeValue, desc,out authority);
+            int status = _zarinPalService.RequestAuthoruty(chargeValue, desc, out authority);
             using (var dataModel = new MibarimEntities())
             {
                 var pr = new PayReq();
-                pr.PayReqCreateTime=DateTime.Now;
+                pr.PayReqCreateTime = DateTime.Now;
                 pr.PayReqUserId = userId;
                 pr.PayReqValue = chargeValue;
                 pr.PayReqStatus = status.ToString();
@@ -55,7 +57,7 @@ namespace CoreManager.PaymentManager
                 paymentDetailModel.ReqId = pr.PayReqId;
             }
             paymentDetailModel.BankLink = "https://www.zarinpal.com/pg/StartPay/" + authority;
-            paymentDetailModel.Authority =  authority;
+            paymentDetailModel.Authority = authority;
             paymentDetailModel.State = status;
             return paymentDetailModel;
         }
@@ -74,12 +76,40 @@ namespace CoreManager.PaymentManager
                     if (status == 100)
                     {
                         amount.PayReqRefID = refId.ToString();
-                        _transactionManager.ChargeAccount(amount.PayReqUserId, amount.PayReqValue*10);
+                        var payRoute =
+                            dataModel.vwPayRoutes.FirstOrDefault(
+                                x => x.PayReqId == amount.PayReqId && x.DrIsDeleted == false);
+                        var route =
+                            dataModel.vwStationRoutes.FirstOrDefault(x => x.StationRouteId == payRoute.StationRouteId);
+                        _transactionManager.PayMoney(amount.PayReqUserId, (int)payRoute.UserId, (int)route.DriverPrice);
+                        NotifModel notifModel = new NotifModel();
+                        notifModel.Title = getResource.getMessage("SeatReserved");
+                        notifModel.Body = string.Format(getResource.getMessage("SeatReservedFor"), route.SrcMainStName,
+                            route.DstMainStName, payRoute.TStartTime.ToString("HH:mm"));
+                        notifModel.RequestCode = (int) payRoute.PayReqId;
+                        notifModel.NotificationId = (int) payRoute.PayReqId;
+                        //send passenger notif
+                        _notifManager.SendNotifToUser(notifModel, payRoute.PayReqUserId);
+                        //send driver notif
+                        _notifManager.SendNotifToUser(notifModel, (int) payRoute.UserId);
+                        //send passenger sms
+                        var user = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == payRoute.PayReqUserId);
+                        var mobileBrief = user.UserName.Substring(1);
+                        string smsBody = string.Format(getResource.getMessage("SeatReservedFor"), route.SrcMainStName,
+                            route.DstMainStName, payRoute.TStartTime.ToString("HH:mm"));
+                        var smsService = new SmsService();
+                        smsService.SendSmsMessages(mobileBrief, smsBody);
+                        //send driver sms
+                        var driver = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == payRoute.UserId);
+                        var drivermobileBrief = driver.UserName.Substring(1);
+                        string smsBodydriver = string.Format(getResource.getMessage("SeatReservedFor"),
+                            route.SrcMainStName, route.DstMainStName, payRoute.TStartTime.ToString("HH:mm"));
+                        smsService.SendSmsMessages(drivermobileBrief, smsBodydriver);
+
                     }
                     dataModel.SaveChanges();
                     paymentDetailModel.RefId = refId;
                 }
-                
             }
             return paymentDetailModel;
         }

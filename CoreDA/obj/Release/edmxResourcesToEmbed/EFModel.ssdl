@@ -916,6 +916,38 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwPath' does not have a primary k
     <Property Name="RecommendPathId" Type="bigint" Nullable="false" />
   </EntityType>
   <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwPayRoute' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwPayRoute">
+    <Key>
+      <PropertyRef Name="PayReqUserId" />
+      <PropertyRef Name="PayReqValue" />
+      <PropertyRef Name="PayReqId" />
+      <PropertyRef Name="TripId" />
+      <PropertyRef Name="TStartTime" />
+      <PropertyRef Name="TState" />
+      <PropertyRef Name="TEmptySeat" />
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="DrIsDeleted" />
+      <PropertyRef Name="DriverRouteId" />
+      <PropertyRef Name="StationRouteId" />
+      <PropertyRef Name="DrSrcStationId" />
+    </Key>
+    <Property Name="PayReqUserId" Type="int" Nullable="false" />
+    <Property Name="PayReqValue" Type="int" Nullable="false" />
+    <Property Name="PayReqStatus" Type="nvarchar" MaxLength="10" />
+    <Property Name="PayReqRefID" Type="nvarchar" MaxLength="512" />
+    <Property Name="PayReqId" Type="bigint" Nullable="false" />
+    <Property Name="TripId" Type="bigint" Nullable="false" />
+    <Property Name="TStartTime" Type="datetime" Nullable="false" />
+    <Property Name="TState" Type="smallint" Nullable="false" />
+    <Property Name="TEmptySeat" Type="smallint" Nullable="false" />
+    <Property Name="UserId" Type="bigint" Nullable="false" />
+    <Property Name="DrIsDeleted" Type="bit" Nullable="false" />
+    <Property Name="DriverRouteId" Type="bigint" Nullable="false" />
+    <Property Name="StationRouteId" Type="bigint" Nullable="false" />
+    <Property Name="DrSrcStationId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
 warning 6002: The table/view 'Mibarim_plus.dbo.vwRouteGroup' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
   <EntityType Name="vwRouteGroup">
     <Key>
@@ -1547,6 +1579,24 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vwPath].[RecommendGeo] AS [RecommendGeo], 
     [vwPath].[RecommendPathId] AS [RecommendPathId]
     FROM [dbo].[vwPath] AS [vwPath]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwPayRoute" EntityType="Self.vwPayRoute" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwPayRoute].[PayReqUserId] AS [PayReqUserId], 
+    [vwPayRoute].[PayReqValue] AS [PayReqValue], 
+    [vwPayRoute].[PayReqStatus] AS [PayReqStatus], 
+    [vwPayRoute].[PayReqRefID] AS [PayReqRefID], 
+    [vwPayRoute].[PayReqId] AS [PayReqId], 
+    [vwPayRoute].[TripId] AS [TripId], 
+    [vwPayRoute].[TStartTime] AS [TStartTime], 
+    [vwPayRoute].[TState] AS [TState], 
+    [vwPayRoute].[TEmptySeat] AS [TEmptySeat], 
+    [vwPayRoute].[UserId] AS [UserId], 
+    [vwPayRoute].[DrIsDeleted] AS [DrIsDeleted], 
+    [vwPayRoute].[DriverRouteId] AS [DriverRouteId], 
+    [vwPayRoute].[StationRouteId] AS [StationRouteId], 
+    [vwPayRoute].[DrSrcStationId] AS [DrSrcStationId]
+    FROM [dbo].[vwPayRoute] AS [vwPayRoute]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="vwRouteGroup" EntityType="Self.vwRouteGroup" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 

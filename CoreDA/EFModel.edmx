@@ -921,6 +921,38 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwPath' does not have a primary k
           <Property Name="RecommendPathId" Type="bigint" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwPayRoute' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vwPayRoute">
+          <Key>
+            <PropertyRef Name="PayReqUserId" />
+            <PropertyRef Name="PayReqValue" />
+            <PropertyRef Name="PayReqId" />
+            <PropertyRef Name="TripId" />
+            <PropertyRef Name="TStartTime" />
+            <PropertyRef Name="TState" />
+            <PropertyRef Name="TEmptySeat" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="DrIsDeleted" />
+            <PropertyRef Name="DriverRouteId" />
+            <PropertyRef Name="StationRouteId" />
+            <PropertyRef Name="DrSrcStationId" />
+          </Key>
+          <Property Name="PayReqUserId" Type="int" Nullable="false" />
+          <Property Name="PayReqValue" Type="int" Nullable="false" />
+          <Property Name="PayReqStatus" Type="nvarchar" MaxLength="10" />
+          <Property Name="PayReqRefID" Type="nvarchar" MaxLength="512" />
+          <Property Name="PayReqId" Type="bigint" Nullable="false" />
+          <Property Name="TripId" Type="bigint" Nullable="false" />
+          <Property Name="TStartTime" Type="datetime" Nullable="false" />
+          <Property Name="TState" Type="smallint" Nullable="false" />
+          <Property Name="TEmptySeat" Type="smallint" Nullable="false" />
+          <Property Name="UserId" Type="bigint" Nullable="false" />
+          <Property Name="DrIsDeleted" Type="bit" Nullable="false" />
+          <Property Name="DriverRouteId" Type="bigint" Nullable="false" />
+          <Property Name="StationRouteId" Type="bigint" Nullable="false" />
+          <Property Name="DrSrcStationId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'Mibarim_plus.dbo.vwRouteGroup' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vwRouteGroup">
           <Key>
@@ -1553,6 +1585,24 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vwPath].[RecommendPathId] AS [RecommendPathId]
     FROM [dbo].[vwPath] AS [vwPath]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="vwPayRoute" EntityType="Self.vwPayRoute" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vwPayRoute].[PayReqUserId] AS [PayReqUserId], 
+    [vwPayRoute].[PayReqValue] AS [PayReqValue], 
+    [vwPayRoute].[PayReqStatus] AS [PayReqStatus], 
+    [vwPayRoute].[PayReqRefID] AS [PayReqRefID], 
+    [vwPayRoute].[PayReqId] AS [PayReqId], 
+    [vwPayRoute].[TripId] AS [TripId], 
+    [vwPayRoute].[TStartTime] AS [TStartTime], 
+    [vwPayRoute].[TState] AS [TState], 
+    [vwPayRoute].[TEmptySeat] AS [TEmptySeat], 
+    [vwPayRoute].[UserId] AS [UserId], 
+    [vwPayRoute].[DrIsDeleted] AS [DrIsDeleted], 
+    [vwPayRoute].[DriverRouteId] AS [DriverRouteId], 
+    [vwPayRoute].[StationRouteId] AS [StationRouteId], 
+    [vwPayRoute].[DrSrcStationId] AS [DrSrcStationId]
+    FROM [dbo].[vwPayRoute] AS [vwPayRoute]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="vwRouteGroup" EntityType="Self.vwRouteGroup" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [vwRouteGroup].[RGCreateTime] AS [RGCreateTime], 
@@ -1867,6 +1917,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
           <EntitySet Name="Stations" EntityType="MibarimModel.Station" />
           <EntitySet Name="vwCarInfoes" EntityType="MibarimModel.vwCarInfo" />
           <EntitySet Name="TripLocations" EntityType="MibarimModel.TripLocation" />
+          <EntitySet Name="vwPayRoutes" EntityType="MibarimModel.vwPayRoute" />
           </EntityContainer>
         <EntityType Name="BankInfo">
           <Key>
@@ -3136,6 +3187,36 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
           <Property Name="TlLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
           <Property Name="TlGeo" Type="Geography" Nullable="false" />
         </EntityType>
+        <EntityType Name="vwPayRoute">
+          <Key>
+            <PropertyRef Name="PayReqUserId" />
+            <PropertyRef Name="PayReqValue" />
+            <PropertyRef Name="PayReqId" />
+            <PropertyRef Name="TripId" />
+            <PropertyRef Name="TStartTime" />
+            <PropertyRef Name="TState" />
+            <PropertyRef Name="TEmptySeat" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="DrIsDeleted" />
+            <PropertyRef Name="DriverRouteId" />
+            <PropertyRef Name="StationRouteId" />
+            <PropertyRef Name="DrSrcStationId" />
+          </Key>
+          <Property Name="PayReqUserId" Type="Int32" Nullable="false" />
+          <Property Name="PayReqValue" Type="Int32" Nullable="false" />
+          <Property Name="PayReqStatus" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="PayReqRefID" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="PayReqId" Type="Int64" Nullable="false" />
+          <Property Name="TripId" Type="Int64" Nullable="false" />
+          <Property Name="TStartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TState" Type="Int16" Nullable="false" />
+          <Property Name="TEmptySeat" Type="Int16" Nullable="false" />
+          <Property Name="UserId" Type="Int64" Nullable="false" />
+          <Property Name="DrIsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="DriverRouteId" Type="Int64" Nullable="false" />
+          <Property Name="StationRouteId" Type="Int64" Nullable="false" />
+          <Property Name="DrSrcStationId" Type="Int64" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4302,6 +4383,26 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
                 <ScalarProperty Name="TlUserId" ColumnName="TlUserId" />
                 <ScalarProperty Name="TlCreateTime" ColumnName="TlCreateTime" />
                 <ScalarProperty Name="TripLocationId" ColumnName="TripLocationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vwPayRoutes">
+            <EntityTypeMapping TypeName="MibarimModel.vwPayRoute">
+              <MappingFragment StoreEntitySet="vwPayRoute">
+                <ScalarProperty Name="DrSrcStationId" ColumnName="DrSrcStationId" />
+                <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
+                <ScalarProperty Name="DriverRouteId" ColumnName="DriverRouteId" />
+                <ScalarProperty Name="DrIsDeleted" ColumnName="DrIsDeleted" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="TEmptySeat" ColumnName="TEmptySeat" />
+                <ScalarProperty Name="TState" ColumnName="TState" />
+                <ScalarProperty Name="TStartTime" ColumnName="TStartTime" />
+                <ScalarProperty Name="TripId" ColumnName="TripId" />
+                <ScalarProperty Name="PayReqId" ColumnName="PayReqId" />
+                <ScalarProperty Name="PayReqRefID" ColumnName="PayReqRefID" />
+                <ScalarProperty Name="PayReqStatus" ColumnName="PayReqStatus" />
+                <ScalarProperty Name="PayReqValue" ColumnName="PayReqValue" />
+                <ScalarProperty Name="PayReqUserId" ColumnName="PayReqUserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

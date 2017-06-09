@@ -60,6 +60,24 @@ namespace CoreManager.TransactionManager
 
         }
 
+        public void ChargeAccount(int userId, int value,string desc, TransactionType transactionType)
+        {
+            using (var dataModel = new MibarimEntities())
+            {
+                var userInfo = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == userId);
+                //var desc = string.Format(getResource.getMessage("GiftPayDesc"), GetUserNameFamilyString(userInfo), value);
+                var trans = new Tran();
+                trans.TransCreateTime = DateTime.Now;
+                trans.TransType = (short)transactionType;
+                trans.TransUserId = userId;
+                trans.TransValue = value;
+                trans.TransDescription = desc;
+                dataModel.Trans.Add(trans);
+                dataModel.SaveChanges();
+            }
+
+        }
+
         public void PayMoney(int sourceUserId, int destinationUserId, int value)
         {
             using (var dataModel = new MibarimEntities())

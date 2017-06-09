@@ -10,6 +10,7 @@ namespace CoreManager.TransactionManager
     public interface ITransactionManager
     {
         void ChargeAccount(int userId,int value);
+        void ChargeAccount(int userId, int value, string desc, TransactionType transactionType);
         void GiftChargeAccount(int userId, int value);
         void PayMoney(int sourceUserId,int destinationUserId ,int value);
         float GetRemain(int userId);

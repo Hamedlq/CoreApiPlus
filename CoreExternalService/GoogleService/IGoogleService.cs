@@ -15,6 +15,6 @@ namespace CoreExternalService
         string SendNotification(string gtokenKey, string title, string message, string action, string selectedTab);
         string SendGroupNotification(List<string> deviceIds, string title, string message, string action, string selectedTab);
         byte[] GetMapImage(GDirectionRequest request);
-        string SendNotification(string gtokenKey, string encodedTitle, string message, string action, string selectedTab, int requestCode, int notificationId);
+        string SendNotification(string gtokenKey, string encodedTitle, string message, string action, string selectedTab, int requestCode, int notificationId,string url);
     }
 }

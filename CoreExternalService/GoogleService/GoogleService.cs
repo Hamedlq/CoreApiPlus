@@ -190,7 +190,7 @@ namespace CoreExternalService
 
         }
 
-        public string SendNotification(string deviceId, string title, string message, string action, string selectedTab, int requestCode, int notificationId)
+        public string SendNotification(string deviceId, string title, string message, string action, string selectedTab, int requestCode, int notificationId,string url)
         {
             int thetab;
             int.TryParse(selectedTab, out thetab);
@@ -203,7 +203,7 @@ namespace CoreExternalService
 
             tRequest.Headers.Add(string.Format("Sender: id={0}", SENDER_ID));
 
-            string postData = "collapse_key=score_update&delay_while_idle=0&data.title=" + title + "&data.body=" + message + "&data.action=" + action + "&data.tab=" + thetab + "&data.requestCode=" + requestCode + "&data.notificationId=" + notificationId + "&registration_id=" + deviceId + "";
+            string postData = "collapse_key=score_update&delay_while_idle=0&data.title=" + title + "&data.body=" + message + "&data.action=" + action + "&data.tab=" + thetab + "&data.requestCode=" + requestCode + "&data.notificationId=" + notificationId + "&data.link=" + url + "&registration_id=" + deviceId + "";
             Console.WriteLine(postData);
             Byte[] byteArray = Encoding.UTF8.GetBytes(postData);
             tRequest.ContentLength = byteArray.Length;

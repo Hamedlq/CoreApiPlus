@@ -1361,9 +1361,14 @@ namespace CoreManager.UserManager
             }
             using (var dataModel = new MibarimEntities())
             {
-                var withdraw =
+                double withdraw = 0;
+                var withdrawquery =
                     dataModel.Withdraws.Where(
-                        x => x.UserId == userId && x.WithdrawState == (int) WithdrawStates.Submitted).Sum(x=>x.WithdrawAmount);
+                        x => x.UserId == userId && x.WithdrawState == (int) WithdrawStates.Submitted).ToList();
+                if (withdrawquery.Count>0)
+                {
+                    withdraw = withdrawquery.Sum(x => x.WithdrawAmount);
+                }
                 if (model.WithdrawAmount > remain+withdraw)
                 {
                     return false;

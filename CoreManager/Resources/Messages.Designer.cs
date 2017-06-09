@@ -585,6 +585,15 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to پرداخت {0} تومان بابت ثبت سفر.
+        /// </summary>
+        public static string PayForSetTrip {
+            get {
+                return ResourceManager.GetString("PayForSetTrip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to شارژ حساب {0} به مبلغ {1} تومان.
         /// </summary>
         public static string PaymentDesc {
@@ -612,7 +621,7 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to مقدار {0} ریال از حساب {1} به حساب {2} پرداخت شد.
+        ///   Looks up a localized string similar to مقدار {0} تومان از اعتبار {1} به اعتبار {2} پرداخت شد.
         /// </summary>
         public static string PayMoneyDesc {
             get {
@@ -734,6 +743,24 @@ namespace CoreManager.Resources {
         public static string ScoreSubmited {
             get {
                 return ResourceManager.GetString("ScoreSubmited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to رزرو شد.
+        /// </summary>
+        public static string SeatReserved {
+            get {
+                return ResourceManager.GetString("SeatReserved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to صندلی شما برای مسیر {0} به {1} ساعت {2} رزرو شد.
+        /// </summary>
+        public static string SeatReservedFor {
+            get {
+                return ResourceManager.GetString("SeatReservedFor", resourceCulture);
             }
         }
         

@@ -328,7 +328,7 @@
     <value>{0} بدهکار</value>
   </data>
   <data name="PayMoneyDesc" xml:space="preserve">
-    <value>مقدار {0} ریال از حساب {1} به حساب {2} پرداخت شد</value>
+    <value>مقدار {0} تومان از اعتبار {1} به اعتبار {2} پرداخت شد</value>
   </data>
   <data name="ShareBody" xml:space="preserve">
     <value>من {0}، {1} از {2} به {3} میرم. اگه کسی همین ساعت این مسیر رو میره می تونیم قرار  بذاریم و با هم بریم.</value>
@@ -406,5 +406,14 @@
   </data>
   <data name="TripAlreadyEnabled" xml:space="preserve">
     <value>سفر فعال است</value>
+  </data>
+  <data name="SeatReserved" xml:space="preserve">
+    <value>رزرو شد</value>
+  </data>
+  <data name="SeatReservedFor" xml:space="preserve">
+    <value>صندلی شما برای مسیر {0} به {1} ساعت {2} رزرو شد</value>
+  </data>
+  <data name="PayForSetTrip" xml:space="preserve">
+    <value>پرداخت {0} تومان بابت ثبت سفر</value>
   </data>
 </root>

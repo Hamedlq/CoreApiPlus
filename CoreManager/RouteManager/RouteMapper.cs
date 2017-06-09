@@ -782,5 +782,23 @@ namespace CoreManager.RouteManager
             return response;
 
         }
+
+        public static string GetUserNameFamilyString(vwUserInfo user)
+        {
+            var res = "";
+            if (user.Gender == (int)Gender.Man)
+            {
+                res = " آقای ";
+            }
+            else if (user.Gender == (int)Gender.Woman)
+            {
+                res = " خانم ";
+            }
+            else
+            {
+                res = "";
+            }
+            return res + user.Name + " " + user.Family;
+        }
     }
 }

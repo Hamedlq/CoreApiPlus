@@ -248,6 +248,9 @@
     <Compile Include="vwPath.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="vwPayRoute.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="vwRouteGroup.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>

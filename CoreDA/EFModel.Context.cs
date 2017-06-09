@@ -98,6 +98,7 @@ namespace CoreDA
         public virtual DbSet<Station> Stations { get; set; }
         public virtual DbSet<vwCarInfo> vwCarInfoes { get; set; }
         public virtual DbSet<TripLocation> TripLocations { get; set; }
+        public virtual DbSet<vwPayRoute> vwPayRoutes { get; set; }
     
         public virtual ObjectResult<GetLocalRoutes_Result> GetLocalRoutes(Nullable<decimal> lat, Nullable<decimal> lng, Nullable<int> routeDistance, Nullable<int> pointDistance)
         {

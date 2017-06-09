@@ -2367,7 +2367,7 @@ namespace CoreManager.RouteManager
                         x =>
                             x.TStartTime > triptime &&
                             (x.TState == (int) TripState.Scheduled || x.TState == (int) TripState.InTripTime ||
-                             x.TState == (int) TripState.InPreTripTime || x.TState == (int)TripState.InRiding));
+                             x.TState == (int) TripState.InPreTripTime || x.TState == (int) TripState.InRiding));
                 foreach (var trip in dataList)
                 {
                     var filledSeats = 0;
@@ -2555,7 +2555,8 @@ namespace CoreManager.RouteManager
                         driverRouteModel.TimingMin = lastTrip.TStartTime.Minute;
                         driverRouteModel.HasTrip = false;
                         if (lastTrip.TState == (int) TripState.InTripTime || lastTrip.TState == (int) TripState.InRiding ||
-                            lastTrip.TState == (int) TripState.InPreTripTime || lastTrip.TState == (int)TripState.Scheduled)
+                            lastTrip.TState == (int) TripState.InPreTripTime ||
+                            lastTrip.TState == (int) TripState.Scheduled)
                         {
                             driverRouteModel.HasTrip = true;
                             driverRouteModel.TripState = lastTrip.TState;
@@ -2625,7 +2626,8 @@ namespace CoreManager.RouteManager
                     var trip = new Trip();
                     trip.TStartTime = GetNextDateTime(model.TimingHour, model.TimingMin);
                     res.RemainHour = (int) (trip.TStartTime - DateTime.Now).TotalHours;
-                    res.RemainMin = (int) (trip.TStartTime - DateTime.Now).TotalMinutes;
+                    var remainMin = (int) (trip.TStartTime - DateTime.Now).TotalMinutes;
+                    res.RemainMin = (remainMin % 60);
                     trip.DriverRouteId = model.DriverRouteId;
                     trip.TCreateTime = DateTime.Now;
                     trip.TEmptySeat = model.CarSeats;
@@ -2661,7 +2663,10 @@ namespace CoreManager.RouteManager
                         activeTrip.TState = (int) TripState.InTripTime;
                         var driveRoute =
                             dataModel.DriverRoutes.FirstOrDefault(x => x.DriverRouteId == activeTrip.DriverRouteId);
-                        _transactionManager.GiftChargeAccount((int) driveRoute.UserId, 1000);
+                        var usr = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == driveRoute.UserId);
+                        var msg = string.Format(getResource.getMessage("PayForSetTrip"),
+                            RouteMapper.GetUserNameFamilyString(usr), 1000);
+                        _transactionManager.ChargeAccount((int) driveRoute.UserId, 1000, msg,TransactionType.CreditChargeAccount);
                     }
                 }
                 //var doingTrips = dataModel.Trips.Where(x => x.TState == (int)TripState.InTripTime);
@@ -2672,11 +2677,14 @@ namespace CoreManager.RouteManager
                         doingTrip.TState = (int) TripState.DriverNotCome;
                     }
                 }
-                foreach (var doingTrip in activeTrips.Where(x => x.TState == (int)TripState.InRiding || x.TState == (int)TripState.InDriving))
+                foreach (
+                    var doingTrip in
+                    activeTrips.Where(x => x.TState == (int) TripState.InRiding || x.TState == (int) TripState.InDriving)
+                )
                 {
                     if (doingTrip.TStartTime.AddMinutes(30) < DateTime.Now)
                     {
-                        doingTrip.TState = (int)TripState.FinishedByTime;
+                        doingTrip.TState = (int) TripState.FinishedByTime;
                     }
                 }
                 dataModel.SaveChanges();
@@ -2780,7 +2788,7 @@ namespace CoreManager.RouteManager
                              x.TState == (int) TripState.InRanking));
                 if (trip != null)
                 {
-                    res.FilledSeats=0;
+                    res.FilledSeats = 0;
                     var tripUsers = dataModel.vwBookPays.Where(x => x.TripId == trip.TripId);
                     foreach (var tripUser in tripUsers)
                     {
@@ -2837,7 +2845,7 @@ namespace CoreManager.RouteManager
             {
                 var triplocation = new TripLocation();
                 triplocation.TlCreateTime = DateTime.Now;
-                triplocation.TripState = (short)model.TripState;
+                triplocation.TripState = (short) model.TripState;
                 triplocation.TlUserId = userId;
                 triplocation.TlLat = decimal.Parse(model.SrcLatitude);
                 triplocation.TlLng = decimal.Parse(model.SrcLongitude);
@@ -2847,16 +2855,23 @@ namespace CoreManager.RouteManager
                 dataModel.SaveChanges();
                 var ct = dataModel.Trips.FirstOrDefault(x => x.TripId == model.TripId);
                 var driveModel = dataModel.DriverRoutes.FirstOrDefault(x => x.DriverRouteId == ct.DriverRouteId);
-                var tl = dataModel.TripLocations.Where(x => x.TripId == model.TripId && x.TlUserId == driveModel.UserId).OrderByDescending(x=>x.TlCreateTime).ToList();
+                var tl =
+                    dataModel.TripLocations.Where(x => x.TripId == model.TripId && x.TlUserId == driveModel.UserId)
+                        .OrderByDescending(x => x.TlCreateTime)
+                        .ToList();
                 var geoSum = new List<GeoCoordinate>();
-                for (int i = 0; i < 5; i++)
+                int max = tl.Count > 5 ? 5 : tl.Count;
+                for (int i = 0; i < max; i++)
                 {
-                    var geo = new GeoCoordinate((double)tl[i].TlLat, (double)tl[i].TlLng);
+                    var geo = new GeoCoordinate((double) tl[i].TlLat, (double) tl[i].TlLng);
                     geoSum.Add(geo);
                 }
-                var geores = GetCentralGeoCoordinate(geoSum);
-                res.SrcLatitude = geores.Latitude.ToString();
-                res.SrcLongitude= geores.Longitude.ToString();
+                if (geoSum.Count > 0)
+                {
+                    var geores = GetCentralGeoCoordinate(geoSum);
+                    res.SrcLatitude = geores.Latitude.ToString();
+                    res.SrcLongitude = geores.Longitude.ToString();
+                }
             }
             return res;
         }
@@ -2884,7 +2899,7 @@ namespace CoreManager.RouteManager
         }
 
         public GeoCoordinate GetCentralGeoCoordinate(
-        IList<GeoCoordinate> geoCoordinates)
+            IList<GeoCoordinate> geoCoordinates)
         {
             if (geoCoordinates.Count == 1)
             {
@@ -2897,25 +2912,25 @@ namespace CoreManager.RouteManager
 
             foreach (var geoCoordinate in geoCoordinates)
             {
-                var latitude = geoCoordinate.Latitude * Math.PI / 180;
-                var longitude = geoCoordinate.Longitude * Math.PI / 180;
+                var latitude = geoCoordinate.Latitude*Math.PI/180;
+                var longitude = geoCoordinate.Longitude*Math.PI/180;
 
-                x += Math.Cos(latitude) * Math.Cos(longitude);
-                y += Math.Cos(latitude) * Math.Sin(longitude);
+                x += Math.Cos(latitude)*Math.Cos(longitude);
+                y += Math.Cos(latitude)*Math.Sin(longitude);
                 z += Math.Sin(latitude);
             }
 
             var total = geoCoordinates.Count;
 
-            x = x / total;
-            y = y / total;
-            z = z / total;
+            x = x/total;
+            y = y/total;
+            z = z/total;
 
             var centralLongitude = Math.Atan2(y, x);
-            var centralSquareRoot = Math.Sqrt(x * x + y * y);
+            var centralSquareRoot = Math.Sqrt(x*x + y*y);
             var centralLatitude = Math.Atan2(z, centralSquareRoot);
 
-            return new GeoCoordinate(centralLatitude * 180 / Math.PI, centralLongitude * 180 / Math.PI);
+            return new GeoCoordinate(centralLatitude*180/Math.PI, centralLongitude*180/Math.PI);
         }
 
         private DateTime GetNextDateTime(int hour, int min)

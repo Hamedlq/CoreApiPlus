@@ -28,6 +28,7 @@ namespace CoreManager.Models
         {
             get { return HttpUtility.UrlEncode(_body); }
         }
+        public String Url{ set; get; }
         public String Action{ set; get; }
         public int RequestCode { set; get; }
         public int NotificationId { set; get; }
