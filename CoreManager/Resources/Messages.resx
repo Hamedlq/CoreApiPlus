@@ -411,9 +411,12 @@
     <value>رزرو شد</value>
   </data>
   <data name="SeatReservedFor" xml:space="preserve">
-    <value>صندلی شما برای مسیر {0} به {1} ساعت {2} رزرو شد</value>
+    <value>صندلی خودروی شما برای مسیر {0} به {1} ساعت {2} رزرو شد</value>
   </data>
   <data name="PayForSetTrip" xml:space="preserve">
-    <value>پرداخت {0} تومان بابت ثبت سفر</value>
+    <value>مبلغ {0} تومان افزایش اعتبار {1} بابت ثبت سفر</value>
+  </data>
+  <data name="BlockedUser" xml:space="preserve">
+    <value>امکان ثبت سفر وجود ندارد. لطفا با پشتیبانی تماس بگیرید</value>
   </data>
 </root>

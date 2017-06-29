@@ -1015,40 +1015,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="vwDriverTrips">
-      <EntityTypeMapping TypeName="MibarimModel.vwDriverTrip">
-        <MappingFragment StoreEntitySet="vwDriverTrip">
-          <ScalarProperty Name="PassPrice" ColumnName="PassPrice" />
-          <ScalarProperty Name="DriverPrice" ColumnName="DriverPrice" />
-          <ScalarProperty Name="DstMainStLng" ColumnName="DstMainStLng" />
-          <ScalarProperty Name="DstMainStLat" ColumnName="DstMainStLat" />
-          <ScalarProperty Name="DstMainStName" ColumnName="DstMainStName" />
-          <ScalarProperty Name="SrcStlng" ColumnName="SrcStlng" />
-          <ScalarProperty Name="SrcStLat" ColumnName="SrcStLat" />
-          <ScalarProperty Name="SrcStAdd" ColumnName="SrcStAdd" />
-          <ScalarProperty Name="SrcMainStGeo" ColumnName="SrcMainStGeo" />
-          <ScalarProperty Name="SrcMainStLng" ColumnName="SrcMainStLng" />
-          <ScalarProperty Name="SrcMainStLat" ColumnName="SrcMainStLat" />
-          <ScalarProperty Name="SrcMainStationId" ColumnName="SrcMainStationId" />
-          <ScalarProperty Name="SrcMainStName" ColumnName="SrcMainStName" />
-          <ScalarProperty Name="TripId" ColumnName="TripId" />
-          <ScalarProperty Name="CarPlateNo" ColumnName="CarPlateNo" />
-          <ScalarProperty Name="CarColor" ColumnName="CarColor" />
-          <ScalarProperty Name="CarType" ColumnName="CarType" />
-          <ScalarProperty Name="UserImageId" ColumnName="UserImageId" />
-          <ScalarProperty Name="UserName" ColumnName="UserName" />
-          <ScalarProperty Name="Gender" ColumnName="Gender" />
-          <ScalarProperty Name="Family" ColumnName="Family" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="DriverRouteId" ColumnName="DriverRouteId" />
-          <ScalarProperty Name="TEmptySeat" ColumnName="TEmptySeat" />
-          <ScalarProperty Name="TState" ColumnName="TState" />
-          <ScalarProperty Name="TStartTime" ColumnName="TStartTime" />
-          <ScalarProperty Name="TCreateTime" ColumnName="TCreateTime" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="vwStationRoutes">
       <EntityTypeMapping TypeName="MibarimModel.vwStationRoute">
         <MappingFragment StoreEntitySet="vwStationRoute">
@@ -1181,6 +1147,41 @@
           <ScalarProperty Name="PayReqStatus" ColumnName="PayReqStatus" />
           <ScalarProperty Name="PayReqValue" ColumnName="PayReqValue" />
           <ScalarProperty Name="PayReqUserId" ColumnName="PayReqUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwDriverTrips">
+      <EntityTypeMapping TypeName="MibarimModel.vwDriverTrip">
+        <MappingFragment StoreEntitySet="vwDriverTrip">
+          <ScalarProperty Name="VerifiedLevel" ColumnName="VerifiedLevel" />
+          <ScalarProperty Name="PassPrice" ColumnName="PassPrice" />
+          <ScalarProperty Name="DriverPrice" ColumnName="DriverPrice" />
+          <ScalarProperty Name="DstMainStLng" ColumnName="DstMainStLng" />
+          <ScalarProperty Name="DstMainStLat" ColumnName="DstMainStLat" />
+          <ScalarProperty Name="DstMainStName" ColumnName="DstMainStName" />
+          <ScalarProperty Name="SrcStlng" ColumnName="SrcStlng" />
+          <ScalarProperty Name="SrcStLat" ColumnName="SrcStLat" />
+          <ScalarProperty Name="SrcStAdd" ColumnName="SrcStAdd" />
+          <ScalarProperty Name="SrcMainStGeo" ColumnName="SrcMainStGeo" />
+          <ScalarProperty Name="SrcMainStLng" ColumnName="SrcMainStLng" />
+          <ScalarProperty Name="SrcMainStLat" ColumnName="SrcMainStLat" />
+          <ScalarProperty Name="SrcMainStationId" ColumnName="SrcMainStationId" />
+          <ScalarProperty Name="SrcMainStName" ColumnName="SrcMainStName" />
+          <ScalarProperty Name="TripId" ColumnName="TripId" />
+          <ScalarProperty Name="CarPlateNo" ColumnName="CarPlateNo" />
+          <ScalarProperty Name="CarColor" ColumnName="CarColor" />
+          <ScalarProperty Name="CarType" ColumnName="CarType" />
+          <ScalarProperty Name="UserImageId" ColumnName="UserImageId" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="Gender" ColumnName="Gender" />
+          <ScalarProperty Name="Family" ColumnName="Family" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="DriverRouteId" ColumnName="DriverRouteId" />
+          <ScalarProperty Name="TEmptySeat" ColumnName="TEmptySeat" />
+          <ScalarProperty Name="TState" ColumnName="TState" />
+          <ScalarProperty Name="TStartTime" ColumnName="TStartTime" />
+          <ScalarProperty Name="TCreateTime" ColumnName="TCreateTime" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

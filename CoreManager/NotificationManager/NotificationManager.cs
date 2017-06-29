@@ -255,5 +255,20 @@ namespace CoreManager.NotificationManager
 
             }
         }
+
+        public void SendNotifToAdmins(NotifModel notif)
+        {
+            using (var dataModel = new MibarimEntities())
+            {
+                var gtoken =
+                    dataModel.GoogleTokens.Where(x => x.GtokenUserId == 27 || x.GtokenUserId == 1 || x.GtokenUserId == 181)
+                        .OrderByDescending(x => x.GtokenCreateTime).ToList();
+                if (gtoken.Count > 0)
+                {
+                    _gService.SendNotification(gtoken.FirstOrDefault().GtokenKey, notif.EncodedTitle, notif.EncodedBody, notif.Action, notif.Tab.ToString(), notif.RequestCode, notif.NotificationId, notif.Url);
+                }
+
+            }
+        }
     }
 }

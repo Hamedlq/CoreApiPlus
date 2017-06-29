@@ -61,7 +61,6 @@ namespace CoreApi.Controllers
                 {
                     return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "You are unauthorized to see Info!"));
                 }
-                
             }
             catch (Exception e)
             {
@@ -103,7 +102,6 @@ namespace CoreApi.Controllers
                 {
                     return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "You are unauthorized to see Info!"));
                 }
-
             }
             catch (Exception e)
             {
@@ -130,7 +128,5 @@ namespace CoreApi.Controllers
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
-
-
     }
 }

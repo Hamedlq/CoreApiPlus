@@ -8,6 +8,7 @@ namespace CoreExternalService.Models
 {
     public class FanapUserInfo
     {
+        public string cellphoneNumber { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string name { get; set; }
@@ -18,6 +19,7 @@ namespace CoreExternalService.Models
         public string joinDate { get; set; }
         public int userId { get; set; }
         public bool guest { get; set; }
+        public string email { get; set; }
     }
 
 }

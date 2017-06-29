@@ -74,18 +74,10 @@ namespace CoreApi.Controllers
         {
             try
             {
-                int ff;
-                if (User != null && int.TryParse(User.Identity.GetUserId(), out ff))
-                {
-                    //GET USER
-                    var response = Request.CreateResponse(HttpStatusCode.Moved);
-                    response.Headers.Location = new Uri("http://www.abcmvc.com");
-                    return response;
-                }
-                else
-                {
-                    return new HttpResponseMessage(HttpStatusCode.Unauthorized);
-                }
+                var url = Sso_address + "/oauth2/authorize/?client_id=" + Client_Id + "&redirect_uri=" + redirect_Uri + "&response_type=code";
+                var response = Request.CreateResponse(HttpStatusCode.Moved);
+                response.Headers.Location = new Uri(url);
+                return response;
             }
             catch (Exception e)
             {
@@ -123,15 +115,26 @@ namespace CoreApi.Controllers
         {
             try
             {
-                var model = _userManager.UpdateFanapUserInfo(fanapModel);
-                var user = AppUserManager.FindById(model.UserId);
-                user.Name = model.Name;
-                user.Family = model.Family;
-                AppUserManager.Update(user);
-                var url = "http://exitthisactivity";
-                var response = Request.CreateResponse(HttpStatusCode.Moved);
-                response.Headers.Location = new Uri(url);
-                return response;
+                var fModel = _userManager.GetFanapUserInfo(fanapModel);
+                IdentityResult result;
+                var userObj = new ApplicationUser() { UserName = fModel.UserName, Name = fModel.Name, Family = fModel.Family, MobileConfirmed = false, Code ="Fanap" };
+                //var userObj = new ApplicationUser() { Name = model.Name, Family = model.Family, Gender = model.Gender, UserName = model.Mobile,Code=model.Code, MobileConfirmed = false };
+                var user = AppUserManager.FindByName(fModel.UserName);
+                if (user == null)
+                {
+                    var newPass = System.Web.Security.Membership.GeneratePassword(16, 0);
+                    result = AppUserManager.Create(userObj, newPass);
+                    if (result.Succeeded)
+                    {
+                        user = AppUserManager.FindByName(fModel.UserName);
+                        AppUserManager.AddToRole(user.Id, UserRoles.MobileDriver.ToString());
+                        _userManager.SaveFanapUser(user.Id, fModel.UserId);
+                        var url = "http://exitthisactivity";
+                        var response = Request.CreateResponse(HttpStatusCode.Moved);
+                        response.Headers.Location = new Uri(url);
+                        return response;
+                    }
+                }
             }
             catch (Exception e)
             {

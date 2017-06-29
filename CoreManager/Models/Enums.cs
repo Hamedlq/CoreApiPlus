@@ -94,9 +94,14 @@ namespace CoreManager.Models
 
     public enum VerifiedLevel
     {
-        NotVerified=1,
-        PassengerVerified=2,
-        DriverVerified=3
+        NotVerified=0,
+        SentIdOnline=5,
+        TakeIdPics = 10,
+        SignContract = 15,
+        Verified=100,
+        VerifiedByTelegram = 101,
+        Blocked =200,
+        BlockedForNotCome = 205
     }
 
     public enum CityLocationTypes
@@ -157,6 +162,7 @@ namespace CoreManager.Models
         InRanking = 45,
         Finished = 50,
         FinishedByTime = 55,
+        FinishedByTrip = 60,
         Canceled = 60
     }
     /*public enum TripState

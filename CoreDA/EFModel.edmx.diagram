@@ -69,7 +69,6 @@
         <EntityTypeShape EntityType="MibarimModel.vwRouteProfile" Width="1.5" PointX="25.375" PointY="17.75" />
         <EntityTypeShape EntityType="MibarimModel.DriverRoute" Width="1.5" PointX="25.375" PointY="0.75" />
         <EntityTypeShape EntityType="MibarimModel.vwDriverRoute" Width="1.5" PointX="25.375" PointY="23.75" />
-        <EntityTypeShape EntityType="MibarimModel.vwDriverTrip" Width="1.5" PointX="3.375" PointY="26.75" />
         <EntityTypeShape EntityType="MibarimModel.vwStationRoute" Width="1.5" PointX="27.375" PointY="0.75" />
         <EntityTypeShape EntityType="MibarimModel.UserInfo" Width="1.5" PointX="3" PointY="1.25" />
         <EntityTypeShape EntityType="MibarimModel.vwUserInfo" Width="1.5" PointX="19.375" PointY="19.75" />
@@ -79,6 +78,7 @@
         <EntityTypeShape EntityType="MibarimModel.vwCarInfo" Width="1.5" PointX="9.375" PointY="27.75" />
         <EntityTypeShape EntityType="MibarimModel.TripLocation" Width="1.5" PointX="11.375" PointY="27.75" />
         <EntityTypeShape EntityType="MibarimModel.vwPayRoute" Width="1.5" PointX="27.375" PointY="17.75" />
+        <EntityTypeShape EntityType="MibarimModel.vwDriverTrip" Width="1.5" PointX="3.375" PointY="26.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

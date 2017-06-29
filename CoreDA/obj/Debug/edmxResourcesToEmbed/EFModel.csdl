@@ -80,7 +80,6 @@
     <EntitySet Name="vwRouteProfiles" EntityType="MibarimModel.vwRouteProfile" />
     <EntitySet Name="DriverRoutes" EntityType="MibarimModel.DriverRoute" />
     <EntitySet Name="vwDriverRoutes" EntityType="MibarimModel.vwDriverRoute" />
-    <EntitySet Name="vwDriverTrips" EntityType="MibarimModel.vwDriverTrip" />
     <EntitySet Name="vwStationRoutes" EntityType="MibarimModel.vwStationRoute" />
     <EntitySet Name="UserInfoes" EntityType="MibarimModel.UserInfo" />
     <EntitySet Name="vwUserInfoes" EntityType="MibarimModel.vwUserInfo" />
@@ -93,6 +92,7 @@
     <EntitySet Name="vwCarInfoes" EntityType="MibarimModel.vwCarInfo" />
     <EntitySet Name="TripLocations" EntityType="MibarimModel.TripLocation" />
     <EntitySet Name="vwPayRoutes" EntityType="MibarimModel.vwPayRoute" />
+    <EntitySet Name="vwDriverTrips" EntityType="MibarimModel.vwDriverTrip" />
   </EntityContainer>
   <EntityType Name="BankInfo">
     <Key>
@@ -1191,46 +1191,6 @@
     <Property Name="DriverPrice" Type="Int64" />
     <Property Name="PassPrice" Type="Int64" />
   </EntityType>
-  <EntityType Name="vwDriverTrip">
-    <Key>
-      <PropertyRef Name="TCreateTime" />
-      <PropertyRef Name="TStartTime" />
-      <PropertyRef Name="TState" />
-      <PropertyRef Name="TEmptySeat" />
-      <PropertyRef Name="DriverRouteId" />
-      <PropertyRef Name="UserId" />
-      <PropertyRef Name="UserName" />
-      <PropertyRef Name="TripId" />
-    </Key>
-    <Property Name="TCreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="TStartTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="TState" Type="Int16" Nullable="false" />
-    <Property Name="TEmptySeat" Type="Int16" Nullable="false" />
-    <Property Name="DriverRouteId" Type="Int64" Nullable="false" />
-    <Property Name="UserId" Type="Int64" Nullable="false" />
-    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="Gender" Type="Int32" />
-    <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-    <Property Name="UserImageId" Type="Guid" />
-    <Property Name="CarType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="CarColor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="CarPlateNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-    <Property Name="TripId" Type="Int64" Nullable="false" />
-    <Property Name="SrcMainStName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
-    <Property Name="SrcMainStationId" Type="Int64" />
-    <Property Name="SrcMainStLat" Type="Decimal" Precision="20" Scale="17" />
-    <Property Name="SrcMainStLng" Type="Decimal" Precision="20" Scale="17" />
-    <Property Name="SrcMainStGeo" Type="Geography" />
-    <Property Name="SrcStAdd" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
-    <Property Name="SrcStLat" Type="Decimal" Precision="20" Scale="17" />
-    <Property Name="SrcStlng" Type="Decimal" Precision="20" Scale="17" />
-    <Property Name="DstMainStName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
-    <Property Name="DstMainStLat" Type="Decimal" Precision="20" Scale="17" />
-    <Property Name="DstMainStLng" Type="Decimal" Precision="20" Scale="17" />
-    <Property Name="DriverPrice" Type="Int64" />
-    <Property Name="PassPrice" Type="Int64" />
-  </EntityType>
   <EntityType Name="vwStationRoute">
     <Key>
       <PropertyRef Name="SrcMStationId" />
@@ -1391,5 +1351,46 @@
     <Property Name="DriverRouteId" Type="Int64" Nullable="false" />
     <Property Name="StationRouteId" Type="Int64" Nullable="false" />
     <Property Name="DrSrcStationId" Type="Int64" Nullable="false" />
+  </EntityType>
+  <EntityType Name="vwDriverTrip">
+    <Key>
+      <PropertyRef Name="TCreateTime" />
+      <PropertyRef Name="TStartTime" />
+      <PropertyRef Name="TState" />
+      <PropertyRef Name="TEmptySeat" />
+      <PropertyRef Name="DriverRouteId" />
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="UserName" />
+      <PropertyRef Name="TripId" />
+    </Key>
+    <Property Name="TCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="TStartTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="TState" Type="Int16" Nullable="false" />
+    <Property Name="TEmptySeat" Type="Int16" Nullable="false" />
+    <Property Name="DriverRouteId" Type="Int64" Nullable="false" />
+    <Property Name="UserId" Type="Int64" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Gender" Type="Int32" />
+    <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="UserImageId" Type="Guid" />
+    <Property Name="CarType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CarColor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CarPlateNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="TripId" Type="Int64" Nullable="false" />
+    <Property Name="SrcMainStName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <Property Name="SrcMainStationId" Type="Int64" />
+    <Property Name="SrcMainStLat" Type="Decimal" Precision="20" Scale="17" />
+    <Property Name="SrcMainStLng" Type="Decimal" Precision="20" Scale="17" />
+    <Property Name="SrcMainStGeo" Type="Geography" />
+    <Property Name="SrcStAdd" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+    <Property Name="SrcStLat" Type="Decimal" Precision="20" Scale="17" />
+    <Property Name="SrcStlng" Type="Decimal" Precision="20" Scale="17" />
+    <Property Name="DstMainStName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <Property Name="DstMainStLat" Type="Decimal" Precision="20" Scale="17" />
+    <Property Name="DstMainStLng" Type="Decimal" Precision="20" Scale="17" />
+    <Property Name="DriverPrice" Type="Int64" />
+    <Property Name="PassPrice" Type="Int64" />
+    <Property Name="VerifiedLevel" Type="Int16" />
   </EntityType>
 </Schema>

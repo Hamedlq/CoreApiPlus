@@ -10,6 +10,7 @@ using System.Web;
 using AutoMapper;
 using CoreDA;
 using CoreExternalService;
+using CoreExternalService.Models;
 using CoreManager.Models;
 using CoreManager.NotificationManager;
 using CoreManager.Resources;
@@ -27,16 +28,20 @@ namespace CoreManager.UserManager
         private readonly ITimingService _timingService;
         private readonly INotificationManager _notifManager;
         private readonly ITransactionManager _transactionManager;
-        public UserManager(IResponseProvider responseProvider, ITimingService timingService, INotificationManager notifManager, ITransactionManager transactionManager)
+
+        public UserManager(IResponseProvider responseProvider, ITimingService timingService,
+            INotificationManager notifManager, ITransactionManager transactionManager)
         {
             _responseProvider = responseProvider;
             _timingService = timingService;
             _notifManager = notifManager;
             _transactionManager = transactionManager;
         }
+
         public UserManager()
         {
         }
+
         public void UpdateUserInfo(ApplicationUser user, RegisterModel model)
         {
             switch (model.UserRole)
@@ -45,7 +50,6 @@ namespace CoreManager.UserManager
                     //AgencyDriver agencyDriver=new AgencyDriver();
                     //agencyDriver.UpdateUserInfo(user,model);
                     break;
-
             }
             CreateSupportContact(user);
             HandleInvite(user, model.Code);
@@ -68,9 +72,8 @@ namespace CoreManager.UserManager
                     dataModel.SaveChanges();
                     thisInvite.InviteCode = InviteCodeGenerator(thisInvite.InviteId);
                     dataModel.SaveChanges();
-                    _notifManager.SendInviteGiftNotif((int)invite.UserId);
+                    _notifManager.SendInviteGiftNotif((int) invite.UserId);
                     _notifManager.SendInviteGiftNotif(user.Id);
-
                 }
             }
         }
@@ -106,7 +109,6 @@ namespace CoreManager.UserManager
             //user.Gender = model.Gender;
             user.UserRole = model.UserRole.ToString();
             return user;
-
         }
 
         public void UpdatePersoanlInfo(PersoanlInfoModel model, int userId)
@@ -125,7 +127,13 @@ namespace CoreManager.UserManager
                 else
                 {
                     //_responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = getResource.getMessage("UserPicNotUploaded") });
-                    var ui = new UserInfo() { NationalCode = model.NationalCode, UserInfoCreateTime = DateTime.Now, UserId = userId, UserInfoIsDeleted = false };
+                    var ui = new UserInfo()
+                    {
+                        NationalCode = model.NationalCode,
+                        UserInfoCreateTime = DateTime.Now,
+                        UserId = userId,
+                        UserInfoIsDeleted = false
+                    };
                     dataModel.UserInfoes.Add(ui);
                 }
                 dataModel.SaveChanges();
@@ -143,7 +151,13 @@ namespace CoreManager.UserManager
                 }
                 else
                 {
-                    var ui = new UserInfo() { NationalCode = model.NationalCode, UserInfoCreateTime = DateTime.Now, UserId = userId, UserInfoIsDeleted = false };
+                    var ui = new UserInfo()
+                    {
+                        NationalCode = model.NationalCode,
+                        UserInfoCreateTime = DateTime.Now,
+                        UserId = userId,
+                        UserInfoIsDeleted = false
+                    };
                     dataModel.UserInfoes.Add(ui);
                 }
                 var ucar = dataModel.CarInfoes.FirstOrDefault(x => x.UserId == userId);
@@ -155,7 +169,15 @@ namespace CoreManager.UserManager
                 }
                 else
                 {
-                    var newUcar = new CarInfo() { CarInfoCreateTime = DateTime.Now, UserId = userId, CarInfoIsDeleted = false, CarColor = model.CarColor, CarType = model.CarType, CarPlateNo = model.CarPlateNo };
+                    var newUcar = new CarInfo()
+                    {
+                        CarInfoCreateTime = DateTime.Now,
+                        UserId = userId,
+                        CarInfoIsDeleted = false,
+                        CarColor = model.CarColor,
+                        CarType = model.CarType,
+                        CarPlateNo = model.CarPlateNo
+                    };
                     dataModel.CarInfoes.Add(newUcar);
                 }
                 var ubank = dataModel.BankInfoes.FirstOrDefault(x => x.BankUserId == userId);
@@ -167,7 +189,15 @@ namespace CoreManager.UserManager
                 }
                 else
                 {
-                    var bi = new BankInfo() { BankCreateTime = DateTime.Now, BankUserId = userId, BankIsDeleted = false, BankName = model.BankName, BankAccountNo = model.BankAccountNo, BankShabaNo = model.BankShaba };
+                    var bi = new BankInfo()
+                    {
+                        BankCreateTime = DateTime.Now,
+                        BankUserId = userId,
+                        BankIsDeleted = false,
+                        BankName = model.BankName,
+                        BankAccountNo = model.BankAccountNo,
+                        BankShabaNo = model.BankShaba
+                    };
                     dataModel.BankInfoes.Add(bi);
                 }
                 dataModel.SaveChanges();
@@ -187,6 +217,7 @@ namespace CoreManager.UserManager
             }
             return pi;
         }
+
         public PersoanlInfoModel GetPersonalInfoByRouteId(int routeId)
         {
             var pi = new PersoanlInfoModel();
@@ -209,7 +240,6 @@ namespace CoreManager.UserManager
         {
             using (var dataModel = new MibarimEntities())
             {
-
                 var uis = dataModel.LicenseInfoes.FirstOrDefault(x => x.UserId == userId && !x.IsDeleted);
                 if (uis != null)
                 {
@@ -219,21 +249,36 @@ namespace CoreManager.UserManager
                     }
                     if (uis.LicensePic == null)
                     {
-                        _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = getResource.getMessage("LicensePicNotUploaded") });
+                        _responseProvider.SetBusinessMessage(new MessageResponse()
+                        {
+                            Type = ResponseTypes.Error,
+                            Message = getResource.getMessage("LicensePicNotUploaded")
+                        });
                     }
                 }
                 else
                 {
-                    _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = getResource.getMessage("LicensePicNotUploaded") });
+                    _responseProvider.SetBusinessMessage(new MessageResponse()
+                    {
+                        Type = ResponseTypes.Error,
+                        Message = getResource.getMessage("LicensePicNotUploaded")
+                    });
                     if (model != null && model.LicenseNo != null)
                     {
-                        var li = new LicenseInfo() { LicenseNo = model.LicenseNo, UserLicenseCreateTime = DateTime.Now, UserId = userId, IsDeleted = false };
+                        var li = new LicenseInfo()
+                        {
+                            LicenseNo = model.LicenseNo,
+                            UserLicenseCreateTime = DateTime.Now,
+                            UserId = userId,
+                            IsDeleted = false
+                        };
                         dataModel.LicenseInfoes.Add(li);
                     }
                 }
                 dataModel.SaveChanges();
             }
         }
+
         public void InsertLicensePic(byte[] userLicensepic, int userId)
         {
             using (var dataModel = new MibarimEntities())
@@ -242,7 +287,7 @@ namespace CoreManager.UserManager
                 var image = new Image();
                 image.ImageId = Guid.NewGuid();
                 image.ImageCreateTime = DateTime.Now;
-                image.ImageType = (int)ImageType.LicensePic;
+                image.ImageType = (int) ImageType.LicensePic;
                 image.ImageUserId = userId;
                 image.ImageFile = userLicensepic;
                 dataModel.Images.Add(image);
@@ -256,13 +301,19 @@ namespace CoreManager.UserManager
                 }
                 else
                 {
-                    var ui = new LicenseInfo() { UserLicenseCreateTime = DateTime.Now, LicensePic = userLicensepic, UserId = userId, IsDeleted = false, LicenseImageId = image.ImageId };
+                    var ui = new LicenseInfo()
+                    {
+                        UserLicenseCreateTime = DateTime.Now,
+                        LicensePic = userLicensepic,
+                        UserId = userId,
+                        IsDeleted = false,
+                        LicenseImageId = image.ImageId
+                    };
                     dataModel.LicenseInfoes.Add(ui);
                 }
 
                 dataModel.SaveChanges();
             }
-
         }
 
         public void InsertNationalCardPic(byte[] nationalCardPicModel, int userId)
@@ -273,7 +324,7 @@ namespace CoreManager.UserManager
                 var image = new Image();
                 image.ImageId = Guid.NewGuid();
                 image.ImageCreateTime = DateTime.Now;
-                image.ImageType = (int)ImageType.UserNationalCard;
+                image.ImageType = (int) ImageType.UserNationalCard;
                 image.ImageUserId = userId;
                 image.ImageFile = nationalCardPicModel;
                 dataModel.Images.Add(image);
@@ -285,7 +336,13 @@ namespace CoreManager.UserManager
                 }
                 else
                 {
-                    var ui = new UserInfo() { UserInfoCreateTime = DateTime.Now, UserId = userId, UserInfoIsDeleted = false, UserImageId = image.ImageId };
+                    var ui = new UserInfo()
+                    {
+                        UserInfoCreateTime = DateTime.Now,
+                        UserId = userId,
+                        UserInfoIsDeleted = false,
+                        UserImageId = image.ImageId
+                    };
                     dataModel.UserInfoes.Add(ui);
                 }
                 dataModel.SaveChanges();
@@ -321,7 +378,15 @@ namespace CoreManager.UserManager
                 }
                 else
                 {
-                    var ci = new CarInfo() { CarInfoCreateTime = DateTime.Now, UserId = userId, CarInfoIsDeleted = false, CarColor = model.CarColor, CarType = model.CarType, CarPlateNo = model.CarPlateNo };
+                    var ci = new CarInfo()
+                    {
+                        CarInfoCreateTime = DateTime.Now,
+                        UserId = userId,
+                        CarInfoIsDeleted = false,
+                        CarColor = model.CarColor,
+                        CarType = model.CarType,
+                        CarPlateNo = model.CarPlateNo
+                    };
                     dataModel.CarInfoes.Add(ci);
                 }
                 dataModel.SaveChanges();
@@ -342,7 +407,7 @@ namespace CoreManager.UserManager
                 var newImg = new Image();
                 newImg.ImageId = Guid.NewGuid();
                 newImg.ImageCreateTime = DateTime.Now;
-                newImg.ImageType = (int)ImageType.CarPic;
+                newImg.ImageType = (int) ImageType.CarPic;
                 newImg.ImageUserId = userId;
                 newImg.ImageFile = carPicModel;
                 dataModel.Images.Add(newImg);
@@ -353,7 +418,13 @@ namespace CoreManager.UserManager
                 }
                 else
                 {
-                    var newUcar = new CarInfo() { CarInfoCreateTime = DateTime.Now, UserId = userId, CarInfoIsDeleted = false, CarFrontImageId = newImg.ImageId };
+                    var newUcar = new CarInfo()
+                    {
+                        CarInfoCreateTime = DateTime.Now,
+                        UserId = userId,
+                        CarInfoIsDeleted = false,
+                        CarFrontImageId = newImg.ImageId
+                    };
                     dataModel.CarInfoes.Add(newUcar);
                 }
 
@@ -364,7 +435,13 @@ namespace CoreManager.UserManager
                     var last = ci.OrderBy(x => x.CarPicCreateTime);
                     last.FirstOrDefault().CarCardIsDeleted = true;
                 }
-                var nci = new CarPic() { CarPicCreateTime = DateTime.Now, CarCardUserId = userId, CarCardIsDeleted = false, CarCardPic = carPicModel };
+                var nci = new CarPic()
+                {
+                    CarPicCreateTime = DateTime.Now,
+                    CarCardUserId = userId,
+                    CarCardIsDeleted = false,
+                    CarCardPic = carPicModel
+                };
                 dataModel.CarPics.Add(nci);
 
                 dataModel.SaveChanges();
@@ -380,7 +457,7 @@ namespace CoreManager.UserManager
                 var newImg = new Image();
                 newImg.ImageId = Guid.NewGuid();
                 newImg.ImageCreateTime = DateTime.Now;
-                newImg.ImageType = (int)ImageType.CarBckPic;
+                newImg.ImageType = (int) ImageType.CarBckPic;
                 newImg.ImageUserId = userId;
                 newImg.ImageFile = carPicModel;
                 dataModel.Images.Add(newImg);
@@ -391,7 +468,13 @@ namespace CoreManager.UserManager
                 }
                 else
                 {
-                    var newUcar = new CarInfo() { CarInfoCreateTime = DateTime.Now, UserId = userId, CarInfoIsDeleted = false, CarBackImageId = newImg.ImageId };
+                    var newUcar = new CarInfo()
+                    {
+                        CarInfoCreateTime = DateTime.Now,
+                        UserId = userId,
+                        CarInfoIsDeleted = false,
+                        CarBackImageId = newImg.ImageId
+                    };
                     dataModel.CarInfoes.Add(newUcar);
                 }
                 //old image save method
@@ -401,7 +484,13 @@ namespace CoreManager.UserManager
                     var last = ci.OrderBy(x => x.CarPicCreateTime);
                     last.FirstOrDefault().CarCardIsDeleted = true;
                 }
-                var nci = new CarPic() { CarPicCreateTime = DateTime.Now, CarCardUserId = userId, CarCardIsDeleted = false, CarCardPic = carPicModel };
+                var nci = new CarPic()
+                {
+                    CarPicCreateTime = DateTime.Now,
+                    CarCardUserId = userId,
+                    CarCardIsDeleted = false,
+                    CarCardPic = carPicModel
+                };
                 dataModel.CarPics.Add(nci);
                 dataModel.SaveChanges();
             }
@@ -446,7 +535,7 @@ namespace CoreManager.UserManager
                 var image = new Image();
                 image.ImageId = Guid.NewGuid();
                 image.ImageCreateTime = DateTime.Now;
-                image.ImageType = (int)ImageType.UserPic;
+                image.ImageType = (int) ImageType.UserPic;
                 image.ImageUserId = userId;
                 image.ImageFile = userPicModel;
                 dataModel.Images.Add(image);
@@ -460,13 +549,19 @@ namespace CoreManager.UserManager
                 }
                 else
                 {
-                    var ui = new UserInfo() { UserInfoCreateTime = DateTime.Now, UserPic = userPicModel, UserId = userId, UserInfoIsDeleted = false, UserImageId = image.ImageId };
+                    var ui = new UserInfo()
+                    {
+                        UserInfoCreateTime = DateTime.Now,
+                        UserPic = userPicModel,
+                        UserId = userId,
+                        UserInfoIsDeleted = false,
+                        UserImageId = image.ImageId
+                    };
                     dataModel.UserInfoes.Add(ui);
                 }
 
                 dataModel.SaveChanges();
             }
-
         }
 
         public void SubmitContactUs(ContactUsModel model)
@@ -481,7 +576,6 @@ namespace CoreManager.UserManager
                 dataModel.ContactUs.Add(cmodel);
                 dataModel.SaveChanges();
             }
-
         }
 
         public PersoanlInfoModel GetRouteUserImage(int userId, int routeRequestId)
@@ -499,6 +593,7 @@ namespace CoreManager.UserManager
             }
             return pi;
         }
+
         public PersoanlInfoModel GetCommentUserImage(int userId, int commentId)
         {
             var pi = new PersoanlInfoModel();
@@ -529,7 +624,15 @@ namespace CoreManager.UserManager
                 }
                 else
                 {
-                    var bi = new BankInfo() { BankCreateTime = DateTime.Now, BankUserId = userId, BankIsDeleted = false, BankName = model.BankName, BankAccountNo = model.BankAccountNo, BankCardNo = model.BankShaba };
+                    var bi = new BankInfo()
+                    {
+                        BankCreateTime = DateTime.Now,
+                        BankUserId = userId,
+                        BankIsDeleted = false,
+                        BankName = model.BankName,
+                        BankAccountNo = model.BankAccountNo,
+                        BankCardNo = model.BankShaba
+                    };
                     dataModel.BankInfoes.Add(bi);
                 }
                 dataModel.SaveChanges();
@@ -544,7 +647,7 @@ namespace CoreManager.UserManager
                 var image = new Image();
                 image.ImageId = Guid.NewGuid();
                 image.ImageCreateTime = DateTime.Now;
-                image.ImageType = (int)ImageType.BankPic;
+                image.ImageType = (int) ImageType.BankPic;
                 image.ImageUserId = userId;
                 image.ImageFile = bankCardPic;
                 dataModel.Images.Add(image);
@@ -558,7 +661,14 @@ namespace CoreManager.UserManager
                 }
                 else
                 {
-                    var ui = new BankInfo() { BankCreateTime = DateTime.Now, BankCardPic = bankCardPic, BankUserId = userId, BankIsDeleted = false, BankCardImageId = image.ImageId };
+                    var ui = new BankInfo()
+                    {
+                        BankCreateTime = DateTime.Now,
+                        BankCardPic = bankCardPic,
+                        BankUserId = userId,
+                        BankIsDeleted = false,
+                        BankCardImageId = image.ImageId
+                    };
                     dataModel.BankInfoes.Add(ui);
                 }
 
@@ -578,7 +688,7 @@ namespace CoreManager.UserManager
                     bank.BankAccountNo = bankdb.BankAccountNo;
                     bank.BankShaba = bankdb.BankShabaNo;
                     bank.BankCardPic = bankdb.BankCardPic;
-                    bank.BankCardImageId = (Guid)bankdb.BankCardImageId;
+                    bank.BankCardImageId = (Guid) bankdb.BankCardImageId;
                 }
             }
             return bank;
@@ -600,7 +710,6 @@ namespace CoreManager.UserManager
 
         public bool SendConfirmMobileSms(ApplicationUser model, MobileValidation mobileModel, string rand)
         {
-
             using (var dataModel = new MibarimEntities())
             {
                 var vuis = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserName == mobileModel.Mobile);
@@ -626,7 +735,7 @@ namespace CoreManager.UserManager
                             if (mobileModel.SendCounter == 3)
                             {
                                 sendSoundKav(mobileModel.MobileBrief(), rand);
-                            }    
+                            }
                         }
                         if (uis.Smscount == null)
                         {
@@ -713,7 +822,6 @@ namespace CoreManager.UserManager
                 {
                     pi = UserMapper.CastPersonalInfoToModel(uis);
                 }
-
             }
             return pi;
         }
@@ -783,7 +891,8 @@ namespace CoreManager.UserManager
                 {
                     notifModel.IsNewRouteSuggest = true;
                     notifModel.SuggestRouteRequestId = notif.RouteRequestId;
-                    var notifTable = dataModel.RouteSuggests.FirstOrDefault(x => x.RouteSuggestId == notif.RouteSuggestId);
+                    var notifTable =
+                        dataModel.RouteSuggests.FirstOrDefault(x => x.RouteSuggestId == notif.RouteSuggestId);
                     if (notifTable != null) notifTable.IsSuggestSent = true;
                     dataModel.SaveChanges();
                 }
@@ -797,7 +906,6 @@ namespace CoreManager.UserManager
                     if (notificationTable != null) notificationTable.IsNotificationSent = true;
                     dataModel.SaveChanges();
                 }
-
             }
             return notifModel;
         }
@@ -808,22 +916,32 @@ namespace CoreManager.UserManager
             var contactModel = new ContactModel();
             using (var dataModel = new MibarimEntities())
             {
-                var contacts = dataModel.Contacts.Where(x => (x.ContactPassengerUserId == userId || x.ContactDriverUserId == userId) && !x.ContactIsDeleted).OrderByDescending(x => x.ContactLastMsgTime).Take(10);
-                var userIds = contacts.Where(x => x.ContactDriverUserId == userId).Select(x => x.ContactPassengerUserId).ToList();
-                userIds.AddRange(contacts.Where(x => x.ContactPassengerUserId == userId).Select(x => x.ContactDriverUserId).ToList());
+                var contacts =
+                    dataModel.Contacts.Where(
+                        x =>
+                            (x.ContactPassengerUserId == userId || x.ContactDriverUserId == userId) &&
+                            !x.ContactIsDeleted).OrderByDescending(x => x.ContactLastMsgTime).Take(10);
+                var userIds =
+                    contacts.Where(x => x.ContactDriverUserId == userId).Select(x => x.ContactPassengerUserId).ToList();
+                userIds.AddRange(
+                    contacts.Where(x => x.ContactPassengerUserId == userId).Select(x => x.ContactDriverUserId).ToList());
                 //var chats = dataModel.Chats.Where(x => contacts.Select(y => y.ContactId).Contains(x.ContactId)).OrderByDescending(x=>x.ChatCreateTime);
                 var users = dataModel.vwUserInfoes.Where(x => userIds.Contains(x.UserId));
                 foreach (var contact in contacts)
                 {
                     contactModel = new ContactModel();
-                    var user = users.FirstOrDefault(x => (x.UserId == contact.ContactPassengerUserId || x.UserId == contact.ContactDriverUserId) && x.UserId != userId);
+                    var user =
+                        users.FirstOrDefault(
+                            x =>
+                                (x.UserId == contact.ContactPassengerUserId ||
+                                 x.UserId == contact.ContactDriverUserId) && x.UserId != userId);
                     contactModel.ContactId = contact.ContactId;
                     contactModel.Name = user.Name;
                     contactModel.Family = user.Family;
-                    contactModel.Gender = (Gender)user.Gender;
+                    contactModel.Gender = (Gender) user.Gender;
                     if (contact.ContactLastMsgTime != null)
                     {
-                        contactModel.LastMsgTime = _timingService.GetTimingString((DateTime)contact.ContactLastMsgTime);
+                        contactModel.LastMsgTime = _timingService.GetTimingString((DateTime) contact.ContactLastMsgTime);
                     }
                     contactModel.IsSupport = 0;
                     if (contact.ContactDriverUserId == 1)
@@ -833,20 +951,26 @@ namespace CoreManager.UserManager
                     contactModel.IsDriver = contact.ContactDriverUserId == userId ? 1 : 0;
                     contactModel.IsRideAccepted = contact.ContactIsRideAccepted == null
                         ? 0
-                        : ((bool)contact.ContactIsRideAccepted ? 1 : 0);
+                        : ((bool) contact.ContactIsRideAccepted ? 1 : 0);
                     contactModel.IsPassengerAccepted = contact.IsPassengerAccepted == null
                         ? 0
-                        : ((bool)contact.IsPassengerAccepted ? 1 : 0);
+                        : ((bool) contact.IsPassengerAccepted ? 1 : 0);
 
 
-                    contactModel.LastMsg = contact.ContactLastMsg.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
+                    contactModel.LastMsg = contact.ContactLastMsg.Replace("\r\n", " ")
+                        .Replace("\n", " ")
+                        .Replace("\r", " ");
                     if (contactModel.UserPic != null)
                     {
                         contactModel.UserPic = UserMapper.ResizeImage(user.UserPic, 200, 160);
                     }
                     contactModel.UserImageId = user.UserImageId;
                     contactModel.AboutUser = GetUserAboutMe(user.UserId).Desc;
-                    contactModel.NewChats = dataModel.Chats.Count(x => x.ChatUserId== contact.ContactPassengerUserId || x.ChatUserId == contact.ContactPassengerUserId && !x.IsChatSeen);
+                    contactModel.NewChats =
+                        dataModel.Chats.Count(
+                            x =>
+                                x.ChatUserId == contact.ContactPassengerUserId ||
+                                x.ChatUserId == contact.ContactPassengerUserId && !x.IsChatSeen);
                     pilist.Add(contactModel);
                 }
             }
@@ -859,12 +983,16 @@ namespace CoreManager.UserManager
             var remain = _transactionManager.GetRemain(userId);
             s.CreditMoney = remain.ToString("N0", new NumberFormatInfo()
             {
-                NumberGroupSizes = new[] { 3 },
+                NumberGroupSizes = new[] {3},
                 NumberGroupSeparator = ","
             });
             using (var dataModel = new MibarimEntities())
             {
-                s.Score = dataModel.vwTripRoutes.Where(x => x.RouteRequestUserId == userId && x.TrState == (int)TripRouteState.TripRouteFinished).ToList().Count;
+                s.Score =
+                    dataModel.vwTripRoutes.Where(
+                            x => x.RouteRequestUserId == userId && x.TrState == (int) TripRouteState.TripRouteFinished)
+                        .ToList()
+                        .Count;
             }
             s.MoneySave = 0;
             return s;
@@ -891,8 +1019,8 @@ namespace CoreManager.UserManager
                 var uinfo =
                     dataModel.vwUserInfoes.Where(
                         x => (!string.IsNullOrEmpty(x.UserName) && x.UserName == model.Mobile) ||
-                        (!string.IsNullOrEmpty(x.Name) && x.Name == model.Name) ||
-                        (!string.IsNullOrEmpty(x.Family) && x.Family == model.Family));
+                             (!string.IsNullOrEmpty(x.Name) && x.Name == model.Name) ||
+                             (!string.IsNullOrEmpty(x.Family) && x.Family == model.Family));
                 foreach (var vwUserInfo in uinfo)
                 {
                     pi.Add(UserMapper.CastPersonalInfoToModelWithoutPic(vwUserInfo));
@@ -924,7 +1052,7 @@ namespace CoreManager.UserManager
                 var res = dataModel.UserInfoes.FirstOrDefault(x => x.UserId == userId);
                 if (res.TripId != null)
                 {
-                    return (long)res.TripId;
+                    return (long) res.TripId;
                 }
             }
             return 0;
@@ -1200,7 +1328,6 @@ namespace CoreManager.UserManager
                     {
                         ui.IsUserRegistered = false;
                     }
-                    
                 }
                 else
                 {
@@ -1220,13 +1347,11 @@ namespace CoreManager.UserManager
                 if (bankdb != null)
                 {
                     ui = UserMapper.FillBankInfoInUserInfoModel(ui, bankdb);
-
                 }
                 var comp = dataModel.vwCompanies.FirstOrDefault(x => x.Id == userId);
                 if (comp != null)
                 {
                     ui = UserMapper.FillCompanyInfoInUserInfoModel(ui, comp);
-
                 }
             }
             return ui;
@@ -1250,10 +1375,9 @@ namespace CoreManager.UserManager
                 discount.DiscountId = dc.DiscountId;
                 discount.UserId = userId;
                 discount.DuCreateTime = DateTime.Now;
-                discount.DuState = (int)DiscountStates.Submitted;
+                discount.DuState = (int) DiscountStates.Submitted;
                 dataModel.DiscountUsers.Add(discount);
                 dataModel.SaveChanges();
-
             }
         }
 
@@ -1268,7 +1392,7 @@ namespace CoreManager.UserManager
                 withdraw.LastModification = DateTime.Now;
                 withdraw.UserBalance = remain;
                 withdraw.UserId = userId;
-                withdraw.WithdrawState = (int)WithdrawStates.Submitted;
+                withdraw.WithdrawState = (int) WithdrawStates.Submitted;
                 dataModel.Withdraws.Add(withdraw);
                 dataModel.SaveChanges();
             }
@@ -1279,13 +1403,16 @@ namespace CoreManager.UserManager
             var res = new List<DiscountModel>();
             using (var dataModel = new MibarimEntities())
             {
-                var discounts = dataModel.vwDiscountUsers.Where(x => x.UserId == userId).OrderByDescending(x => x.DuCreateTime).ToList();
+                var discounts =
+                    dataModel.vwDiscountUsers.Where(x => x.UserId == userId)
+                        .OrderByDescending(x => x.DuCreateTime)
+                        .ToList();
                 foreach (var vwDiscountUser in discounts)
                 {
                     var dis = new DiscountModel();
                     dis.DiscountCode = vwDiscountUser.DiscountCode;
                     dis.DiscountTitle = vwDiscountUser.DiscountTitle;
-                    dis.DiscountStateString = getResource.getString(((DiscountStates)vwDiscountUser.DuState).ToString());
+                    dis.DiscountStateString = getResource.getString(((DiscountStates) vwDiscountUser.DuState).ToString());
                     res.Add(dis);
                 }
             }
@@ -1314,7 +1441,6 @@ namespace CoreManager.UserManager
                 dataModel.AboutUsers.Add(about);
                 dataModel.SaveChanges();
             }
-
         }
 
         public AboutUserModel GetUserAboutMe(int userId)
@@ -1324,7 +1450,9 @@ namespace CoreManager.UserManager
             using (var dataModel = new MibarimEntities())
             {
                 var aboutMe =
-                    dataModel.AboutUsers.Where(x => x.UserId == userId).OrderByDescending(x => x.AboutCreateTime).FirstOrDefault();
+                    dataModel.AboutUsers.Where(x => x.UserId == userId)
+                        .OrderByDescending(x => x.AboutCreateTime)
+                        .FirstOrDefault();
                 if (aboutMe != null)
                 {
                     res.Desc = aboutMe.AboutDesc;
@@ -1338,14 +1466,16 @@ namespace CoreManager.UserManager
             var res = new List<WithdrawRequestModel>();
             using (var dataModel = new MibarimEntities())
             {
-                var withdrawReqs = dataModel.Withdraws.Where(x => x.UserId == userId).OrderByDescending(x => x.CreateTime).ToList();
+                var withdrawReqs =
+                    dataModel.Withdraws.Where(x => x.UserId == userId).OrderByDescending(x => x.CreateTime).ToList();
                 foreach (var withdrawReq in withdrawReqs)
                 {
                     var with = new WithdrawRequestModel();
                     with.WithdrawAmount = withdrawReq.WithdrawAmount;
                     with.WithdrawDate = _timingService.GetTimingString(withdrawReq.CreateTime);
-                    with.WithdrawState = (WithdrawStates)withdrawReq.WithdrawState;
-                    with.WithdrawStateString = getResource.getString(((WithdrawStates)withdrawReq.WithdrawState).ToString());
+                    with.WithdrawState = (WithdrawStates) withdrawReq.WithdrawState;
+                    with.WithdrawStateString =
+                        getResource.getString(((WithdrawStates) withdrawReq.WithdrawState).ToString());
                     res.Add(with);
                 }
             }
@@ -1365,11 +1495,11 @@ namespace CoreManager.UserManager
                 var withdrawquery =
                     dataModel.Withdraws.Where(
                         x => x.UserId == userId && x.WithdrawState == (int) WithdrawStates.Submitted).ToList();
-                if (withdrawquery.Count>0)
+                if (withdrawquery.Count > 0)
                 {
                     withdraw = withdrawquery.Sum(x => x.WithdrawAmount);
                 }
-                if (model.WithdrawAmount > remain+withdraw)
+                if (model.WithdrawAmount > remain + withdraw)
                 {
                     return false;
                 }
@@ -1400,7 +1530,8 @@ namespace CoreManager.UserManager
                     invite.InviteCode = InviteCodeGenerator(invite.InviteId);
                     dataModel.SaveChanges();
                     res.InviteCode = invite.InviteCode;
-                    res.InviteLink = UserMapper.PersianNumber(String.Format(getResource.getMessage("InviteLink"), invite.InviteCode));
+                    res.InviteLink =
+                        UserMapper.PersianNumber(String.Format(getResource.getMessage("InviteLink"), invite.InviteCode));
                 }
                 return res;
             }
@@ -1421,11 +1552,16 @@ namespace CoreManager.UserManager
                     {
                         uis.ValidatingTry++;
                     }
-
                 }
                 else
                 {
-                    var ui = new UserInfo() { UserInfoCreateTime = DateTime.Now, UserId = id, UserInfoIsDeleted = false, ValidatingTry = 1 };
+                    var ui = new UserInfo()
+                    {
+                        UserInfoCreateTime = DateTime.Now,
+                        UserId = id,
+                        UserInfoIsDeleted = false,
+                        ValidatingTry = 1
+                    };
                     dataModel.UserInfoes.Add(ui);
                 }
                 dataModel.SaveChanges();
@@ -1434,7 +1570,7 @@ namespace CoreManager.UserManager
 
         public void SendNotif()
         {
-            var userIds = new List<int> { 27, 1,181 };
+            var userIds = new List<int> {27, 1, 181};
             using (var dataModel = new MibarimEntities())
             {
                 var nu = dataModel.GetNotificationUsers();
@@ -1461,23 +1597,41 @@ namespace CoreManager.UserManager
                 var contact = dataModel.Contacts.FirstOrDefault(x => x.ContactId == contactId);
                 if (contact != null && contact.ContactPassengerUserId == userId)
                 {
-                    var average = dataModel.vwContactScores.Where(x => (x.ContactDriverUserId == contact.ContactDriverUserId || x.ContactPassengerUserId == contact.ContactDriverUserId) && x.CsUserId != x.ContactDriverUserId).Average(x => x.CsScore);
+                    var average =
+                        dataModel.vwContactScores.Where(
+                            x =>
+                                (x.ContactDriverUserId == contact.ContactDriverUserId ||
+                                 x.ContactPassengerUserId == contact.ContactDriverUserId) &&
+                                x.CsUserId != x.ContactDriverUserId).Average(x => x.CsScore);
                     if (average !=
                         null)
-                        s.ContactScore = (int)average;
+                        s.ContactScore = (int) average;
                     var aboutMe = dataModel.AboutUsers.FirstOrDefault(x => x.UserId == contact.ContactDriverUserId);
                     if (aboutMe != null) s.AboutMe = aboutMe.AboutDesc;
-                    s.Score = dataModel.vwTripRoutes.Where(x => x.RouteRequestUserId == contact.ContactDriverUserId && x.TrState == (int)TripRouteState.TripRouteFinished).ToList().Count;
+                    s.Score =
+                        dataModel.vwTripRoutes.Where(
+                            x =>
+                                x.RouteRequestUserId == contact.ContactDriverUserId &&
+                                x.TrState == (int) TripRouteState.TripRouteFinished).ToList().Count;
                 }
                 else if (contact != null && contact.ContactDriverUserId == userId)
                 {
-                    var average = dataModel.vwContactScores.Where(x => (x.ContactDriverUserId == contact.ContactPassengerUserId || x.ContactPassengerUserId == contact.ContactPassengerUserId) && x.CsUserId != x.ContactPassengerUserId).Average(x => x.CsScore);
+                    var average =
+                        dataModel.vwContactScores.Where(
+                            x =>
+                                (x.ContactDriverUserId == contact.ContactPassengerUserId ||
+                                 x.ContactPassengerUserId == contact.ContactPassengerUserId) &&
+                                x.CsUserId != x.ContactPassengerUserId).Average(x => x.CsScore);
                     if (average !=
                         null)
-                        s.ContactScore = (int)average;
+                        s.ContactScore = (int) average;
                     var aboutMe = dataModel.AboutUsers.FirstOrDefault(x => x.UserId == contact.ContactDriverUserId);
                     if (aboutMe != null) s.AboutMe = aboutMe.AboutDesc;
-                    s.Score = dataModel.vwTripRoutes.Where(x => x.RouteRequestUserId == contact.ContactPassengerUserId && x.TrState == (int)TripRouteState.TripRouteFinished).ToList().Count;
+                    s.Score =
+                        dataModel.vwTripRoutes.Where(
+                            x =>
+                                x.RouteRequestUserId == contact.ContactPassengerUserId &&
+                                x.TrState == (int) TripRouteState.TripRouteFinished).ToList().Count;
                 }
             }
             s.MoneySave = 0;
@@ -1489,19 +1643,27 @@ namespace CoreManager.UserManager
             using (var dataModel = new MibarimEntities())
             {
                 var contact = dataModel.Contacts.FirstOrDefault(x => x.ContactId == model.ContactId);
-                var driverTripIds = dataModel.vwTripRoutes.Where(x => x.RouteRequestUserId == contact.ContactDriverUserId && x.TrState == (int)TripRouteState.TripRouteFinished).ToList();
-                var passTripIds = dataModel.vwTripRoutes.Where(x => x.RouteRequestUserId == contact.ContactPassengerUserId && x.TrState == (int)TripRouteState.TripRouteFinished).ToList();
-                var sameTrip = driverTripIds.Any(x => passTripIds.Select(y=>y.TrTripId).Contains(x.TrTripId));
+                var driverTripIds =
+                    dataModel.vwTripRoutes.Where(
+                        x =>
+                            x.RouteRequestUserId == contact.ContactDriverUserId &&
+                            x.TrState == (int) TripRouteState.TripRouteFinished).ToList();
+                var passTripIds =
+                    dataModel.vwTripRoutes.Where(
+                        x =>
+                            x.RouteRequestUserId == contact.ContactPassengerUserId &&
+                            x.TrState == (int) TripRouteState.TripRouteFinished).ToList();
+                var sameTrip = driverTripIds.Any(x => passTripIds.Select(y => y.TrTripId).Contains(x.TrTripId));
                 if (sameTrip)
                 {
-                    var hasScore = dataModel.ContactScores.FirstOrDefault(x => x.CsContactId == model.ContactId && x.CsUserId == userId);
+                    var hasScore =
+                        dataModel.ContactScores.FirstOrDefault(
+                            x => x.CsContactId == model.ContactId && x.CsUserId == userId);
                     int res = 0;
                     if (hasScore != null)
                     {
-
                         int.TryParse(model.ContactScore.ToString(), out res);
-                        hasScore.CsScore = (short?)res;
-
+                        hasScore.CsScore = (short?) res;
                     }
                     else
                     {
@@ -1510,7 +1672,7 @@ namespace CoreManager.UserManager
                         score.CsCreateTime = DateTime.Now;
                         score.CsContactId = model.ContactId;
                         int.TryParse(model.ContactScore.ToString(), out res);
-                        score.CsScore = (short?)res;
+                        score.CsScore = (short?) res;
                         dataModel.ContactScores.Add(score);
                     }
                     dataModel.SaveChanges();
@@ -1518,7 +1680,11 @@ namespace CoreManager.UserManager
                 }
                 else
                 {
-                    _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = getResource.getMessage("NoTrip") });
+                    _responseProvider.SetBusinessMessage(new MessageResponse()
+                    {
+                        Type = ResponseTypes.Error,
+                        Message = getResource.getMessage("NoTrip")
+                    });
                     return string.Empty;
                 }
             }
@@ -1540,16 +1706,18 @@ namespace CoreManager.UserManager
                     var passengerContacts = dataModel.Contacts.Where(x => x.ContactPassengerUserId == userId);
                     foreach (var passengerContact in passengerContacts)
                     {
-                        res.ChatCount += dataModel.Chats.Count(x => x.ChatUserId == passengerContact.ContactDriverUserId && !x.IsChatSeen);
+                        res.ChatCount +=
+                            dataModel.Chats.Count(
+                                x => x.ChatUserId == passengerContact.ContactDriverUserId && !x.IsChatSeen);
                     }
                     var driverContacts = dataModel.Contacts.Where(x => x.ContactDriverUserId == userId);
                     foreach (var driverContact in driverContacts)
                     {
-                        res.ChatCount += dataModel.Chats.Count(x => x.ChatUserId == driverContact.ContactPassengerUserId && !x.IsChatSeen);
+                        res.ChatCount +=
+                            dataModel.Chats.Count(
+                                x => x.ChatUserId == driverContact.ContactPassengerUserId && !x.IsChatSeen);
                     }
-
                 }
-                
             }
             return res;
         }
@@ -1566,14 +1734,13 @@ namespace CoreManager.UserManager
             var fanapService = new FanapService();
             using (var dataModel = new MibarimEntities())
             {
-                var userfanap = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserUId ==model.StateGUid);
+                var userfanap = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserUId == model.StateGUid);
                 if (userfanap != null)
                 {
-
                     var fanap = dataModel.Fanaps.FirstOrDefault(x => x.userId == userfanap.UserId);
                     if (fanap == null)
                     {
-                        fanap=new Fanap();
+                        fanap = new Fanap();
                     }
                     fanap.userId = userfanap.UserId;
                     fanap.authorization_code = model.Code;
@@ -1584,7 +1751,7 @@ namespace CoreManager.UserManager
                     dataModel.SaveChanges();
                     if (cont.access_token != null)
                     {
-                        var userInfo = fanapService.RegisterWithSso(cont.access_token,"mibarim_"+ fanap.FanapId);
+                        var userInfo = fanapService.RegisterWithSso(cont.access_token, "mibarim_" + fanap.FanapId);
                         fanap.nickName = userInfo.nickName;
                         fanap.birthDate = userInfo.birthDate;
                         fanap.fuserId = userInfo.userId;
@@ -1600,7 +1767,7 @@ namespace CoreManager.UserManager
 
             return userInfomodel;
         }
-        
+
         public bool RegisterFanap(string nickname)
         {
             var fanapService = new FanapService();
@@ -1621,18 +1788,65 @@ namespace CoreManager.UserManager
                 else
                 {
                     res.IsUserRegistered = true;
-                    var istrip = dataModel.vwDriverTrips.Where(x => x.UserId == userId && x.TState==(int)TripState.InRiding);
-
+                    var istrip =
+                        dataModel.vwDriverTrips.Where(x => x.UserId == userId && x.TState == (int) TripState.InRiding);
                 }
-
             }
             return res;
+        }
+
+        public UserModel GetFanapUserInfo(FanapModel fanapModel)
+        {
+            var userInfomodel = new UserModel();
+            var fanapService = new FanapService();
+            var userInfo = new FanapUserInfo();
+            using (var dataModel = new MibarimEntities())
+            {
+                var cont = fanapService.GetAuthenticationToken(fanapModel.Code);
+                if (cont.access_token != null)
+                {
+                    userInfo = fanapService.RegisterWithSso(cont.access_token, "mibarim_");
+                    if (userInfo != null)
+                    {
+                        var fanap = new Fanap();
+                        fanap.userId = 1;
+                        fanap.authorization_code = fanapModel.Code;
+                        fanap.access_token = cont.access_token;
+                        fanap.refresh_token = cont.refresh_token;
+                        fanap.nickName = userInfo.nickName;
+                        fanap.birthDate = userInfo.birthDate;
+                        fanap.fuserId = userInfo.userId;
+                        userInfomodel.UserId = userInfo.userId;
+                        userInfomodel.Name = userInfo.firstName;
+                        userInfomodel.Family = userInfo.lastName;
+                        userInfomodel.UserId = userInfo.userId;
+                        userInfomodel.UserName = userInfo.cellphoneNumber;
+                        userInfomodel.Email = userInfo.email;
+                        fanap.score = userInfo.score.ToString();
+                        dataModel.Fanaps.Add(fanap);
+                        dataModel.SaveChanges();
+                        return userInfomodel;
+                    }
+                }
+            }
+
+            return userInfomodel;
+        }
+
+        public void SaveFanapUser(int userId, int fModelUserName)
+        {
+            using (var dataModel = new MibarimEntities())
+            {
+                var fanapModel = dataModel.Fanaps.FirstOrDefault(x => x.fuserId == fModelUserName);
+                fanapModel.userId = userId;
+                dataModel.SaveChanges();
+            }
         }
 
         private string InviteCodeGenerator(long inviteId)
         {
             var random = new Random();
-            string[] str = new[] { "mb", "mi", "mr", "ba", "mm" };
+            string[] str = new[] {"mb", "mi", "mr", "ba", "mm"};
             var rndMember = str[random.Next(str.Length)];
             return rndMember + inviteId;
         }
@@ -1653,10 +1867,9 @@ namespace CoreManager.UserManager
         }*/
 
         private
-        string BriefChat(string supportChatTxt)
+            string BriefChat(string supportChatTxt)
         {
             throw new NotImplementedException();
         }
-
     }
 }

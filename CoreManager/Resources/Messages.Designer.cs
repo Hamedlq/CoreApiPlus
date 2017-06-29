@@ -142,6 +142,15 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to امکان ثبت سفر وجود ندارد. لطفا با پشتیبانی تماس بگیرید.
+        /// </summary>
+        public static string BlockedUser {
+            get {
+                return ResourceManager.GetString("BlockedUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to این مسیر در یک گروه ثبت شده است و نمی توانید آن را حذف کنید.
         /// </summary>
         public static string CantDelete {
@@ -585,7 +594,7 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to پرداخت {0} تومان بابت ثبت سفر.
+        ///   Looks up a localized string similar to مبلغ {0} تومان افزایش اعتبار {1} بابت ثبت سفر.
         /// </summary>
         public static string PayForSetTrip {
             get {
@@ -756,7 +765,7 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to صندلی شما برای مسیر {0} به {1} ساعت {2} رزرو شد.
+        ///   Looks up a localized string similar to صندلی خودروی شما برای مسیر {0} به {1} ساعت {2} رزرو شد.
         /// </summary>
         public static string SeatReservedFor {
             get {

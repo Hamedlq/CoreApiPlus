@@ -92,6 +92,7 @@ namespace CoreManager.PaymentManager
                         _notifManager.SendNotifToUser(notifModel, payRoute.PayReqUserId);
                         //send driver notif
                         _notifManager.SendNotifToUser(notifModel, (int) payRoute.UserId);
+                        _notifManager.SendNotifToAdmins(notifModel);
                         //send passenger sms
                         var user = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == payRoute.PayReqUserId);
                         var mobileBrief = user.UserName.Substring(1);
@@ -105,7 +106,8 @@ namespace CoreManager.PaymentManager
                         string smsBodydriver = string.Format(getResource.getMessage("SeatReservedFor"),
                             route.SrcMainStName, route.DstMainStName, payRoute.TStartTime.ToString("HH:mm"));
                         smsService.SendSmsMessages(drivermobileBrief, smsBodydriver);
-
+                        smsService.SendSmsMessages("9358695785", smsBody);
+                        smsService.SendSmsMessages("9354205407", smsBody);
                     }
                     dataModel.SaveChanges();
                     paymentDetailModel.RefId = refId;

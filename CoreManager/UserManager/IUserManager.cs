@@ -73,5 +73,7 @@ namespace CoreManager.UserManager
         bool RegisterFanap(string nickname);
 
         UserInitialInfo GetDriverInitialInfo(int userId);
+        UserModel GetFanapUserInfo(FanapModel fanapModel);
+        void SaveFanapUser(int userId, int fModelUserName);
     }
 }

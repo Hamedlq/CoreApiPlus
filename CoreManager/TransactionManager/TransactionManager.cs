@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoreDA;
+using CoreExternalService;
 using CoreExternalService.SMSirSentAndReceivedMessages;
+using CoreManager.LogProvider;
 using CoreManager.Models;
 using CoreManager.NotificationManager;
 using CoreManager.Resources;
@@ -14,16 +16,24 @@ namespace CoreManager.TransactionManager
 {
     public class TransactionManager : ITransactionManager
     {
+        private static string Tag = "TransactionManager";
         private readonly INotificationManager _notifManager;
+        private ILogProvider _logmanager;
+
         #region Constructor
+
         public TransactionManager()
         {
         }
-        public TransactionManager(INotificationManager notifManager)
+
+        public TransactionManager(INotificationManager notifManager, ILogProvider logManager)
         {
+            _logmanager = logManager;
             _notifManager = notifManager;
         }
+
         #endregion
+
         public void ChargeAccount(int userId, int value)
         {
             using (var dataModel = new MibarimEntities())
@@ -32,7 +42,7 @@ namespace CoreManager.TransactionManager
                 var desc = string.Format(getResource.getMessage("PaymentDesc"), GetUserNameFamilyString(userInfo), value);
                 var trans = new Tran();
                 trans.TransCreateTime = DateTime.Now;
-                trans.TransType = (int)TransactionType.ChargeAccount;
+                trans.TransType = (int) TransactionType.ChargeAccount;
                 trans.TransUserId = userId;
                 trans.TransValue = value;
                 trans.TransDescription = desc;
@@ -50,7 +60,7 @@ namespace CoreManager.TransactionManager
                 var desc = string.Format(getResource.getMessage("GiftPayDesc"), GetUserNameFamilyString(userInfo), value);
                 var trans = new Tran();
                 trans.TransCreateTime = DateTime.Now;
-                trans.TransType = (int)TransactionType.GiftChargeAccount;
+                trans.TransType = (int) TransactionType.GiftChargeAccount;
                 trans.TransUserId = userId;
                 trans.TransValue = value;
                 trans.TransDescription = desc;
@@ -60,7 +70,7 @@ namespace CoreManager.TransactionManager
 
         }
 
-        public void ChargeAccount(int userId, int value,string desc, TransactionType transactionType)
+        public void ChargeAccount(int userId, int value, string desc, TransactionType transactionType)
         {
             using (var dataModel = new MibarimEntities())
             {
@@ -68,14 +78,29 @@ namespace CoreManager.TransactionManager
                 //var desc = string.Format(getResource.getMessage("GiftPayDesc"), GetUserNameFamilyString(userInfo), value);
                 var trans = new Tran();
                 trans.TransCreateTime = DateTime.Now;
-                trans.TransType = (short)transactionType;
+                trans.TransType = (short) transactionType;
                 trans.TransUserId = userId;
                 trans.TransValue = value;
                 trans.TransDescription = desc;
                 dataModel.Trans.Add(trans);
                 dataModel.SaveChanges();
+                try
+                {
+                    NotifModel notifModel = new NotifModel();
+                    notifModel.Title = getResource.getString("Transaction");
+                    notifModel.Body = desc;
+                    notifModel.RequestCode = (int)trans.TransId;
+                    notifModel.NotificationId = (int)trans.TransId;
+                    _notifManager.SendNotifToUser(notifModel, userId);
+                    var mobileBrief = userInfo.UserName.Substring(1);
+                    var smsService = new SmsService();
+                    smsService.SendSmsMessages(mobileBrief, desc);
+                }
+                catch (Exception e)
+                {
+                    _logmanager.Log(Tag, "ChargeAccount", e.Message);
+                }
             }
-
         }
 
         public void PayMoney(int sourceUserId, int destinationUserId, int value)

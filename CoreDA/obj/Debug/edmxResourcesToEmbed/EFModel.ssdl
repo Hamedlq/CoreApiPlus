@@ -861,6 +861,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwDriverTrip' does not have a pri
     <Property Name="DstMainStLng" Type="decimal" Precision="20" Scale="17" />
     <Property Name="DriverPrice" Type="bigint" />
     <Property Name="PassPrice" Type="bigint" />
+    <Property Name="VerifiedLevel" Type="smallint" />
   </EntityType>
   <!--Errors Found During Generation:
 warning 6002: The table/view 'Mibarim_plus.dbo.vwGroup' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1541,7 +1542,8 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vwDriverTrip].[DstMainStLat] AS [DstMainStLat], 
     [vwDriverTrip].[DstMainStLng] AS [DstMainStLng], 
     [vwDriverTrip].[DriverPrice] AS [DriverPrice], 
-    [vwDriverTrip].[PassPrice] AS [PassPrice]
+    [vwDriverTrip].[PassPrice] AS [PassPrice], 
+    [vwDriverTrip].[VerifiedLevel] AS [VerifiedLevel]
     FROM [dbo].[vwDriverTrip] AS [vwDriverTrip]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="vwGroup" EntityType="Self.vwGroup" store:Type="Views" store:Schema="dbo">

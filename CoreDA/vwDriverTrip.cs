@@ -42,5 +42,6 @@ namespace CoreDA
         public Nullable<decimal> DstMainStLng { get; set; }
         public Nullable<long> DriverPrice { get; set; }
         public Nullable<long> PassPrice { get; set; }
+        public Nullable<short> VerifiedLevel { get; set; }
     }
 }

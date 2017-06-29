@@ -25,6 +25,7 @@ namespace CoreExternalService
             sso_address = "http://sandbox.fanapium.com";
             client_Id = "85504dcc9e6272b2f8ee45ae";
             redirect_Uri = "http://mibarimapp.com/coreapi/loginreturn";
+            //redirect_Uri = "http://mibarimiiii.ir";
             client_secret = "134a5602";
             platform_address="http://sandbox.fanapium.com:8080";
             token = "3e78bf162cf84c3c95c250e30a1695be";

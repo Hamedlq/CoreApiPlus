@@ -21,5 +21,6 @@ namespace CoreManager.NotificationManager
         void SendInviteGiftNotif(int userId);
         void SendNotifToUser(NotifModel notif, int userId);
         void SendGroupNotif(NotifModel notif, List<int> userIds);
+        void SendNotifToAdmins(NotifModel notifModel);
     }
 }

@@ -121,6 +121,7 @@
     <Compile Include="Models\PassengerModels\PassRouteModel.cs" />
     <Compile Include="Models\RouteModels\StationRouteModel.cs" />
     <Compile Include="Models\RouteModels\UserRouteModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
     <Compile Include="Models\UserInitialInfo.cs" />
     <Compile Include="Models\WithdrawRequestModel.cs" />
     <Compile Include="Models\DiscountModel.cs" />

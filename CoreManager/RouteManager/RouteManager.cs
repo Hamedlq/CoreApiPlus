@@ -2367,7 +2367,7 @@ namespace CoreManager.RouteManager
                         x =>
                             x.TStartTime > triptime &&
                             (x.TState == (int) TripState.Scheduled || x.TState == (int) TripState.InTripTime ||
-                             x.TState == (int) TripState.InPreTripTime || x.TState == (int) TripState.InRiding));
+                             x.TState == (int) TripState.InPreTripTime || x.TState == (int) TripState.InRiding)).OrderBy(x=>x.TStartTime);
                 foreach (var trip in dataList)
                 {
                     var filledSeats = 0;
@@ -2387,14 +2387,15 @@ namespace CoreManager.RouteManager
                     passRouteModel.Family = trip.Family;
                     passRouteModel.TimingString = trip.TStartTime.ToString("HH:mm");
                     passRouteModel.PricingString = trip.PassPrice.ToString();
-                    passRouteModel.SrcAddress = trip.SrcStAdd;
+                    passRouteModel.SrcAddress = trip.SrcMainStName+"، "+ trip.SrcStAdd;
                     passRouteModel.SrcLink = "https://www.google.com/maps/place/" + trip.SrcStLat + "," +
                                              trip.SrcStlng;
                     passRouteModel.DstAddress = trip.DstMainStName;
                     passRouteModel.DstLink = "https://www.google.com/maps/place/" + trip.DstMainStLat + "," +
                                              trip.DstMainStLng;
                     passRouteModel.UserImageId = trip.UserImageId;
-                    passRouteModel.IsVerified = true;
+                    passRouteModel.IsVerified = trip.VerifiedLevel != null &&
+                                                trip.VerifiedLevel == (int) VerifiedLevel.Verified;
                     passRouteModel.CarSeats = trip.TEmptySeat;
                     var tripUsers = dataModel.vwBookPays.Where(x => x.TripId == trip.TripId);
                     foreach (var tripUser in tripUsers)
@@ -2623,6 +2624,17 @@ namespace CoreManager.RouteManager
                 }
                 else
                 {
+                    var usr = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == userId);
+                    if (usr.VerifiedLevel!=null && usr.VerifiedLevel > (int) VerifiedLevel.Blocked)
+                    {
+                        _responseProvider.SetBusinessMessage(new MessageResponse()
+                        {
+                            Type = ResponseTypes.Error,
+                            Message = getResource.getMessage("BlockedUser")
+                        });
+                        res.IsSubmited = false;
+                        return res;
+                    }
                     var trip = new Trip();
                     trip.TStartTime = GetNextDateTime(model.TimingHour, model.TimingMin);
                     res.RemainHour = (int) (trip.TStartTime - DateTime.Now).TotalHours;
@@ -2648,14 +2660,16 @@ namespace CoreManager.RouteManager
                     dataModel.Trips.Where(
                         x =>
                             x.TState == (int) TripState.Scheduled || x.TState == (int) TripState.InTripTime ||
-                            x.TState == (int) TripState.InPreTripTime);
+                            x.TState == (int) TripState.InPreTripTime).OrderByDescending(x=>x.TStartTime);
                 foreach (var preTrip in activeTrips.Where(x => x.TState == (int) TripState.Scheduled))
                 {
                     if (preTrip.TStartTime.AddMinutes(-15) < DateTime.Now)
                     {
                         preTrip.TState = (int) TripState.InPreTripTime;
                     }
+                    
                 }
+                dataModel.SaveChanges();
                 foreach (var activeTrip in activeTrips.Where(x => x.TState == (int) TripState.InPreTripTime))
                 {
                     if (activeTrip.TStartTime < DateTime.Now)
@@ -2663,12 +2677,18 @@ namespace CoreManager.RouteManager
                         activeTrip.TState = (int) TripState.InTripTime;
                         var driveRoute =
                             dataModel.DriverRoutes.FirstOrDefault(x => x.DriverRouteId == activeTrip.DriverRouteId);
-                        var usr = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == driveRoute.UserId);
-                        var msg = string.Format(getResource.getMessage("PayForSetTrip"),
-                            RouteMapper.GetUserNameFamilyString(usr), 1000);
-                        _transactionManager.ChargeAccount((int) driveRoute.UserId, 1000, msg,TransactionType.CreditChargeAccount);
+                        var todate = DateTime.Today;
+                        var todaytrips = dataModel.vwDriverTrips.Count(x => x.UserId == driveRoute.UserId && (x.TState==(int)TripState.DriverNotCome || x.TState == (int)TripState.FinishedByTime) && x.TStartTime >= todate);
+                        if (todaytrips < 1)
+                        {
+                            var usr = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == driveRoute.UserId);
+                            var msg = string.Format(getResource.getMessage("PayForSetTrip"), 3000,
+                                    RouteMapper.GetUserNameFamilyString(usr) );
+                            _transactionManager.ChargeAccount((int)driveRoute.UserId, 3000, msg, TransactionType.CreditChargeAccount);
+                        }
                     }
                 }
+                dataModel.SaveChanges();
                 //var doingTrips = dataModel.Trips.Where(x => x.TState == (int)TripState.InTripTime);
                 foreach (var doingTrip in activeTrips.Where(x => x.TState == (int) TripState.InTripTime))
                 {
@@ -2677,6 +2697,7 @@ namespace CoreManager.RouteManager
                         doingTrip.TState = (int) TripState.DriverNotCome;
                     }
                 }
+                dataModel.SaveChanges();
                 foreach (
                     var doingTrip in
                     activeTrips.Where(x => x.TState == (int) TripState.InRiding || x.TState == (int) TripState.InDriving)

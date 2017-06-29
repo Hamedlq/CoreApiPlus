@@ -90,7 +90,6 @@ namespace CoreDA
         public virtual DbSet<vwRouteProfile> vwRouteProfiles { get; set; }
         public virtual DbSet<DriverRoute> DriverRoutes { get; set; }
         public virtual DbSet<vwDriverRoute> vwDriverRoutes { get; set; }
-        public virtual DbSet<vwDriverTrip> vwDriverTrips { get; set; }
         public virtual DbSet<vwStationRoute> vwStationRoutes { get; set; }
         public virtual DbSet<UserInfo> UserInfoes { get; set; }
         public virtual DbSet<vwUserInfo> vwUserInfoes { get; set; }
@@ -99,6 +98,7 @@ namespace CoreDA
         public virtual DbSet<vwCarInfo> vwCarInfoes { get; set; }
         public virtual DbSet<TripLocation> TripLocations { get; set; }
         public virtual DbSet<vwPayRoute> vwPayRoutes { get; set; }
+        public virtual DbSet<vwDriverTrip> vwDriverTrips { get; set; }
     
         public virtual ObjectResult<GetLocalRoutes_Result> GetLocalRoutes(Nullable<decimal> lat, Nullable<decimal> lng, Nullable<int> routeDistance, Nullable<int> pointDistance)
         {
