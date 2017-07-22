@@ -203,6 +203,9 @@
     <Compile Include="UserInfo.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="vwBookedTrip.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="vwBookPay.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
@@ -252,9 +255,6 @@
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
     <Compile Include="vwRouteGroup.cs">
-      <DependentUpon>EFModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="vwRouteProfile.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
     <Compile Include="vwRouteRequest.cs">

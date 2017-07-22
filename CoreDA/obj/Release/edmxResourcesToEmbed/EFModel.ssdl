@@ -56,6 +56,11 @@
     <Property Name="TripId" Type="bigint" Nullable="false" />
     <Property Name="BrCreateTime" Type="datetime" Nullable="false" />
     <Property Name="PayReqId" Type="bigint" />
+    <Property Name="BookingType" Type="smallint" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="IsBooked" Type="bit" />
+    <Property Name="DuId" Type="bigint" />
+    <Property Name="Credit" Type="float" />
   </EntityType>
   <EntityType Name="CarInfo">
     <Key>
@@ -165,6 +170,7 @@
     <Property Name="DiscountEndTime" Type="datetime" Nullable="false" />
     <Property Name="DiscountDesc" Type="nvarchar" MaxLength="256" />
     <Property Name="DiscountEvenId" Type="bigint" />
+    <Property Name="DiscountType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="DiscountUser">
     <Key>
@@ -177,6 +183,7 @@
     <Property Name="DuCreateTime" Type="datetime" Nullable="false" />
     <Property Name="DuState" Type="smallint" Nullable="false" />
     <Property Name="TransId" Type="bigint" />
+    <Property Name="DuEndTime" Type="datetime" />
   </EntityType>
   <EntityType Name="DriverRoute">
     <Key>
@@ -285,6 +292,8 @@
     <Property Name="InviteCode" Type="nvarchar" MaxLength="11" />
     <Property Name="UserId" Type="int" />
     <Property Name="InviterUserId" Type="int" />
+    <Property Name="InviteType" Type="smallint" />
+    <Property Name="InviterId" Type="bigint" />
   </EntityType>
   <EntityType Name="LicenseInfo">
     <Key>
@@ -337,10 +346,12 @@
     <Property Name="PayReqId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="PayReqCreateTime" Type="datetime" Nullable="false" />
     <Property Name="PayReqUserId" Type="int" Nullable="false" />
-    <Property Name="PayReqValue" Type="int" Nullable="false" />
+    <Property Name="PayReqValue" Type="float" Nullable="false" />
     <Property Name="PayReqAuthority" Type="nvarchar" MaxLength="512" />
     <Property Name="PayReqStatus" Type="nvarchar" MaxLength="10" />
     <Property Name="PayReqRefID" Type="nvarchar" MaxLength="512" />
+    <Property Name="TraceNumber" Type="nvarchar" MaxLength="64" />
+    <Property Name="ReferenceNumber" Type="nvarchar" MaxLength="64" />
   </EntityType>
   <EntityType Name="RecommendPath">
     <Key>
@@ -608,6 +619,32 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vw_PathRoute' does not have a pri
     <Property Name="RecommendPathSeq" Type="int" Nullable="false" />
   </EntityType>
   <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwBookedTrips' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwBookedTrips">
+    <Key>
+      <PropertyRef Name="TStartTime" />
+      <PropertyRef Name="TState" />
+      <PropertyRef Name="TEmptySeat" />
+      <PropertyRef Name="srcName" />
+      <PropertyRef Name="dstName" />
+      <PropertyRef Name="PassMobile" />
+      <PropertyRef Name="DriverMobile" />
+      <PropertyRef Name="BrCreateTime" />
+    </Key>
+    <Property Name="TStartTime" Type="datetime" Nullable="false" />
+    <Property Name="TState" Type="smallint" Nullable="false" />
+    <Property Name="TEmptySeat" Type="smallint" Nullable="false" />
+    <Property Name="Passname" Type="nvarchar(max)" />
+    <Property Name="PassFamily" Type="nvarchar(max)" />
+    <Property Name="DriverName" Type="nvarchar(max)" />
+    <Property Name="DriverFamily" Type="nvarchar(max)" />
+    <Property Name="srcName" Type="nvarchar" MaxLength="32" Nullable="false" />
+    <Property Name="dstName" Type="nvarchar" MaxLength="32" Nullable="false" />
+    <Property Name="PassMobile" Type="nvarchar" MaxLength="256" Nullable="false" />
+    <Property Name="DriverMobile" Type="nvarchar" MaxLength="256" Nullable="false" />
+    <Property Name="BrCreateTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
 warning 6002: The table/view 'Mibarim_plus.dbo.vwBookPay' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
   <EntityType Name="vwBookPay">
     <Key>
@@ -621,9 +658,14 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwBookPay' does not have a primar
     <Property Name="TripId" Type="bigint" Nullable="false" />
     <Property Name="PayReqId" Type="bigint" />
     <Property Name="PayReqRefID" Type="nvarchar" MaxLength="512" />
-    <Property Name="PayReqValue" Type="int" Nullable="false" />
+    <Property Name="PayReqValue" Type="float" Nullable="false" />
     <Property Name="PayReqUserId" Type="int" Nullable="false" />
     <Property Name="BrCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="IsBooked" Type="bit" />
+    <Property Name="DuId" Type="bigint" />
+    <Property Name="BookingType" Type="smallint" />
+    <Property Name="Credit" Type="float" />
   </EntityType>
   <!--Errors Found During Generation:
 warning 6002: The table/view 'Mibarim_plus.dbo.vwCarInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -756,6 +798,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwDiscountUser' does not have a p
       <PropertyRef Name="DuCreateTime" />
       <PropertyRef Name="DuState" />
       <PropertyRef Name="DuId" />
+      <PropertyRef Name="DiscountType" />
     </Key>
     <Property Name="DiscountCode" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="DiscountTitle" Type="nvarchar" MaxLength="50" />
@@ -771,6 +814,8 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwDiscountUser' does not have a p
     <Property Name="DuState" Type="smallint" Nullable="false" />
     <Property Name="TransId" Type="bigint" />
     <Property Name="DuId" Type="bigint" Nullable="false" />
+    <Property Name="DiscountType" Type="int" Nullable="false" />
+    <Property Name="DuEndTime" Type="datetime" />
   </EntityType>
   <!--Errors Found During Generation:
 warning 6002: The table/view 'Mibarim_plus.dbo.vwDoubleSuggest' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -934,7 +979,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwPayRoute' does not have a prima
       <PropertyRef Name="DrSrcStationId" />
     </Key>
     <Property Name="PayReqUserId" Type="int" Nullable="false" />
-    <Property Name="PayReqValue" Type="int" Nullable="false" />
+    <Property Name="PayReqValue" Type="float" Nullable="false" />
     <Property Name="PayReqStatus" Type="nvarchar" MaxLength="10" />
     <Property Name="PayReqRefID" Type="nvarchar" MaxLength="512" />
     <Property Name="PayReqId" Type="bigint" Nullable="false" />
@@ -989,35 +1034,6 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwRouteGroup' does not have a pri
     <Property Name="CarPlateNo" Type="nvarchar" MaxLength="20" />
   </EntityType>
   <!--Errors Found During Generation:
-warning 6002: The table/view 'Mibarim_plus.dbo.vwRouteProfile' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-  <EntityType Name="vwRouteProfile">
-    <Key>
-      <PropertyRef Name="RouteRequestId" />
-      <PropertyRef Name="SrcLongitude" />
-      <PropertyRef Name="SrcLatitude" />
-      <PropertyRef Name="DstLatitude" />
-      <PropertyRef Name="DstLongitude" />
-      <PropertyRef Name="IsDrive" />
-    </Key>
-    <Property Name="RouteRequestId" Type="bigint" Nullable="false" />
-    <Property Name="UserId" Type="int" />
-    <Property Name="SrcGAddress" Type="nvarchar" MaxLength="200" />
-    <Property Name="SrcLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
-    <Property Name="SrcLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
-    <Property Name="DstGAddress" Type="nvarchar" MaxLength="200" />
-    <Property Name="DstLatitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
-    <Property Name="DstLongitude" Type="decimal" Precision="20" Scale="17" Nullable="false" />
-    <Property Name="IsDrive" Type="bit" Nullable="false" />
-    <Property Name="RouteRequestUId" Type="uniqueidentifier" />
-    <Property Name="RRPricingMinMax" Type="money" />
-    <Property Name="UserImageId" Type="uniqueidentifier" />
-    <Property Name="VerifiedLevel" Type="smallint" />
-    <Property Name="Name" Type="nvarchar(max)" />
-    <Property Name="Family" Type="nvarchar(max)" />
-    <Property Name="Gender" Type="int" />
-    <Property Name="UserName" Type="nvarchar" MaxLength="256" />
-  </EntityType>
-  <!--Errors Found During Generation:
 warning 6002: The table/view 'Mibarim_plus.dbo.vwRouteRequest' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
   <EntityType Name="vwRouteRequest">
     <Key>
@@ -1058,7 +1074,6 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwRouteRequest' does not have a p
     <Property Name="CarColor" Type="nvarchar" MaxLength="50" />
     <Property Name="CarPlateNo" Type="nvarchar" MaxLength="20" />
     <Property Name="RouteRequestState" Type="smallint" />
-    <Property Name="RouteRequestUId" Type="uniqueidentifier" />
   </EntityType>
   <!--Errors Found During Generation:
 warning 6002: The table/view 'Mibarim_plus.dbo.vwRouteSuggest' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1112,7 +1127,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwRouteSuggest' does not have a p
     <Property Name="CarPlateNo" Type="nvarchar" MaxLength="20" />
     <Property Name="RecommendPathId" Type="bigint" />
     <Property Name="UserImageId" Type="uniqueidentifier" />
-    <Property Name="SuggestRouteRequestUId" Type="uniqueidentifier" />
+    <Property Name="RouteRequestUId" Type="uniqueidentifier" />
   </EntityType>
   <!--Errors Found During Generation:
 warning 6002: The table/view 'Mibarim_plus.dbo.vwRRPricing' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1310,6 +1325,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     <Parameter Name="RouteDistance" Type="int" Mode="In" />
     <Parameter Name="PointDistance" Type="int" Mode="In" />
   </Function>
+  <Function Name="GetNotificationUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <EntityContainer Name="MibarimModelStoreContainer">
     <EntitySet Name="AboutUser" EntityType="Self.AboutUser" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
@@ -1376,6 +1392,22 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vw_PathRoute].[RecommendPathSeq] AS [RecommendPathSeq]
     FROM [dbo].[vw_PathRoute] AS [vw_PathRoute]</DefiningQuery>
     </EntitySet>
+    <EntitySet Name="vwBookedTrips" EntityType="Self.vwBookedTrips" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwBookedTrips].[TStartTime] AS [TStartTime], 
+    [vwBookedTrips].[TState] AS [TState], 
+    [vwBookedTrips].[TEmptySeat] AS [TEmptySeat], 
+    [vwBookedTrips].[Passname] AS [Passname], 
+    [vwBookedTrips].[PassFamily] AS [PassFamily], 
+    [vwBookedTrips].[DriverName] AS [DriverName], 
+    [vwBookedTrips].[DriverFamily] AS [DriverFamily], 
+    [vwBookedTrips].[srcName] AS [srcName], 
+    [vwBookedTrips].[dstName] AS [dstName], 
+    [vwBookedTrips].[PassMobile] AS [PassMobile], 
+    [vwBookedTrips].[DriverMobile] AS [DriverMobile], 
+    [vwBookedTrips].[BrCreateTime] AS [BrCreateTime]
+    FROM [dbo].[vwBookedTrips] AS [vwBookedTrips]</DefiningQuery>
+    </EntitySet>
     <EntitySet Name="vwBookPay" EntityType="Self.vwBookPay" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
     [vwBookPay].[BookRequestId] AS [BookRequestId], 
@@ -1384,7 +1416,12 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vwBookPay].[PayReqRefID] AS [PayReqRefID], 
     [vwBookPay].[PayReqValue] AS [PayReqValue], 
     [vwBookPay].[PayReqUserId] AS [PayReqUserId], 
-    [vwBookPay].[BrCreateTime] AS [BrCreateTime]
+    [vwBookPay].[BrCreateTime] AS [BrCreateTime], 
+    [vwBookPay].[UserId] AS [UserId], 
+    [vwBookPay].[IsBooked] AS [IsBooked], 
+    [vwBookPay].[DuId] AS [DuId], 
+    [vwBookPay].[BookingType] AS [BookingType], 
+    [vwBookPay].[Credit] AS [Credit]
     FROM [dbo].[vwBookPay] AS [vwBookPay]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="vwCarInfo" EntityType="Self.vwCarInfo" store:Type="Views" store:Schema="dbo">
@@ -1481,7 +1518,9 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vwDiscountUser].[DuCreateTime] AS [DuCreateTime], 
     [vwDiscountUser].[DuState] AS [DuState], 
     [vwDiscountUser].[TransId] AS [TransId], 
-    [vwDiscountUser].[DuId] AS [DuId]
+    [vwDiscountUser].[DuId] AS [DuId], 
+    [vwDiscountUser].[DiscountType] AS [DiscountType], 
+    [vwDiscountUser].[DuEndTime] AS [DuEndTime]
     FROM [dbo].[vwDiscountUser] AS [vwDiscountUser]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="vwDoubleSuggest" EntityType="Self.vwDoubleSuggest" store:Type="Views" store:Schema="dbo">
@@ -1624,27 +1663,6 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vwRouteGroup].[CarPlateNo] AS [CarPlateNo]
     FROM [dbo].[vwRouteGroup] AS [vwRouteGroup]</DefiningQuery>
     </EntitySet>
-    <EntitySet Name="vwRouteProfile" EntityType="Self.vwRouteProfile" store:Type="Views" store:Schema="dbo">
-      <DefiningQuery>SELECT 
-    [vwRouteProfile].[RouteRequestId] AS [RouteRequestId], 
-    [vwRouteProfile].[UserId] AS [UserId], 
-    [vwRouteProfile].[SrcGAddress] AS [SrcGAddress], 
-    [vwRouteProfile].[SrcLongitude] AS [SrcLongitude], 
-    [vwRouteProfile].[SrcLatitude] AS [SrcLatitude], 
-    [vwRouteProfile].[DstGAddress] AS [DstGAddress], 
-    [vwRouteProfile].[DstLatitude] AS [DstLatitude], 
-    [vwRouteProfile].[DstLongitude] AS [DstLongitude], 
-    [vwRouteProfile].[IsDrive] AS [IsDrive], 
-    [vwRouteProfile].[RouteRequestUId] AS [RouteRequestUId], 
-    [vwRouteProfile].[RRPricingMinMax] AS [RRPricingMinMax], 
-    [vwRouteProfile].[UserImageId] AS [UserImageId], 
-    [vwRouteProfile].[VerifiedLevel] AS [VerifiedLevel], 
-    [vwRouteProfile].[Name] AS [Name], 
-    [vwRouteProfile].[Family] AS [Family], 
-    [vwRouteProfile].[Gender] AS [Gender], 
-    [vwRouteProfile].[UserName] AS [UserName]
-    FROM [dbo].[vwRouteProfile] AS [vwRouteProfile]</DefiningQuery>
-    </EntitySet>
     <EntitySet Name="vwRouteRequest" EntityType="Self.vwRouteRequest" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
     [vwRouteRequest].[UserId] AS [UserId], 
@@ -1669,8 +1687,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vwRouteRequest].[CarType] AS [CarType], 
     [vwRouteRequest].[CarColor] AS [CarColor], 
     [vwRouteRequest].[CarPlateNo] AS [CarPlateNo], 
-    [vwRouteRequest].[RouteRequestState] AS [RouteRequestState], 
-    [vwRouteRequest].[RouteRequestUId] AS [RouteRequestUId]
+    [vwRouteRequest].[RouteRequestState] AS [RouteRequestState]
     FROM [dbo].[vwRouteRequest] AS [vwRouteRequest]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="vwRouteSuggest" EntityType="Self.vwRouteSuggest" store:Type="Views" store:Schema="dbo">
@@ -1705,7 +1722,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vwRouteSuggest].[CarPlateNo] AS [CarPlateNo], 
     [vwRouteSuggest].[RecommendPathId] AS [RecommendPathId], 
     [vwRouteSuggest].[UserImageId] AS [UserImageId], 
-    [vwRouteSuggest].[SuggestRouteRequestUId] AS [SuggestRouteRequestUId]
+    [vwRouteSuggest].[RouteRequestUId] AS [RouteRequestUId]
     FROM [dbo].[vwRouteSuggest] AS [vwRouteSuggest]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="vwRRPricing" EntityType="Self.vwRRPricing" store:Type="Views" store:Schema="dbo">

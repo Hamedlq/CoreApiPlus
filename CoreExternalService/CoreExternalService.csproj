@@ -74,11 +74,15 @@
     <Compile Include="Models\FanapTokenResponse.cs" />
     <Compile Include="Models\FanapUserInfo.cs" />
     <Compile Include="Models\FanapPlatformRegisterResponse.cs" />
+    <Compile Include="Models\PasargadPayResponse.cs" />
+    <Compile Include="Models\PasargadPayModel.cs" />
     <Compile Include="Service References\ZarinPalServiceReference\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="PasargadService\IPasargadService.cs" />
+    <Compile Include="PasargadService\PasargadService.cs" />
     <Compile Include="ZarinPalService\ZarinPalService.cs" />
     <Compile Include="ZarinPalService\IZarinPalService.cs" />
     <Compile Include="GoogleService\GoogleService.cs" />

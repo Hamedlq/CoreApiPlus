@@ -11,6 +11,7 @@ using AutoMapper;
 using CoreDA;
 using CoreExternalService;
 using CoreExternalService.Models;
+using CoreManager.DiscountManager;
 using CoreManager.Models;
 using CoreManager.NotificationManager;
 using CoreManager.Resources;
@@ -28,14 +29,16 @@ namespace CoreManager.UserManager
         private readonly ITimingService _timingService;
         private readonly INotificationManager _notifManager;
         private readonly ITransactionManager _transactionManager;
+        private readonly IDiscountManager _discountManager;
 
         public UserManager(IResponseProvider responseProvider, ITimingService timingService,
-            INotificationManager notifManager, ITransactionManager transactionManager)
+            INotificationManager notifManager, ITransactionManager transactionManager, IDiscountManager discountManager)
         {
             _responseProvider = responseProvider;
             _timingService = timingService;
             _notifManager = notifManager;
             _transactionManager = transactionManager;
+            _discountManager = discountManager;
         }
 
         public UserManager()
@@ -68,12 +71,12 @@ namespace CoreManager.UserManager
                     thisInvite.CreateTime = DateTime.Now;
                     thisInvite.UserId = user.Id;
                     thisInvite.InviterUserId = invite.UserId;
+                    thisInvite.InviterId = invite.InviteId;
+                    thisInvite.InviteCode = InviteCodeGenerator();
                     dataModel.Invites.Add(thisInvite);
                     dataModel.SaveChanges();
-                    thisInvite.InviteCode = InviteCodeGenerator(thisInvite.InviteId);
-                    dataModel.SaveChanges();
-                    _notifManager.SendInviteGiftNotif((int) invite.UserId);
-                    _notifManager.SendInviteGiftNotif(user.Id);
+                    //_notifManager.SendInviteGiftNotif((int) invite.UserId);
+                    //_notifManager.SendInviteGiftNotif(user.Id);
                 }
             }
         }
@@ -981,11 +984,13 @@ namespace CoreManager.UserManager
         {
             var s = new ScoreModel();
             var remain = _transactionManager.GetRemain(userId);
-            s.CreditMoney = remain.ToString("N0", new NumberFormatInfo()
+            s.CreditMoney = (long) remain;
+            s.CreditMoneyString = remain.ToString("N0", new NumberFormatInfo()
             {
                 NumberGroupSizes = new[] {3},
                 NumberGroupSeparator = ","
             });
+
             using (var dataModel = new MibarimEntities())
             {
                 s.Score =
@@ -994,6 +999,75 @@ namespace CoreManager.UserManager
                         .ToList()
                         .Count;
             }
+            s.MoneySave = 0;
+            return s;
+        }
+
+        public ScoreModel GetPassScores(int userId, PayModel paymodel)
+        {
+            var s = new ScoreModel();
+            var remain = _transactionManager.GetRemain(userId);
+            using (var dataModel = new MibarimEntities())
+            {
+                s.Score =
+                    dataModel.vwTripRoutes.Where(
+                            x => x.RouteRequestUserId == userId && x.TrState == (int) TripRouteState.TripRouteFinished)
+                        .ToList()
+                        .Count;
+                var discount =
+                    dataModel.vwDiscountUsers.FirstOrDefault(
+                        x =>
+                            x.UserId == userId && x.DiscountEndTime > DateTime.Now && x.DuEndTime > DateTime.Now &&
+                            x.DuState == (int) DiscountStates.Submitted);
+                if (discount != null)
+                {
+                    //elecomp 50 discount
+                    var trips = dataModel.BookRequests.Count(x => x.IsBooked.Value && x.UserId == userId);
+                    if (trips > 0)
+                    {
+                        remain = remain + Convert.ToSingle((paymodel.SeatPrice)*0.5);
+                    }
+                    else
+                    {
+                        switch (discount.DiscountType)
+                        {
+                            case (int) DiscountTypes.EndlessFirstFreeTrip:
+                            case (int) DiscountTypes.FirstFreeTrip:
+                            case (int) DiscountTypes.EndlessFreeSeat:
+                            case (int) DiscountTypes.FreeSeat:
+                            case (int) DiscountTypes.AlwaysFreeSeat:
+                                remain = remain + paymodel.SeatPrice;
+                                break;
+                        }
+                    }
+                } //elecomp
+                else
+                {
+                    var dc = dataModel.Discounts.FirstOrDefault(x => x.DiscountCode == "elecomprequest");
+                    var elediscount =
+                        dataModel.vwDiscountUsers.FirstOrDefault(
+                            x =>
+                                    x.UserId == userId && x.DiscountId == dc.DiscountId);
+                    if (elediscount == null)
+                    {
+                        var discountUser = new DiscountUser();
+                        discountUser.UserId = userId;
+                        discountUser.DiscountId = dc.DiscountId;
+                        discountUser.DuCreateTime = DateTime.Now;
+                        discountUser.DuEndTime = DateTime.Now.AddDays(6);
+                        discountUser.DuState = (int) DiscountStates.Submitted;
+                        dataModel.DiscountUsers.Add(discountUser);
+                        dataModel.SaveChanges();
+                        remain = remain + paymodel.SeatPrice;
+                    }
+                }
+            }
+            s.CreditMoney = (long) remain;
+            s.CreditMoneyString = remain.ToString("N0", new NumberFormatInfo()
+            {
+                NumberGroupSizes = new[] {3},
+                NumberGroupSeparator = ","
+            });
             s.MoneySave = 0;
             return s;
         }
@@ -1485,6 +1559,10 @@ namespace CoreManager.UserManager
         public bool WithdrawlValid(WithdrawRequestModel model, int userId)
         {
             var remain = _transactionManager.GetRemainWithoutGift(userId);
+            if (model.WithdrawAmount == 0)
+            {
+                return false;
+            }
             if (model.WithdrawAmount > remain)
             {
                 return false;
@@ -1499,7 +1577,7 @@ namespace CoreManager.UserManager
                 {
                     withdraw = withdrawquery.Sum(x => x.WithdrawAmount);
                 }
-                if (model.WithdrawAmount > remain + withdraw)
+                if (model.WithdrawAmount > remain - withdraw)
                 {
                     return false;
                 }
@@ -1507,35 +1585,60 @@ namespace CoreManager.UserManager
             return true;
         }
 
-        public InviteModel GetUserInvite(int userId)
+        public InviteModel GetUserInvite(int userId, InviteTypes inviteType)
         {
             var res = new InviteModel();
 
             using (var dataModel = new MibarimEntities())
             {
                 var invite =
-                    dataModel.Invites.FirstOrDefault(x => x.UserId == userId);
+                    dataModel.Invites.FirstOrDefault(x => x.UserId == userId && x.InviteType == (int) inviteType);
                 if (invite != null)
                 {
                     res.InviteCode = invite.InviteCode;
-                    res.InviteLink = String.Format(getResource.getMessage("InviteLink"), invite.InviteCode);
+                    if (inviteType == InviteTypes.PassInvite)
+                    {
+                        res.InviteLink = String.Format(getResource.getMessage("InviteLink"), invite.InviteCode);
+                    }
+                    else
+                    {
+                        res.InviteLink = String.Format(getResource.getMessage("InviteLink"), invite.InviteCode);
+                    }
                 }
                 else
                 {
                     invite = new Invite();
                     invite.CreateTime = DateTime.Now;
                     invite.UserId = userId;
+                    invite.InviteType = (short?) inviteType;
+                    invite.InviteCode = InviteCodeGenerator();
                     dataModel.Invites.Add(invite);
                     dataModel.SaveChanges();
-                    invite.InviteCode = InviteCodeGenerator(invite.InviteId);
-                    dataModel.SaveChanges();
+                    //dataModel.SaveChanges();
                     res.InviteCode = invite.InviteCode;
-                    res.InviteLink =
-                        UserMapper.PersianNumber(String.Format(getResource.getMessage("InviteLink"), invite.InviteCode));
+                    res.InviteLink = String.Format(getResource.getMessage("InviteLink"), invite.InviteCode);
+                    //UserMapper.PersianNumber();
+                }
+                if (inviteType == InviteTypes.PassInvite)
+                {
+                    res.InvitePassTitle = getResource.getMessage("InvitePassPassTitle");
+                    res.InvitePassenger = getResource.getMessage("InvitePassPass");
+                    /*res.InviteDriverTitle = getResource.getMessage("InvitePassDriverTitle");
+                    res.InviteDriver = getResource.getMessage("InvitePassDriver");*/
+                    res.InviteDriverTitle = "";
+                    res.InviteDriver = "";
+                }
+                else
+                {
+                    res.InvitePassTitle = getResource.getMessage("InviteDriverPassTitle");
+                    res.InvitePassenger = getResource.getMessage("InviteDriverPass");
+                    res.InviteDriverTitle = getResource.getMessage("InviteDriverDriverTitle");
+                    res.InviteDriver = getResource.getMessage("InviteDriverDriver");
                 }
                 return res;
             }
         }
+
 
         public void ValidatingTry(int id)
         {
@@ -1570,14 +1673,16 @@ namespace CoreManager.UserManager
 
         public void SendNotif()
         {
-            var userIds = new List<int> {27, 1, 181};
+            var userIds = new List<int> {27, 1, 12325}; //, 181
             using (var dataModel = new MibarimEntities())
             {
                 var nu = dataModel.GetNotificationUsers();
                 userIds.AddRange(nu.Select(s => Convert.ToInt32(s)));
                 var notif = new NotifModel();
-                notif.Title = "۳۰۰ کتاب فیدیبو جایزه بگیرید! 📚 🎁 ";
-                notif.Body = "با دعوت دوستان و تکمیل پروفایلتان، جایزه بگیرید!";
+                notif.Title = "اولین سفر به نمایشگاه الکامپ را مهمان ما باشید";
+                notif.Body = "سفر رایگان به الکامپ را به دوستان خود اطلاع دهید";
+                notif.Url =
+                    "http://mibarim.com/elecomp96?utm_source=push_elecomp96&utm_campaign:elecomp96&utm_medium:pushnotif";
                 notif.RequestCode = 8;
                 notif.NotificationId = 8;
                 notif.Tab = 1;
@@ -1722,10 +1827,15 @@ namespace CoreManager.UserManager
             return res;
         }
 
-        public void RegisterUserInfo(ApplicationUser user, PersoanlInfoModel model)
+        public void RegisterUserInfo(ApplicationUser user, PersoanlInfoModel model, InviteTypes inviteType)
         {
             CreateSupportContact(user);
-            HandleInvite(user, model.Code);
+            //HandleInvite(user, model.Code);
+            //HandleInvitation(model.Code,user.Id);
+            if (model.Code != null)
+            {
+                DoDiscount(inviteType, model.Code, user.Id);
+            }
         }
 
         public UserInfoModel UpdateFanapUserInfo(FanapModel model)
@@ -1843,12 +1953,289 @@ namespace CoreManager.UserManager
             }
         }
 
-        private string InviteCodeGenerator(long inviteId)
+        public bool DoDiscount(InviteTypes intype, string discountCode, int userid)
         {
-            var random = new Random();
+            using (var dataModel = new MibarimEntities())
+            {
+                var dc = dataModel.Discounts.FirstOrDefault(x => x.DiscountCode == discountCode);
+                if (dc != null)
+                {
+                    var dcu =
+                        dataModel.DiscountUsers.FirstOrDefault(
+                            x => x.DiscountId == dc.DiscountId && x.UserId == userid);
+                    if (dcu != null && dc.DiscountType != (int) DiscountTypes.AlwaysFreeSeat)
+                    {
+                        _responseProvider.SetBusinessMessage(new MessageResponse()
+                        {
+                            Type = ResponseTypes.Error,
+                            Message = getResource.getMessage("CodeUsed")
+                        });
+                        return false;
+                    }
+                    var discountUser = new DiscountUser();
+                    switch (dc.DiscountType)
+                    {
+                        case (int) DiscountTypes.EndlessFirstFreeTrip:
+                            discountUser.UserId = userid;
+                            discountUser.DiscountId = dc.DiscountId;
+                            discountUser.DuCreateTime = DateTime.Now;
+                            discountUser.DuEndTime = null;
+                            discountUser.DuState = (int) DiscountStates.Submitted;
+                            dataModel.DiscountUsers.Add(discountUser);
+                            dataModel.SaveChanges();
+                            break;
+                        case (int) DiscountTypes.FirstFreeTrip:
+                            discountUser.UserId = userid;
+                            discountUser.DiscountId = dc.DiscountId;
+                            discountUser.DuCreateTime = DateTime.Now;
+                            discountUser.DuEndTime = DateTime.Now.AddMonths(1);
+                            discountUser.DuState = (int) DiscountStates.Submitted;
+                            dataModel.DiscountUsers.Add(discountUser);
+                            dataModel.SaveChanges();
+                            break;
+                        case (int) DiscountTypes.FreeSeat:
+                            discountUser.UserId = userid;
+                            discountUser.DiscountId = dc.DiscountId;
+                            discountUser.DuCreateTime = DateTime.Now;
+                            discountUser.DuEndTime = DateTime.Now.AddMonths(1);
+                            discountUser.DuState = (int) DiscountStates.Submitted;
+                            dataModel.DiscountUsers.Add(discountUser);
+                            dataModel.SaveChanges();
+                            break;
+                        case (int) DiscountTypes.EndlessFreeSeat:
+                            discountUser.UserId = userid;
+                            discountUser.DiscountId = dc.DiscountId;
+                            discountUser.DuCreateTime = DateTime.Now;
+                            discountUser.DuEndTime = null;
+                            discountUser.DuState = (int) DiscountStates.Submitted;
+                            dataModel.DiscountUsers.Add(discountUser);
+                            dataModel.SaveChanges();
+                            break;
+                        case (int) DiscountTypes.AlwaysFreeSeat:
+                            discountUser.UserId = userid;
+                            discountUser.DiscountId = dc.DiscountId;
+                            discountUser.DuCreateTime = DateTime.Now;
+                            discountUser.DuEndTime = null;
+                            discountUser.DuState = (int) DiscountStates.Submitted;
+                            dataModel.DiscountUsers.Add(discountUser);
+                            dataModel.SaveChanges();
+                            break;
+                    }
+                    return true;
+                }
+                else
+                {
+                    var ui = dataModel.Invites.FirstOrDefault(x => x.InviteCode == discountCode);
+                    if (ui != null)
+                    {
+                        var discount =
+                            dataModel.Discounts.FirstOrDefault(
+                                x => x.DiscountCode == "InviteFirstFreeTrip");
+
+                        if (ui.InviteType == (int) InviteTypes.PassInvite)
+                        {
+                            if (intype == InviteTypes.PassInvite)
+                            {
+                                var invite =
+                                    dataModel.Invites.FirstOrDefault(
+                                        x => x.UserId == userid && x.InviteType == (int) InviteTypes.PassInvite);
+                                if (invite == null)
+                                {
+                                    var thisInvite = new Invite();
+                                    thisInvite.CreateTime = DateTime.Now;
+                                    thisInvite.UserId = userid;
+                                    thisInvite.InviteType = (int) InviteTypes.PassInvite;
+                                    thisInvite.InviterUserId = ui.UserId;
+                                    thisInvite.InviterId = ui.InviteId;
+                                    thisInvite.InviteCode = InviteCodeGenerator();
+                                    dataModel.Invites.Add(thisInvite);
+                                    dataModel.SaveChanges();
+                                    var discountUser = new DiscountUser();
+                                    discountUser.UserId = userid;
+                                    discountUser.DiscountId = discount.DiscountId;
+                                    discountUser.DuCreateTime = DateTime.Now;
+                                    discountUser.DuEndTime = DateTime.Now.AddMonths(1);
+                                    discountUser.DuState = (int) DiscountStates.Submitted;
+                                    dataModel.DiscountUsers.Add(discountUser);
+                                    dataModel.SaveChanges();
+                                }
+                                else
+                                {
+                                    if (invite.InviterUserId != null)
+                                    {
+                                        _responseProvider.SetBusinessMessage(new MessageResponse()
+                                        {
+                                            Type = ResponseTypes.Error,
+                                            Message = getResource.getMessage("CodeUsed")
+                                        });
+                                        return false;
+                                    }
+                                    else
+                                    {
+                                        invite.InviterUserId = ui.UserId;
+                                        invite.InviterId = ui.InviteId;
+                                        //invite.CreateTime = DateTime.Now;
+                                        dataModel.SaveChanges();
+                                        var discountUser = new DiscountUser();
+                                        discountUser.UserId = userid;
+                                        discountUser.DiscountId = discount.DiscountId;
+                                        discountUser.DuCreateTime = DateTime.Now;
+                                        discountUser.DuEndTime = DateTime.Now.AddMonths(1);
+                                        discountUser.DuState = (int) DiscountStates.Submitted;
+                                        dataModel.DiscountUsers.Add(discountUser);
+                                        dataModel.SaveChanges();
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (intype == InviteTypes.PassInvite)
+                            {
+                                var invite =
+                                    dataModel.Invites.FirstOrDefault(
+                                        x => x.UserId == userid && x.InviteType == (int) InviteTypes.PassInvite);
+                                if (invite == null)
+                                {
+                                    var thisInvite = new Invite();
+                                    thisInvite.CreateTime = DateTime.Now;
+                                    thisInvite.UserId = userid;
+                                    thisInvite.InviteType = (int) InviteTypes.DriverInvite;
+                                    thisInvite.InviterUserId = ui.UserId;
+                                    thisInvite.InviterId = ui.InviteId;
+                                    thisInvite.InviteCode = InviteCodeGenerator();
+                                    dataModel.Invites.Add(thisInvite);
+                                    dataModel.SaveChanges();
+                                    var discountUser = new DiscountUser();
+                                    discountUser.UserId = userid;
+                                    discountUser.DiscountId = discount.DiscountId;
+                                    discountUser.DuCreateTime = DateTime.Now;
+                                    discountUser.DuEndTime = DateTime.Now.AddMonths(1);
+                                    discountUser.DuState = (int) DiscountStates.Submitted;
+                                    dataModel.DiscountUsers.Add(discountUser);
+                                    dataModel.SaveChanges();
+                                }
+                                else
+                                {
+                                    if (invite.InviterUserId != null)
+                                    {
+                                        _responseProvider.SetBusinessMessage(new MessageResponse()
+                                        {
+                                            Type = ResponseTypes.Error,
+                                            Message = getResource.getMessage("CodeUsed")
+                                        });
+                                        return false;
+                                    }
+                                    else
+                                    {
+                                        invite.InviterUserId = ui.UserId;
+                                        invite.InviterId = ui.InviteId;
+                                        //invite.CreateTime = DateTime.Now;
+                                        dataModel.SaveChanges();
+                                        var discountUser = new DiscountUser();
+                                        discountUser.UserId = userid;
+                                        discountUser.DiscountId = discount.DiscountId;
+                                        discountUser.DuCreateTime = DateTime.Now;
+                                        discountUser.DuEndTime = DateTime.Now.AddMonths(1);
+                                        discountUser.DuState = (int) DiscountStates.Submitted;
+                                        dataModel.DiscountUsers.Add(discountUser);
+                                        dataModel.SaveChanges();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                var invite =
+                                    dataModel.Invites.FirstOrDefault(
+                                        x => x.UserId == userid && x.InviteType == (int) InviteTypes.DriverInvite);
+                                if (invite == null)
+                                {
+                                    var thisInvite = new Invite();
+                                    thisInvite.CreateTime = DateTime.Now;
+                                    thisInvite.UserId = userid;
+                                    thisInvite.InviteType = (int) InviteTypes.DriverInvite;
+                                    thisInvite.InviterUserId = ui.UserId;
+                                    thisInvite.InviterId = ui.InviteId;
+                                    thisInvite.InviteCode = InviteCodeGenerator();
+                                    dataModel.Invites.Add(thisInvite);
+                                    dataModel.SaveChanges();
+                                }
+                                else
+                                {
+                                    if (invite.InviterUserId != null)
+                                    {
+                                        _responseProvider.SetBusinessMessage(new MessageResponse()
+                                        {
+                                            Type = ResponseTypes.Error,
+                                            Message = getResource.getMessage("CodeUsed")
+                                        });
+                                        return false;
+                                    }
+                                    else
+                                    {
+                                        invite.InviterUserId = ui.UserId;
+                                        invite.InviterId = ui.InviteId;
+                                        //invite.CreateTime = DateTime.Now;
+                                        dataModel.SaveChanges();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        _responseProvider.SetBusinessMessage(new MessageResponse()
+                        {
+                            Type = ResponseTypes.Error,
+                            Message = getResource.getMessage("CodeNotExist")
+                        });
+                        return false;
+                    }
+                    return true;
+                }
+            }
+        }
+
+        public List<PassRouteModel> GetPassengers()
+        {
+            var res=new List<PassRouteModel>();
+            using (var dataModel = new MibarimEntities())
+            {
+                var time = DateTime.Now.AddHours(-1);
+                var models = dataModel.vwBookedTrips.Where(x => x.TStartTime>time).OrderByDescending(x=>x.BrCreateTime);
+                foreach (var vwBookedTrip in models)
+                {
+                    var rm=new PassRouteModel();
+                    rm.SrcAddress = vwBookedTrip.srcName;
+                    rm.DstAddress = vwBookedTrip.dstName;
+                    rm.CarString =vwBookedTrip.DriverName +" "+ vwBookedTrip.DriverFamily;
+                    rm.CarPlate = vwBookedTrip.DriverMobile;
+                    rm.Name = vwBookedTrip.Passname;
+                    rm.Family = vwBookedTrip.PassFamily;
+                    rm.MobileNo = vwBookedTrip.PassMobile;
+                    rm.EmptySeats= vwBookedTrip.TEmptySeat;
+                    rm.TimingString= vwBookedTrip.TStartTime.ToString("HH:mm");
+                    res.Add(rm);
+                }
+                return res;
+            }
+        }
+
+        private string InviteCodeGenerator()
+        {
+            string[] str = new[] {"mb", "mi", "mr", "ba", "mm", "ma", "mb", "mib"};
+            using (var dataModel = new MibarimEntities())
+            {
+                var invitecode = dataModel.Invites.Count();
+                var indict = invitecode%7;
+                var number = invitecode/7;
+
+                return str[indict] + number;
+            }
+            /*var random = new Random();
             string[] str = new[] {"mb", "mi", "mr", "ba", "mm"};
             var rndMember = str[random.Next(str.Length)];
-            return rndMember + inviteId;
+            return rndMember + inviteId;*/
         }
 
         /*public ImageResponse GetImageByUserId(ImageRequest model)

@@ -28,5 +28,7 @@ namespace CoreDA
         public short DuState { get; set; }
         public Nullable<long> TransId { get; set; }
         public long DuId { get; set; }
+        public int DiscountType { get; set; }
+        public Nullable<System.DateTime> DuEndTime { get; set; }
     }
 }

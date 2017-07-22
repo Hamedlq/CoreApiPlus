@@ -148,6 +148,19 @@ namespace CoreApi.Controllers
             return result;
         }
         [AllowAnonymous]
+        [Route("RegisterIosUser")]
+        public IHttpActionResult RegisterIosUser(OtploginModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(_responseProvider.GenerateBadRequestResponse(ModelState));
+                //return BadRequest(ModelState);
+            }
+            model.UserRole = UserRoles.IosMobileUser;
+            var result = OtploginUser(model);
+            return result;
+        }
+        [AllowAnonymous]
         [Route("RegisterMobileDriver")]
         public IHttpActionResult RegisterMobileDriver(OtploginModel model)
         {
@@ -328,7 +341,7 @@ namespace CoreApi.Controllers
                 var res=AppUserManager.Update(user);
                 if (res.Succeeded)
                 {
-                    _userManager.RegisterUserInfo(user, model);
+                    _userManager.RegisterUserInfo(user, model,InviteTypes.PassInvite);
                     return Json(_responseProvider.GenerateOKResponse());
                 }
                 else
@@ -337,7 +350,46 @@ namespace CoreApi.Controllers
                     _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = getResource.getMessage("ErrorHappened") });
                     return Json(_responseProvider.GenerateBadRequestResponse());
                 }
-                
+            }
+            catch (Exception e)
+            {
+                _logManager.Log(Tag, "RegisterUserInfo", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [Route("RegisterDriverInfo")]
+        public async Task<IHttpActionResult> RegisterDriverInfo(PersoanlInfoModel model)
+        {
+            try
+            {
+                if (model == null)
+                {
+                    _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("Name")) });
+                    return Json(_responseProvider.GenerateBadRequestResponse());
+                }
+                if (!ModelState.IsValid)
+                {
+                    return Json(_responseProvider.GenerateBadRequestResponse(ModelState));
+                }
+                var user = await AppUserManager.FindByIdAsync(int.Parse(User.Identity.GetUserId()));
+                user.Name = model.Name;
+                user.Family = model.Family;
+                user.Gender = model.Gender;
+                user.Email = model.Email;
+                user.Code = model.Code;
+                var res = AppUserManager.Update(user);
+                if (res.Succeeded)
+                {
+                    _userManager.RegisterUserInfo(user, model,InviteTypes.DriverInvite);
+                    return Json(_responseProvider.GenerateOKResponse());
+                }
+                else
+                {
+                    _logManager.Log(Tag, "RegisterUserInfo", getResource.getMessage("ErrorHappened"));
+                    _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = getResource.getMessage("ErrorHappened") });
+                    return Json(_responseProvider.GenerateBadRequestResponse());
+                }
             }
             catch (Exception e)
             {
@@ -744,22 +796,19 @@ namespace CoreApi.Controllers
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
 
-        [HttpPost]
+        /*[HttpPost]
         [Route("SubmitDiscount")]
         public IHttpActionResult SubmitDiscount(DiscountModel model)
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return Json(_responseProvider.GenerateBadRequestResponse(ModelState));
-                }
                 if (model == null)
                 {
                     _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("BankName")) });
                     return Json(_responseProvider.GenerateBadRequestResponse());
                 }
-                if (_userManager.DiscountCodeExist(model))
+                _userManager.DoDiscount(,model.DiscountCode, int.Parse(User.Identity.GetUserId()));
+                /*if (_userManager.DiscountCodeExist(model))
                 {
                     if (_userManager.DiscountCodeUsed(model, int.Parse(User.Identity.GetUserId())))
                     {
@@ -776,14 +825,14 @@ namespace CoreApi.Controllers
                 {
                     _responseProvider.SetBusinessMessage(new MessageResponse() { Message = getResource.getMessage("CodeNotExist"), Type = ResponseTypes.Error });
                     return Json(_responseProvider.GenerateBadRequestResponse());
-                }
+                }#1#
             }
             catch (Exception e)
             {
                 _logManager.Log(Tag, "SubmitDiscount", e.Message);
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
-        }
+        }*/
         [HttpPost]
         [Route("InsertBankCardPic")]
         public IHttpActionResult InsertBankCardPic()
@@ -947,7 +996,7 @@ namespace CoreApi.Controllers
         {
             try
             {
-                var res = _userManager.GetUserInvite(int.Parse(User.Identity.GetUserId()));
+                var res = _userManager.GetUserInvite(int.Parse(User.Identity.GetUserId()),InviteTypes.PassInvite);
                 //var jsonRes = Json(_responseProvider.GenerateRouteResponse(res,"AboutMe"));
                 return Json(res);
             }
@@ -1142,7 +1191,7 @@ namespace CoreApi.Controllers
         {
             try
             {
-                _userManager.SendNotif();
+                //_userManager.SendNotif();
                 return Json(_responseProvider.GenerateOKResponse());
             }
             catch (Exception e)

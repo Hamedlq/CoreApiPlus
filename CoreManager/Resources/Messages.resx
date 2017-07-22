@@ -350,7 +350,7 @@
   </data>
   <data name="InviteLink" xml:space="preserve">
     <value>سفر ارزان و راحت با خودروی اشتراکی
- با اپلیکیشن «می‌بریم» مسیر روزانه خود را ثبت کنید و با هزینه بسیار پایین به محل کار بروید. شما با این دعوت نامه 3 روز سفر رایگان دریافت می‌کنید و با معرفی کردن 10 نفر می‌توانید تا 30 روز رایگان بین خانه تا محل کار خود جابجا شوید. 
+ با اپلیکیشن «می‌بریم» مسیر روزانه خود را ثبت کنید و با هزینه بسیار پایین به محل کار بروید. شما با این دعوت نامه یک روز سفر رایگان دریافت می‌کنید. 
 می‌بریم را از http://mibarim.com دریافت کرده و در کد معرفی عبارت {0} را وارد کنید</value>
   </data>
   <data name="NotRemain" xml:space="preserve">
@@ -411,12 +411,51 @@
     <value>رزرو شد</value>
   </data>
   <data name="SeatReservedFor" xml:space="preserve">
-    <value>صندلی خودروی شما برای مسیر {0} به {1} ساعت {2} رزرو شد</value>
+    <value>صندلی خودروی شما برای مسیر {0} به {1} ساعت {2} رزرو شد. لطفا حتما در ساعت {2} در  {0} حضور داشته باشید.</value>
   </data>
   <data name="PayForSetTrip" xml:space="preserve">
     <value>مبلغ {0} تومان افزایش اعتبار {1} بابت ثبت سفر</value>
   </data>
   <data name="BlockedUser" xml:space="preserve">
     <value>امکان ثبت سفر وجود ندارد. لطفا با پشتیبانی تماس بگیرید</value>
+  </data>
+  <data name="TripWizard" xml:space="preserve">
+    <value>با انجام {0} سفر در یک ماه، {3} تومان اعتبار جایزه دریافت نمایید</value>
+  </data>
+  <data name="InviteDriverDriver" xml:space="preserve">
+    <value>با معرفی راننده در مسیرهای تعریف شده در اپلیکیشن، پس از ۲۰ بار ثبت مسیر در یک ماه توسط راننده ۳۰،۰۰۰ تومان وجه نقد دریافت نمایید و ۳۰۰۰ تومان به ازای هر سفر به راننده هدیه دهید </value>
+  </data>
+  <data name="InviteDriverDriverTitle" xml:space="preserve">
+    <value>معرفی راننده جدید</value>
+  </data>
+  <data name="InviteDriverPass" xml:space="preserve">
+    <value>با معرفی مسافر در مسیر خود، پس از انجام ۱۰ سفر در یک ماه علاوه بر دریافت ۱۰،۰۰۰ تومان وجه نقد یک سفر رایگان به او هدیه دهید </value>
+  </data>
+  <data name="InviteDriverPassTitle" xml:space="preserve">
+    <value>معرفی مسافر</value>
+  </data>
+  <data name="InvitePassDriver" xml:space="preserve">
+    <value>با معرفی راننده در مسیرهای تعریف شده در اپلیکیشن و انجام ۱۰ سفر در یک ماه با او  ۵۰،۰۰۰ تومان اعتبار رایگان دریافت نمایید و ۳۰۰۰ تومان به ازای هر سفر به راننده هدیه دهید</value>
+  </data>
+  <data name="InvitePassDriverTitle" xml:space="preserve">
+    <value>معرفی راننده در مسیر خود</value>
+  </data>
+  <data name="InvitePassPass" xml:space="preserve">
+    <value>با معرفی دوستان خود در مسیرهای تعریف شده در اپلیکیشن، پس از اولین سفر او در یک ماه  ۱۰،۰۰۰ تومان اعتبار رایگان دریافت نمایید و یک سفر رایگان به دوست خود هدیه دهید.</value>
+  </data>
+  <data name="InvitePassPassTitle" xml:space="preserve">
+    <value>معرفی به دوستان</value>
+  </data>
+  <data name="VerificationCode" xml:space="preserve">
+    <value>کد تایید</value>
+  </data>
+  <data name="NoEmptySeat" xml:space="preserve">
+    <value>ظرفیت تکمیل شده است</value>
+  </data>
+  <data name="PricesUnDefined" xml:space="preserve">
+    <value>مبلغ نامعتبر است</value>
+  </data>
+  <data name="TripAlreadyReserved" xml:space="preserve">
+    <value>سفر رزرو شده است</value>
   </data>
 </root>

@@ -14,7 +14,6 @@
     <EntitySet Name="Images" EntityType="MibarimModel.Image" />
     <EntitySet Name="LicenseInfoes" EntityType="MibarimModel.LicenseInfo" />
     <EntitySet Name="Notifications" EntityType="MibarimModel.Notification" />
-    <EntitySet Name="PayReqs" EntityType="MibarimModel.PayReq" />
     <EntitySet Name="RecommendPaths" EntityType="MibarimModel.RecommendPath" />
     <EntitySet Name="RecommendRoutes" EntityType="MibarimModel.RecommendRoute" />
     <EntitySet Name="RouteGroups" EntityType="MibarimModel.RouteGroup" />
@@ -52,12 +51,8 @@
     <EntitySet Name="vwPaths" EntityType="MibarimModel.vwPath" />
     <EntitySet Name="Contacts" EntityType="MibarimModel.Contact" />
     <EntitySet Name="Events" EntityType="MibarimModel.Event" />
-    <EntitySet Name="Discounts" EntityType="MibarimModel.Discount" />
-    <EntitySet Name="vwDiscountUsers" EntityType="MibarimModel.vwDiscountUser" />
-    <EntitySet Name="DiscountUsers" EntityType="MibarimModel.DiscountUser" />
     <EntitySet Name="AboutUsers" EntityType="MibarimModel.AboutUser" />
     <EntitySet Name="Withdraws" EntityType="MibarimModel.Withdraw" />
-    <EntitySet Name="Invites" EntityType="MibarimModel.Invite" />
     <EntitySet Name="RouteRequestGRoutes" EntityType="MibarimModel.RouteRequestGRoute" />
     <EntitySet Name="RouteRequestGPaths" EntityType="MibarimModel.RouteRequestGPath" />
     <FunctionImport Name="GenerateSimilarRoutes" ReturnType="Collection(MibarimModel.GenerateSimilarRoutes_Result)">
@@ -69,15 +64,9 @@
     <EntitySet Name="vwContactTrips" EntityType="MibarimModel.vwContactTrip" />
     <EntitySet Name="vwContactScores" EntityType="MibarimModel.vwContactScore" />
     <EntitySet Name="ContactScores" EntityType="MibarimModel.ContactScore" />
-    <FunctionImport Name="GetNotificationUsers" ReturnType="Collection(Int32)" />
     <EntitySet Name="Trips" EntityType="MibarimModel.Trip" />
-    <EntitySet Name="vwRouteRequests" EntityType="MibarimModel.vwRouteRequest" />
-    <EntitySet Name="vwRouteSuggests" EntityType="MibarimModel.vwRouteSuggest" />
-    <EntitySet Name="BookRequests" EntityType="MibarimModel.BookRequest" />
     <EntitySet Name="MainStations" EntityType="MibarimModel.MainStation" />
     <EntitySet Name="StationRoutes" EntityType="MibarimModel.StationRoute" />
-    <EntitySet Name="vwBookPays" EntityType="MibarimModel.vwBookPay" />
-    <EntitySet Name="vwRouteProfiles" EntityType="MibarimModel.vwRouteProfile" />
     <EntitySet Name="DriverRoutes" EntityType="MibarimModel.DriverRoute" />
     <EntitySet Name="vwDriverRoutes" EntityType="MibarimModel.vwDriverRoute" />
     <EntitySet Name="vwStationRoutes" EntityType="MibarimModel.vwStationRoute" />
@@ -91,8 +80,19 @@
     <EntitySet Name="Stations" EntityType="MibarimModel.Station" />
     <EntitySet Name="vwCarInfoes" EntityType="MibarimModel.vwCarInfo" />
     <EntitySet Name="TripLocations" EntityType="MibarimModel.TripLocation" />
-    <EntitySet Name="vwPayRoutes" EntityType="MibarimModel.vwPayRoute" />
     <EntitySet Name="vwDriverTrips" EntityType="MibarimModel.vwDriverTrip" />
+    <EntitySet Name="vwRouteRequests" EntityType="MibarimModel.vwRouteRequest" />
+    <EntitySet Name="Invites" EntityType="MibarimModel.Invite" />
+    <EntitySet Name="DiscountUsers" EntityType="MibarimModel.DiscountUser" />
+    <EntitySet Name="vwDiscountUsers" EntityType="MibarimModel.vwDiscountUser" />
+    <EntitySet Name="Discounts" EntityType="MibarimModel.Discount" />
+    <EntitySet Name="BookRequests" EntityType="MibarimModel.BookRequest" />
+    <EntitySet Name="vwRouteSuggests" EntityType="MibarimModel.vwRouteSuggest" />
+    <EntitySet Name="vwBookPays" EntityType="MibarimModel.vwBookPay" />
+    <EntitySet Name="PayReqs" EntityType="MibarimModel.PayReq" />
+    <EntitySet Name="vwPayRoutes" EntityType="MibarimModel.vwPayRoute" />
+    <FunctionImport Name="GetNotificationUsers" ReturnType="Collection(Int32)" />
+    <EntitySet Name="vwBookedTrips" EntityType="MibarimModel.vwBookedTrip" />
   </EntityContainer>
   <EntityType Name="BankInfo">
     <Key>
@@ -248,18 +248,6 @@
     <Property Name="NotifCommentId" Type="Int64" Nullable="false" />
     <Property Name="IsNotificationSent" Type="Boolean" Nullable="false" />
     <Property Name="IsNotificationSeen" Type="Boolean" Nullable="false" />
-  </EntityType>
-  <EntityType Name="PayReq">
-    <Key>
-      <PropertyRef Name="PayReqId" />
-    </Key>
-    <Property Name="PayReqId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="PayReqCreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="PayReqUserId" Type="Int32" Nullable="false" />
-    <Property Name="PayReqValue" Type="Int32" Nullable="false" />
-    <Property Name="PayReqAuthority" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
-    <Property Name="PayReqStatus" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-    <Property Name="PayReqRefID" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="RecommendPath">
     <Key>
@@ -780,57 +768,6 @@
     <Property Name="EventConfirmed" Type="Int16" />
     <Property Name="IsConfirmed" Type="Boolean" />
   </EntityType>
-  <EntityType Name="Discount">
-    <Key>
-      <PropertyRef Name="DiscountId" />
-    </Key>
-    <Property Name="DiscountId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="DiscountCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="DiscountCreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="DiscountStartTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="DiscountEndTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="DiscountDesc" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-    <Property Name="DiscountEvenId" Type="Int64" />
-    <Property Name="DiscountTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-  </EntityType>
-  <EntityType Name="vwDiscountUser">
-    <Key>
-      <PropertyRef Name="DiscountCode" />
-      <PropertyRef Name="DiscountCreateTime" />
-      <PropertyRef Name="DiscountStartTime" />
-      <PropertyRef Name="DiscountEndTime" />
-      <PropertyRef Name="DiscountId" />
-      <PropertyRef Name="DuCreateTime" />
-      <PropertyRef Name="DuState" />
-      <PropertyRef Name="DuId" />
-    </Key>
-    <Property Name="DiscountCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="DiscountTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="DiscountCreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="DiscountStartTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="DiscountEndTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="DiscountDesc" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-    <Property Name="DiscountEvenId" Type="Int64" />
-    <Property Name="UserId" Type="Int32" />
-    <Property Name="RouteRequestId" Type="Int64" />
-    <Property Name="DiscountId" Type="Int32" Nullable="false" />
-    <Property Name="DuCreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="DuState" Type="Int16" Nullable="false" />
-    <Property Name="TransId" Type="Int64" />
-    <Property Name="DuId" Type="Int64" Nullable="false" />
-  </EntityType>
-  <EntityType Name="DiscountUser">
-    <Key>
-      <PropertyRef Name="DuId" />
-    </Key>
-    <Property Name="DuId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="UserId" Type="Int32" />
-    <Property Name="RouteRequestId" Type="Int64" />
-    <Property Name="DiscountId" Type="Int32" Nullable="false" />
-    <Property Name="DuCreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="DuState" Type="Int16" Nullable="false" />
-    <Property Name="TransId" Type="Int64" />
-  </EntityType>
   <EntityType Name="AboutUser">
     <Key>
       <PropertyRef Name="AboutId" />
@@ -854,16 +791,6 @@
     <Property Name="UserBalance" Type="Double" Nullable="false" />
     <Property Name="WithdrawAmount" Type="Double" Nullable="false" />
     <Property Name="WithdrawState" Type="Int32" Nullable="false" />
-  </EntityType>
-  <EntityType Name="Invite">
-    <Key>
-      <PropertyRef Name="InviteId" />
-    </Key>
-    <Property Name="InviteId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="InviteCode" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
-    <Property Name="UserId" Type="Int32" />
-    <Property Name="InviterUserId" Type="Int32" />
   </EntityType>
   <EntityType Name="RouteRequestGRoute">
     <Key>
@@ -984,108 +911,6 @@
     <Property Name="TState" Type="Int16" Nullable="false" />
     <Property Name="TEmptySeat" Type="Int16" Nullable="false" />
   </EntityType>
-  <EntityType Name="vwRouteRequest">
-    <Key>
-      <PropertyRef Name="UserId" />
-      <PropertyRef Name="UserName" />
-      <PropertyRef Name="RouteRequestType" />
-      <PropertyRef Name="SrcLatitude" />
-      <PropertyRef Name="SrcLongitude" />
-      <PropertyRef Name="DstLatitude" />
-      <PropertyRef Name="DstLongitude" />
-      <PropertyRef Name="AccompanyCount" />
-      <PropertyRef Name="RouteRequestId" />
-      <PropertyRef Name="RRPricingOption" />
-      <PropertyRef Name="RRIsConfirmed" />
-      <PropertyRef Name="IsDrive" />
-      <PropertyRef Name="CarInfoId" />
-    </Key>
-    <Property Name="UserId" Type="Int32" Nullable="false" />
-    <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-    <Property Name="RouteRequestType" Type="Int32" Nullable="false" />
-    <Property Name="SrcGAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-    <Property Name="SrcDetailAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-    <Property Name="SrcLatitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="SrcLongitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="DstGAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-    <Property Name="DstDetailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Name="DstLatitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="DstLongitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="AccompanyCount" Type="Int32" Nullable="false" />
-    <Property Name="RouteRequestId" Type="Int64" Nullable="false" />
-    <Property Name="RRPricingOption" Type="Int32" Nullable="false" />
-    <Property Name="RRPricingMinMax" Type="Decimal" Precision="19" Scale="4" />
-    <Property Name="ConfirmatedText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="RRIsConfirmed" Type="Int16" Nullable="false" />
-    <Property Name="IsDrive" Type="Boolean" Nullable="false" />
-    <Property Name="CarInfoId" Type="Int32" Nullable="false" />
-    <Property Name="CarType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="CarColor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="CarPlateNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-    <Property Name="RouteRequestState" Type="Int16" />
-    <Property Name="RouteRequestUId" Type="Guid" />
-  </EntityType>
-  <EntityType Name="vwRouteSuggest">
-    <Key>
-      <PropertyRef Name="SSrcDistance" />
-      <PropertyRef Name="SDstDistance" />
-      <PropertyRef Name="SrcLatitude" />
-      <PropertyRef Name="SrcLongitude" />
-      <PropertyRef Name="DstLatitude" />
-      <PropertyRef Name="DstLongitude" />
-      <PropertyRef Name="AccompanyCount" />
-      <PropertyRef Name="CarInfoId" />
-      <PropertyRef Name="IsSuggestSent" />
-      <PropertyRef Name="IsSuggestSeen" />
-      <PropertyRef Name="IsSuggestAccepted" />
-      <PropertyRef Name="IsSuggestRejected" />
-      <PropertyRef Name="RRPricingOption" />
-      <PropertyRef Name="RouteRequestId" />
-      <PropertyRef Name="SelfRouteRequestId" />
-      <PropertyRef Name="IsDrive" />
-      <PropertyRef Name="UserId" />
-    </Key>
-    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="SSrcDistance" Type="Double" Nullable="false" />
-    <Property Name="SDstDistance" Type="Double" Nullable="false" />
-    <Property Name="SrcGAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-    <Property Name="SrcDetailAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-    <Property Name="SrcLatitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="SrcLongitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="DstGAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-    <Property Name="DstDetailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Name="DstLatitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="DstLongitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="AccompanyCount" Type="Int32" Nullable="false" />
-    <Property Name="CarInfoId" Type="Int32" Nullable="false" />
-    <Property Name="CarType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="CarColor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="IsSuggestSent" Type="Boolean" Nullable="false" />
-    <Property Name="IsSuggestSeen" Type="Boolean" Nullable="false" />
-    <Property Name="IsSuggestAccepted" Type="Boolean" Nullable="false" />
-    <Property Name="IsSuggestRejected" Type="Boolean" Nullable="false" />
-    <Property Name="RRPricingMinMax" Type="Decimal" Precision="19" Scale="4" />
-    <Property Name="RRPricingOption" Type="Int32" Nullable="false" />
-    <Property Name="Gender" Type="Int32" />
-    <Property Name="RouteRequestId" Type="Int64" Nullable="false" />
-    <Property Name="SelfRouteRequestId" Type="Int64" Nullable="false" />
-    <Property Name="IsDrive" Type="Boolean" Nullable="false" />
-    <Property Name="UserId" Type="Int32" Nullable="false" />
-    <Property Name="CarPlateNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-    <Property Name="RecommendPathId" Type="Int64" />
-    <Property Name="UserImageId" Type="Guid" />
-    <Property Name="SuggestRouteRequestUId" Type="Guid" />
-  </EntityType>
-  <EntityType Name="BookRequest">
-    <Key>
-      <PropertyRef Name="BookRequestId" />
-    </Key>
-    <Property Name="BookRequestId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="TripId" Type="Int64" Nullable="false" />
-    <Property Name="BrCreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="PayReqId" Type="Int64" />
-  </EntityType>
   <EntityType Name="MainStation">
     <Key>
       <PropertyRef Name="MainStationId" />
@@ -1107,49 +932,6 @@
     <Property Name="DriverPrice" Type="Int64" />
     <Property Name="PassPrice" Type="Int64" />
     <Property Name="Duration" Type="Int64" />
-  </EntityType>
-  <EntityType Name="vwBookPay">
-    <Key>
-      <PropertyRef Name="BookRequestId" />
-      <PropertyRef Name="TripId" />
-      <PropertyRef Name="PayReqValue" />
-      <PropertyRef Name="PayReqUserId" />
-      <PropertyRef Name="BrCreateTime" />
-    </Key>
-    <Property Name="BookRequestId" Type="Int64" Nullable="false" />
-    <Property Name="TripId" Type="Int64" Nullable="false" />
-    <Property Name="PayReqId" Type="Int64" />
-    <Property Name="PayReqRefID" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
-    <Property Name="PayReqValue" Type="Int32" Nullable="false" />
-    <Property Name="PayReqUserId" Type="Int32" Nullable="false" />
-    <Property Name="BrCreateTime" Type="DateTime" Nullable="false" Precision="3" />
-  </EntityType>
-  <EntityType Name="vwRouteProfile">
-    <Key>
-      <PropertyRef Name="RouteRequestId" />
-      <PropertyRef Name="SrcLongitude" />
-      <PropertyRef Name="SrcLatitude" />
-      <PropertyRef Name="DstLatitude" />
-      <PropertyRef Name="DstLongitude" />
-      <PropertyRef Name="IsDrive" />
-    </Key>
-    <Property Name="RouteRequestId" Type="Int64" Nullable="false" />
-    <Property Name="UserId" Type="Int32" />
-    <Property Name="SrcGAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-    <Property Name="SrcLongitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="SrcLatitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="DstGAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-    <Property Name="DstLatitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="DstLongitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="IsDrive" Type="Boolean" Nullable="false" />
-    <Property Name="RouteRequestUId" Type="Guid" />
-    <Property Name="RRPricingMinMax" Type="Decimal" Precision="19" Scale="4" />
-    <Property Name="UserImageId" Type="Guid" />
-    <Property Name="VerifiedLevel" Type="Int16" />
-    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="Gender" Type="Int32" />
-    <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="DriverRoute">
     <Key>
@@ -1322,36 +1104,6 @@
     <Property Name="TlLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
     <Property Name="TlGeo" Type="Geography" Nullable="false" />
   </EntityType>
-  <EntityType Name="vwPayRoute">
-    <Key>
-      <PropertyRef Name="PayReqUserId" />
-      <PropertyRef Name="PayReqValue" />
-      <PropertyRef Name="PayReqId" />
-      <PropertyRef Name="TripId" />
-      <PropertyRef Name="TStartTime" />
-      <PropertyRef Name="TState" />
-      <PropertyRef Name="TEmptySeat" />
-      <PropertyRef Name="UserId" />
-      <PropertyRef Name="DrIsDeleted" />
-      <PropertyRef Name="DriverRouteId" />
-      <PropertyRef Name="StationRouteId" />
-      <PropertyRef Name="DrSrcStationId" />
-    </Key>
-    <Property Name="PayReqUserId" Type="Int32" Nullable="false" />
-    <Property Name="PayReqValue" Type="Int32" Nullable="false" />
-    <Property Name="PayReqStatus" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-    <Property Name="PayReqRefID" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
-    <Property Name="PayReqId" Type="Int64" Nullable="false" />
-    <Property Name="TripId" Type="Int64" Nullable="false" />
-    <Property Name="TStartTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="TState" Type="Int16" Nullable="false" />
-    <Property Name="TEmptySeat" Type="Int16" Nullable="false" />
-    <Property Name="UserId" Type="Int64" Nullable="false" />
-    <Property Name="DrIsDeleted" Type="Boolean" Nullable="false" />
-    <Property Name="DriverRouteId" Type="Int64" Nullable="false" />
-    <Property Name="StationRouteId" Type="Int64" Nullable="false" />
-    <Property Name="DrSrcStationId" Type="Int64" Nullable="false" />
-  </EntityType>
   <EntityType Name="vwDriverTrip">
     <Key>
       <PropertyRef Name="TCreateTime" />
@@ -1392,5 +1144,266 @@
     <Property Name="DriverPrice" Type="Int64" />
     <Property Name="PassPrice" Type="Int64" />
     <Property Name="VerifiedLevel" Type="Int16" />
+  </EntityType>
+  <EntityType Name="vwRouteRequest">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="UserName" />
+      <PropertyRef Name="RouteRequestType" />
+      <PropertyRef Name="SrcLatitude" />
+      <PropertyRef Name="SrcLongitude" />
+      <PropertyRef Name="DstLatitude" />
+      <PropertyRef Name="DstLongitude" />
+      <PropertyRef Name="AccompanyCount" />
+      <PropertyRef Name="RouteRequestId" />
+      <PropertyRef Name="RRPricingOption" />
+      <PropertyRef Name="RRIsConfirmed" />
+      <PropertyRef Name="IsDrive" />
+      <PropertyRef Name="CarInfoId" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="RouteRequestType" Type="Int32" Nullable="false" />
+    <Property Name="SrcGAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="SrcDetailAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="SrcLatitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="SrcLongitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="DstGAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="DstDetailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="DstLatitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="DstLongitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="AccompanyCount" Type="Int32" Nullable="false" />
+    <Property Name="RouteRequestId" Type="Int64" Nullable="false" />
+    <Property Name="RRPricingOption" Type="Int32" Nullable="false" />
+    <Property Name="RRPricingMinMax" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="ConfirmatedText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="RRIsConfirmed" Type="Int16" Nullable="false" />
+    <Property Name="IsDrive" Type="Boolean" Nullable="false" />
+    <Property Name="CarInfoId" Type="Int32" Nullable="false" />
+    <Property Name="CarType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CarColor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CarPlateNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="RouteRequestState" Type="Int16" />
+  </EntityType>
+  <EntityType Name="Invite">
+    <Key>
+      <PropertyRef Name="InviteId" />
+    </Key>
+    <Property Name="InviteId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="InviteCode" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="InviterUserId" Type="Int32" />
+    <Property Name="InviteType" Type="Int16" />
+    <Property Name="InviterId" Type="Int64" />
+  </EntityType>
+  <EntityType Name="DiscountUser">
+    <Key>
+      <PropertyRef Name="DuId" />
+    </Key>
+    <Property Name="DuId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="RouteRequestId" Type="Int64" />
+    <Property Name="DiscountId" Type="Int32" Nullable="false" />
+    <Property Name="DuCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DuState" Type="Int16" Nullable="false" />
+    <Property Name="TransId" Type="Int64" />
+    <Property Name="DuEndTime" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="vwDiscountUser">
+    <Key>
+      <PropertyRef Name="DiscountCode" />
+      <PropertyRef Name="DiscountCreateTime" />
+      <PropertyRef Name="DiscountStartTime" />
+      <PropertyRef Name="DiscountEndTime" />
+      <PropertyRef Name="DiscountId" />
+      <PropertyRef Name="DuCreateTime" />
+      <PropertyRef Name="DuState" />
+      <PropertyRef Name="DuId" />
+      <PropertyRef Name="DiscountType" />
+    </Key>
+    <Property Name="DiscountCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="DiscountTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="DiscountCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DiscountStartTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DiscountEndTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DiscountDesc" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="DiscountEvenId" Type="Int64" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="RouteRequestId" Type="Int64" />
+    <Property Name="DiscountId" Type="Int32" Nullable="false" />
+    <Property Name="DuCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DuState" Type="Int16" Nullable="false" />
+    <Property Name="TransId" Type="Int64" />
+    <Property Name="DuId" Type="Int64" Nullable="false" />
+    <Property Name="DiscountType" Type="Int32" Nullable="false" />
+    <Property Name="DuEndTime" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="Discount">
+    <Key>
+      <PropertyRef Name="DiscountId" />
+    </Key>
+    <Property Name="DiscountId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DiscountType" Type="Int32" Nullable="false" />
+    <Property Name="DiscountCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="DiscountTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="DiscountCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DiscountStartTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DiscountEndTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DiscountDesc" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="DiscountEvenId" Type="Int64" />
+  </EntityType>
+  <EntityType Name="BookRequest">
+    <Key>
+      <PropertyRef Name="BookRequestId" />
+    </Key>
+    <Property Name="BookRequestId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TripId" Type="Int64" Nullable="false" />
+    <Property Name="BrCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="PayReqId" Type="Int64" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="IsBooked" Type="Boolean" />
+    <Property Name="DuId" Type="Int64" />
+    <Property Name="Credit" Type="Double" />
+    <Property Name="BookingType" Type="Int16" />
+  </EntityType>
+  <EntityType Name="vwRouteSuggest">
+    <Key>
+      <PropertyRef Name="SSrcDistance" />
+      <PropertyRef Name="SDstDistance" />
+      <PropertyRef Name="SrcLatitude" />
+      <PropertyRef Name="SrcLongitude" />
+      <PropertyRef Name="DstLatitude" />
+      <PropertyRef Name="DstLongitude" />
+      <PropertyRef Name="AccompanyCount" />
+      <PropertyRef Name="CarInfoId" />
+      <PropertyRef Name="IsSuggestSent" />
+      <PropertyRef Name="IsSuggestSeen" />
+      <PropertyRef Name="IsSuggestAccepted" />
+      <PropertyRef Name="IsSuggestRejected" />
+      <PropertyRef Name="RRPricingOption" />
+      <PropertyRef Name="RouteRequestId" />
+      <PropertyRef Name="SelfRouteRequestId" />
+      <PropertyRef Name="IsDrive" />
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SSrcDistance" Type="Double" Nullable="false" />
+    <Property Name="SDstDistance" Type="Double" Nullable="false" />
+    <Property Name="SrcGAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="SrcDetailAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="SrcLatitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="SrcLongitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="DstGAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="DstDetailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="DstLatitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="DstLongitude" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="AccompanyCount" Type="Int32" Nullable="false" />
+    <Property Name="CarInfoId" Type="Int32" Nullable="false" />
+    <Property Name="CarType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CarColor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IsSuggestSent" Type="Boolean" Nullable="false" />
+    <Property Name="IsSuggestSeen" Type="Boolean" Nullable="false" />
+    <Property Name="IsSuggestAccepted" Type="Boolean" Nullable="false" />
+    <Property Name="IsSuggestRejected" Type="Boolean" Nullable="false" />
+    <Property Name="RRPricingMinMax" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="RRPricingOption" Type="Int32" Nullable="false" />
+    <Property Name="Gender" Type="Int32" />
+    <Property Name="RouteRequestId" Type="Int64" Nullable="false" />
+    <Property Name="SelfRouteRequestId" Type="Int64" Nullable="false" />
+    <Property Name="IsDrive" Type="Boolean" Nullable="false" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="CarPlateNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="RecommendPathId" Type="Int64" />
+    <Property Name="UserImageId" Type="Guid" />
+    <Property Name="RouteRequestUId" Type="Guid" />
+  </EntityType>
+  <EntityType Name="vwBookPay">
+    <Key>
+      <PropertyRef Name="BookRequestId" />
+      <PropertyRef Name="TripId" />
+      <PropertyRef Name="PayReqUserId" />
+      <PropertyRef Name="BrCreateTime" />
+      <PropertyRef Name="PayReqValue" />
+    </Key>
+    <Property Name="BookRequestId" Type="Int64" Nullable="false" />
+    <Property Name="TripId" Type="Int64" Nullable="false" />
+    <Property Name="PayReqId" Type="Int64" />
+    <Property Name="PayReqRefID" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+    <Property Name="PayReqUserId" Type="Int32" Nullable="false" />
+    <Property Name="BrCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="IsBooked" Type="Boolean" />
+    <Property Name="DuId" Type="Int64" />
+    <Property Name="BookingType" Type="Int16" />
+    <Property Name="Credit" Type="Double" />
+    <Property Name="PayReqValue" Type="Double" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PayReq">
+    <Key>
+      <PropertyRef Name="PayReqId" />
+    </Key>
+    <Property Name="PayReqId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PayReqCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="PayReqUserId" Type="Int32" Nullable="false" />
+    <Property Name="PayReqValue" Type="Double" Nullable="false" />
+    <Property Name="PayReqAuthority" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+    <Property Name="PayReqStatus" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="PayReqRefID" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+    <Property Name="TraceNumber" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+    <Property Name="ReferenceNumber" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="vwPayRoute">
+    <Key>
+      <PropertyRef Name="PayReqUserId" />
+      <PropertyRef Name="PayReqValue" />
+      <PropertyRef Name="PayReqId" />
+      <PropertyRef Name="TripId" />
+      <PropertyRef Name="TStartTime" />
+      <PropertyRef Name="TState" />
+      <PropertyRef Name="TEmptySeat" />
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="DrIsDeleted" />
+      <PropertyRef Name="DriverRouteId" />
+      <PropertyRef Name="StationRouteId" />
+      <PropertyRef Name="DrSrcStationId" />
+    </Key>
+    <Property Name="PayReqUserId" Type="Int32" Nullable="false" />
+    <Property Name="PayReqValue" Type="Double" Nullable="false" />
+    <Property Name="PayReqStatus" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="PayReqRefID" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+    <Property Name="PayReqId" Type="Int64" Nullable="false" />
+    <Property Name="TripId" Type="Int64" Nullable="false" />
+    <Property Name="TStartTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="TState" Type="Int16" Nullable="false" />
+    <Property Name="TEmptySeat" Type="Int16" Nullable="false" />
+    <Property Name="UserId" Type="Int64" Nullable="false" />
+    <Property Name="DrIsDeleted" Type="Boolean" Nullable="false" />
+    <Property Name="DriverRouteId" Type="Int64" Nullable="false" />
+    <Property Name="StationRouteId" Type="Int64" Nullable="false" />
+    <Property Name="DrSrcStationId" Type="Int64" Nullable="false" />
+  </EntityType>
+  <EntityType Name="vwBookedTrip">
+    <Key>
+      <PropertyRef Name="TStartTime" />
+      <PropertyRef Name="TState" />
+      <PropertyRef Name="TEmptySeat" />
+      <PropertyRef Name="srcName" />
+      <PropertyRef Name="dstName" />
+      <PropertyRef Name="PassMobile" />
+      <PropertyRef Name="DriverMobile" />
+    </Key>
+    <Property Name="TStartTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="TState" Type="Int16" Nullable="false" />
+    <Property Name="TEmptySeat" Type="Int16" Nullable="false" />
+    <Property Name="Passname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PassFamily" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="DriverName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="DriverFamily" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="srcName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+    <Property Name="dstName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+    <Property Name="PassMobile" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="DriverMobile" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
   </EntityType>
 </Schema>

@@ -250,7 +250,7 @@ namespace CoreManager.NotificationManager
                     .GroupBy(x=>x.GtokenUserId,(key,g)=>g.OrderByDescending(e=>e.GtokenCreateTime).FirstOrDefault()).ToList();
                 if (gtokens.Count > 0)
                 {
-                    _gService.SendGroupNotification(gtokens.Select(x=>x.GtokenKey).ToList(), notif.Title, notif.Body, notif.Action, notif.Tab.ToString());
+                    _gService.SendGroupNotification(gtokens.Select(x=>x.GtokenKey).ToList(), notif.Title, notif.Body, notif.Action, notif.Tab.ToString(),notif.Url);
                 }
 
             }

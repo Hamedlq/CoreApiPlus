@@ -37,6 +37,5 @@ namespace CoreDA
         public string CarColor { get; set; }
         public string CarPlateNo { get; set; }
         public Nullable<short> RouteRequestState { get; set; }
-        public Nullable<System.Guid> RouteRequestUId { get; set; }
     }
 }

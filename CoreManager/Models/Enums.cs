@@ -19,7 +19,8 @@ namespace CoreManager.Models
         TaxiAgencyDriver,
         WebUser,
         MobileUser,
-        MobileDriver
+        MobileDriver,
+        IosMobileUser,
 
     };
 
@@ -232,5 +233,32 @@ namespace CoreManager.Models
         Cenceled = 4,
     }
 
-    
+    public enum DiscountTypes
+    {
+        FirstFreeTrip=1,
+        EndlessFirstFreeTrip=2,
+        FreeCredit = 3,
+        FreeSeat = 4,
+        EndlessFreeSeat = 5,
+        AlwaysFreeSeat = 6,
+    }
+
+    public enum InviteTypes
+    {
+        DriverInvite = 1,
+        PassInvite = 2,
+    }
+
+    public enum BookingTypes
+    {
+        ByDiscount = 1,
+        ByDiscountAndCredit = 2,
+        ByDiscountAndOnlinePay = 3,
+        ByDiscountAndCash = 4,
+        ByOnlinePay = 5,
+        ByZarinPal = 6,
+        ByPasargad = 7,
+        ByCredit = 8,
+        Cash = 9,
+    }
 }

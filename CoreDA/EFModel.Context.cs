@@ -40,7 +40,6 @@ namespace CoreDA
         public virtual DbSet<Image> Images { get; set; }
         public virtual DbSet<LicenseInfo> LicenseInfoes { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
-        public virtual DbSet<PayReq> PayReqs { get; set; }
         public virtual DbSet<RecommendPath> RecommendPaths { get; set; }
         public virtual DbSet<RecommendRoute> RecommendRoutes { get; set; }
         public virtual DbSet<RouteGroup> RouteGroups { get; set; }
@@ -68,12 +67,8 @@ namespace CoreDA
         public virtual DbSet<vwPath> vwPaths { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<Event> Events { get; set; }
-        public virtual DbSet<Discount> Discounts { get; set; }
-        public virtual DbSet<vwDiscountUser> vwDiscountUsers { get; set; }
-        public virtual DbSet<DiscountUser> DiscountUsers { get; set; }
         public virtual DbSet<AboutUser> AboutUsers { get; set; }
         public virtual DbSet<Withdraw> Withdraws { get; set; }
-        public virtual DbSet<Invite> Invites { get; set; }
         public virtual DbSet<RouteRequestGRoute> RouteRequestGRoutes { get; set; }
         public virtual DbSet<RouteRequestGPath> RouteRequestGPaths { get; set; }
         public virtual DbSet<vwComment> vwComments { get; set; }
@@ -81,13 +76,8 @@ namespace CoreDA
         public virtual DbSet<vwContactScore> vwContactScores { get; set; }
         public virtual DbSet<ContactScore> ContactScores { get; set; }
         public virtual DbSet<Trip> Trips { get; set; }
-        public virtual DbSet<vwRouteRequest> vwRouteRequests { get; set; }
-        public virtual DbSet<vwRouteSuggest> vwRouteSuggests { get; set; }
-        public virtual DbSet<BookRequest> BookRequests { get; set; }
         public virtual DbSet<MainStation> MainStations { get; set; }
         public virtual DbSet<StationRoute> StationRoutes { get; set; }
-        public virtual DbSet<vwBookPay> vwBookPays { get; set; }
-        public virtual DbSet<vwRouteProfile> vwRouteProfiles { get; set; }
         public virtual DbSet<DriverRoute> DriverRoutes { get; set; }
         public virtual DbSet<vwDriverRoute> vwDriverRoutes { get; set; }
         public virtual DbSet<vwStationRoute> vwStationRoutes { get; set; }
@@ -97,8 +87,18 @@ namespace CoreDA
         public virtual DbSet<Station> Stations { get; set; }
         public virtual DbSet<vwCarInfo> vwCarInfoes { get; set; }
         public virtual DbSet<TripLocation> TripLocations { get; set; }
-        public virtual DbSet<vwPayRoute> vwPayRoutes { get; set; }
         public virtual DbSet<vwDriverTrip> vwDriverTrips { get; set; }
+        public virtual DbSet<vwRouteRequest> vwRouteRequests { get; set; }
+        public virtual DbSet<Invite> Invites { get; set; }
+        public virtual DbSet<DiscountUser> DiscountUsers { get; set; }
+        public virtual DbSet<vwDiscountUser> vwDiscountUsers { get; set; }
+        public virtual DbSet<Discount> Discounts { get; set; }
+        public virtual DbSet<BookRequest> BookRequests { get; set; }
+        public virtual DbSet<vwRouteSuggest> vwRouteSuggests { get; set; }
+        public virtual DbSet<vwBookPay> vwBookPays { get; set; }
+        public virtual DbSet<PayReq> PayReqs { get; set; }
+        public virtual DbSet<vwPayRoute> vwPayRoutes { get; set; }
+        public virtual DbSet<vwBookedTrip> vwBookedTrips { get; set; }
     
         public virtual ObjectResult<GetLocalRoutes_Result> GetLocalRoutes(Nullable<decimal> lat, Nullable<decimal> lng, Nullable<int> routeDistance, Nullable<int> pointDistance)
         {

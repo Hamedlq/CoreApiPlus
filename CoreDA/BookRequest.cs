@@ -18,5 +18,10 @@ namespace CoreDA
         public long TripId { get; set; }
         public System.DateTime BrCreateTime { get; set; }
         public Nullable<long> PayReqId { get; set; }
+        public Nullable<int> UserId { get; set; }
+        public Nullable<bool> IsBooked { get; set; }
+        public Nullable<long> DuId { get; set; }
+        public Nullable<double> Credit { get; set; }
+        public Nullable<short> BookingType { get; set; }
     }
 }

@@ -18,7 +18,6 @@
         <EntityTypeShape EntityType="MibarimModel.Image" Width="1.5" PointX="12.75" PointY="9.75" />
         <EntityTypeShape EntityType="MibarimModel.LicenseInfo" Width="1.5" PointX="12.75" PointY="12.75" />
         <EntityTypeShape EntityType="MibarimModel.Notification" Width="1.5" PointX="13.75" PointY="3.75" />
-        <EntityTypeShape EntityType="MibarimModel.PayReq" Width="1.5" PointX="6.75" PointY="13.75" />
         <EntityTypeShape EntityType="MibarimModel.RecommendPath" Width="1.5" PointX="0.75" PointY="14.75" />
         <EntityTypeShape EntityType="MibarimModel.RecommendRoute" Width="1.5" PointX="13.75" PointY="6.75" />
         <EntityTypeShape EntityType="MibarimModel.RouteGroup" Width="1.5" PointX="8.75" PointY="14.75" />
@@ -47,12 +46,8 @@
         <EntityTypeShape EntityType="MibarimModel.vwPath" Width="1.5" PointX="21.375" PointY="15.75" />
         <EntityTypeShape EntityType="MibarimModel.Contact" Width="1.5" PointX="23.375" PointY="0.75" />
         <EntityTypeShape EntityType="MibarimModel.Event" Width="1.5" PointX="0.75" PointY="23.75" />
-        <EntityTypeShape EntityType="MibarimModel.Discount" Width="1.5" PointX="21.375" PointY="10.75" />
-        <EntityTypeShape EntityType="MibarimModel.vwDiscountUser" Width="1.5" PointX="7.375" PointY="23.75" />
-        <EntityTypeShape EntityType="MibarimModel.DiscountUser" Width="1.5" PointX="23.375" PointY="4.75" />
         <EntityTypeShape EntityType="MibarimModel.AboutUser" Width="1.5" PointX="23.375" PointY="8.75" />
         <EntityTypeShape EntityType="MibarimModel.Withdraw" Width="1.5" PointX="9.375" PointY="23.75" />
-        <EntityTypeShape EntityType="MibarimModel.Invite" Width="1.5" PointX="23.375" PointY="11.75" />
         <EntityTypeShape EntityType="MibarimModel.RouteRequestGRoute" Width="1.5" PointX="13.375" PointY="23.75" />
         <EntityTypeShape EntityType="MibarimModel.RouteRequestGPath" Width="1.5" PointX="23.375" PointY="14.75" />
         <EntityTypeShape EntityType="MibarimModel.vwComment" Width="1.5" PointX="15.375" PointY="13.75" />
@@ -60,13 +55,8 @@
         <EntityTypeShape EntityType="MibarimModel.vwContactScore" Width="1.5" PointX="19.375" PointY="24.75" />
         <EntityTypeShape EntityType="MibarimModel.ContactScore" Width="1.5" PointX="23.375" PointY="21.75" />
         <EntityTypeShape EntityType="MibarimModel.Trip" Width="1.5" PointX="0.75" PointY="20.75" />
-        <EntityTypeShape EntityType="MibarimModel.vwRouteRequest" Width="1.5" PointX="17.375" PointY="15.75" />
-        <EntityTypeShape EntityType="MibarimModel.vwRouteSuggest" Width="1.5" PointX="15.375" PointY="22.75" />
-        <EntityTypeShape EntityType="MibarimModel.BookRequest" Width="1.5" PointX="23.375" PointY="24.75" />
         <EntityTypeShape EntityType="MibarimModel.MainStation" Width="1.5" PointX="25.375" PointY="4.75" />
         <EntityTypeShape EntityType="MibarimModel.StationRoute" Width="1.5" PointX="25.375" PointY="10.75" />
-        <EntityTypeShape EntityType="MibarimModel.vwBookPay" Width="1.5" PointX="25.375" PointY="13.75" />
-        <EntityTypeShape EntityType="MibarimModel.vwRouteProfile" Width="1.5" PointX="25.375" PointY="17.75" />
         <EntityTypeShape EntityType="MibarimModel.DriverRoute" Width="1.5" PointX="25.375" PointY="0.75" />
         <EntityTypeShape EntityType="MibarimModel.vwDriverRoute" Width="1.5" PointX="25.375" PointY="23.75" />
         <EntityTypeShape EntityType="MibarimModel.vwStationRoute" Width="1.5" PointX="27.375" PointY="0.75" />
@@ -77,9 +67,19 @@
         <EntityTypeShape EntityType="MibarimModel.Station" Width="1.5" PointX="27.375" PointY="9.75" />
         <EntityTypeShape EntityType="MibarimModel.vwCarInfo" Width="1.5" PointX="9.375" PointY="27.75" />
         <EntityTypeShape EntityType="MibarimModel.TripLocation" Width="1.5" PointX="11.375" PointY="27.75" />
-        <EntityTypeShape EntityType="MibarimModel.vwPayRoute" Width="1.5" PointX="27.375" PointY="17.75" />
         <EntityTypeShape EntityType="MibarimModel.vwDriverTrip" Width="1.5" PointX="3.375" PointY="26.75" />
-      </Diagram>
+        <EntityTypeShape EntityType="MibarimModel.vwRouteRequest" Width="1.5" PointX="21.375" PointY="27.75" />
+        <EntityTypeShape EntityType="MibarimModel.Invite" Width="1.5" PointX="17.375" PointY="15.75" />
+        <EntityTypeShape EntityType="MibarimModel.DiscountUser" Width="1.5" PointX="5.375" PointY="25.75" />
+        <EntityTypeShape EntityType="MibarimModel.vwDiscountUser" Width="1.5" PointX="27.375" PointY="12.75" />
+        <EntityTypeShape EntityType="MibarimModel.Discount" Width="1.5" PointX="5.375" PointY="21.75" />
+        <EntityTypeShape EntityType="MibarimModel.BookRequest" Width="1.5" PointX="27.375" PointY="22.75" />
+        <EntityTypeShape EntityType="MibarimModel.vwRouteSuggest" Width="1.5" PointX="15.375" PointY="19.75" />
+        <EntityTypeShape EntityType="MibarimModel.vwBookPay" Width="1.5" PointX="15.375" PointY="27.75" />
+        <EntityTypeShape EntityType="MibarimModel.PayReq" Width="1.5" PointX="27.375" PointY="26.75" />
+        <EntityTypeShape EntityType="MibarimModel.vwPayRoute" Width="1.5" PointX="25.375" PointY="17.75" />
+        <EntityTypeShape EntityType="MibarimModel.vwBookedTrip" Width="1.5" PointX="27.375" PointY="17.75" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

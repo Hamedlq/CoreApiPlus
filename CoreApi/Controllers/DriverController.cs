@@ -333,5 +333,23 @@ namespace CoreApi.Controllers
             var _appVersion = ConfigurationManager.AppSettings["MobileDriverAppVersion"];
             return Json(new ResponseModel() {Messages = new List<string>() {_appVersion}});
         }
+
+        [HttpPost]
+        [Route("GetDriverInvite")]
+        public IHttpActionResult GetDriverInvite()
+        {
+            try
+            {
+                var res = _userManager.GetUserInvite(int.Parse(User.Identity.GetUserId()),InviteTypes.DriverInvite);
+                //var jsonRes = Json(_responseProvider.GenerateRouteResponse(res,"AboutMe"));
+                return Json(res);
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "GetInvite", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
     }
 }

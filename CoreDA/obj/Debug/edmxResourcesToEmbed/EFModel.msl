@@ -169,19 +169,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="PayReqs">
-      <EntityTypeMapping TypeName="MibarimModel.PayReq">
-        <MappingFragment StoreEntitySet="PayReq">
-          <ScalarProperty Name="PayReqRefID" ColumnName="PayReqRefID" />
-          <ScalarProperty Name="PayReqStatus" ColumnName="PayReqStatus" />
-          <ScalarProperty Name="PayReqAuthority" ColumnName="PayReqAuthority" />
-          <ScalarProperty Name="PayReqValue" ColumnName="PayReqValue" />
-          <ScalarProperty Name="PayReqUserId" ColumnName="PayReqUserId" />
-          <ScalarProperty Name="PayReqCreateTime" ColumnName="PayReqCreateTime" />
-          <ScalarProperty Name="PayReqId" ColumnName="PayReqId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="RecommendPaths">
       <EntityTypeMapping TypeName="MibarimModel.RecommendPath">
         <MappingFragment StoreEntitySet="RecommendPath">
@@ -640,53 +627,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Discounts">
-      <EntityTypeMapping TypeName="MibarimModel.Discount">
-        <MappingFragment StoreEntitySet="Discount">
-          <ScalarProperty Name="DiscountTitle" ColumnName="DiscountTitle" />
-          <ScalarProperty Name="DiscountEvenId" ColumnName="DiscountEvenId" />
-          <ScalarProperty Name="DiscountDesc" ColumnName="DiscountDesc" />
-          <ScalarProperty Name="DiscountEndTime" ColumnName="DiscountEndTime" />
-          <ScalarProperty Name="DiscountStartTime" ColumnName="DiscountStartTime" />
-          <ScalarProperty Name="DiscountCreateTime" ColumnName="DiscountCreateTime" />
-          <ScalarProperty Name="DiscountCode" ColumnName="DiscountCode" />
-          <ScalarProperty Name="DiscountId" ColumnName="DiscountId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="vwDiscountUsers">
-      <EntityTypeMapping TypeName="MibarimModel.vwDiscountUser">
-        <MappingFragment StoreEntitySet="vwDiscountUser">
-          <ScalarProperty Name="DuId" ColumnName="DuId" />
-          <ScalarProperty Name="TransId" ColumnName="TransId" />
-          <ScalarProperty Name="DuState" ColumnName="DuState" />
-          <ScalarProperty Name="DuCreateTime" ColumnName="DuCreateTime" />
-          <ScalarProperty Name="DiscountId" ColumnName="DiscountId" />
-          <ScalarProperty Name="RouteRequestId" ColumnName="RouteRequestId" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="DiscountEvenId" ColumnName="DiscountEvenId" />
-          <ScalarProperty Name="DiscountDesc" ColumnName="DiscountDesc" />
-          <ScalarProperty Name="DiscountEndTime" ColumnName="DiscountEndTime" />
-          <ScalarProperty Name="DiscountStartTime" ColumnName="DiscountStartTime" />
-          <ScalarProperty Name="DiscountCreateTime" ColumnName="DiscountCreateTime" />
-          <ScalarProperty Name="DiscountTitle" ColumnName="DiscountTitle" />
-          <ScalarProperty Name="DiscountCode" ColumnName="DiscountCode" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="DiscountUsers">
-      <EntityTypeMapping TypeName="MibarimModel.DiscountUser">
-        <MappingFragment StoreEntitySet="DiscountUser">
-          <ScalarProperty Name="TransId" ColumnName="TransId" />
-          <ScalarProperty Name="DuState" ColumnName="DuState" />
-          <ScalarProperty Name="DuCreateTime" ColumnName="DuCreateTime" />
-          <ScalarProperty Name="DiscountId" ColumnName="DiscountId" />
-          <ScalarProperty Name="RouteRequestId" ColumnName="RouteRequestId" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="DuId" ColumnName="DuId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="AboutUsers">
       <EntityTypeMapping TypeName="MibarimModel.AboutUser">
         <MappingFragment StoreEntitySet="AboutUser">
@@ -710,17 +650,6 @@
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
           <ScalarProperty Name="WithdrawId" ColumnName="WithdrawId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Invites">
-      <EntityTypeMapping TypeName="MibarimModel.Invite">
-        <MappingFragment StoreEntitySet="Invite">
-          <ScalarProperty Name="InviterUserId" ColumnName="InviterUserId" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="InviteCode" ColumnName="InviteCode" />
-          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-          <ScalarProperty Name="InviteId" ColumnName="InviteId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -844,83 +773,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="vwRouteRequests">
-      <EntityTypeMapping TypeName="MibarimModel.vwRouteRequest">
-        <MappingFragment StoreEntitySet="vwRouteRequest">
-          <ScalarProperty Name="RouteRequestUId" ColumnName="RouteRequestUId" />
-          <ScalarProperty Name="RouteRequestState" ColumnName="RouteRequestState" />
-          <ScalarProperty Name="CarPlateNo" ColumnName="CarPlateNo" />
-          <ScalarProperty Name="CarColor" ColumnName="CarColor" />
-          <ScalarProperty Name="CarType" ColumnName="CarType" />
-          <ScalarProperty Name="CarInfoId" ColumnName="CarInfoId" />
-          <ScalarProperty Name="IsDrive" ColumnName="IsDrive" />
-          <ScalarProperty Name="RRIsConfirmed" ColumnName="RRIsConfirmed" />
-          <ScalarProperty Name="ConfirmatedText" ColumnName="ConfirmatedText" />
-          <ScalarProperty Name="RRPricingMinMax" ColumnName="RRPricingMinMax" />
-          <ScalarProperty Name="RRPricingOption" ColumnName="RRPricingOption" />
-          <ScalarProperty Name="RouteRequestId" ColumnName="RouteRequestId" />
-          <ScalarProperty Name="AccompanyCount" ColumnName="AccompanyCount" />
-          <ScalarProperty Name="DstLongitude" ColumnName="DstLongitude" />
-          <ScalarProperty Name="DstLatitude" ColumnName="DstLatitude" />
-          <ScalarProperty Name="DstDetailAddress" ColumnName="DstDetailAddress" />
-          <ScalarProperty Name="DstGAddress" ColumnName="DstGAddress" />
-          <ScalarProperty Name="SrcLongitude" ColumnName="SrcLongitude" />
-          <ScalarProperty Name="SrcLatitude" ColumnName="SrcLatitude" />
-          <ScalarProperty Name="SrcDetailAddress" ColumnName="SrcDetailAddress" />
-          <ScalarProperty Name="SrcGAddress" ColumnName="SrcGAddress" />
-          <ScalarProperty Name="RouteRequestType" ColumnName="RouteRequestType" />
-          <ScalarProperty Name="UserName" ColumnName="UserName" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="vwRouteSuggests">
-      <EntityTypeMapping TypeName="MibarimModel.vwRouteSuggest">
-        <MappingFragment StoreEntitySet="vwRouteSuggest">
-          <ScalarProperty Name="SuggestRouteRequestUId" ColumnName="SuggestRouteRequestUId" />
-          <ScalarProperty Name="UserImageId" ColumnName="UserImageId" />
-          <ScalarProperty Name="RecommendPathId" ColumnName="RecommendPathId" />
-          <ScalarProperty Name="CarPlateNo" ColumnName="CarPlateNo" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="IsDrive" ColumnName="IsDrive" />
-          <ScalarProperty Name="SelfRouteRequestId" ColumnName="SelfRouteRequestId" />
-          <ScalarProperty Name="RouteRequestId" ColumnName="RouteRequestId" />
-          <ScalarProperty Name="Gender" ColumnName="Gender" />
-          <ScalarProperty Name="RRPricingOption" ColumnName="RRPricingOption" />
-          <ScalarProperty Name="RRPricingMinMax" ColumnName="RRPricingMinMax" />
-          <ScalarProperty Name="IsSuggestRejected" ColumnName="IsSuggestRejected" />
-          <ScalarProperty Name="IsSuggestAccepted" ColumnName="IsSuggestAccepted" />
-          <ScalarProperty Name="IsSuggestSeen" ColumnName="IsSuggestSeen" />
-          <ScalarProperty Name="IsSuggestSent" ColumnName="IsSuggestSent" />
-          <ScalarProperty Name="CarColor" ColumnName="CarColor" />
-          <ScalarProperty Name="CarType" ColumnName="CarType" />
-          <ScalarProperty Name="CarInfoId" ColumnName="CarInfoId" />
-          <ScalarProperty Name="AccompanyCount" ColumnName="AccompanyCount" />
-          <ScalarProperty Name="DstLongitude" ColumnName="DstLongitude" />
-          <ScalarProperty Name="DstLatitude" ColumnName="DstLatitude" />
-          <ScalarProperty Name="DstDetailAddress" ColumnName="DstDetailAddress" />
-          <ScalarProperty Name="DstGAddress" ColumnName="DstGAddress" />
-          <ScalarProperty Name="SrcLongitude" ColumnName="SrcLongitude" />
-          <ScalarProperty Name="SrcLatitude" ColumnName="SrcLatitude" />
-          <ScalarProperty Name="SrcDetailAddress" ColumnName="SrcDetailAddress" />
-          <ScalarProperty Name="SrcGAddress" ColumnName="SrcGAddress" />
-          <ScalarProperty Name="SDstDistance" ColumnName="SDstDistance" />
-          <ScalarProperty Name="SSrcDistance" ColumnName="SSrcDistance" />
-          <ScalarProperty Name="Family" ColumnName="Family" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="BookRequests">
-      <EntityTypeMapping TypeName="MibarimModel.BookRequest">
-        <MappingFragment StoreEntitySet="BookRequest">
-          <ScalarProperty Name="PayReqId" ColumnName="PayReqId" />
-          <ScalarProperty Name="BrCreateTime" ColumnName="BrCreateTime" />
-          <ScalarProperty Name="TripId" ColumnName="TripId" />
-          <ScalarProperty Name="BookRequestId" ColumnName="BookRequestId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="MainStations">
       <EntityTypeMapping TypeName="MibarimModel.MainStation">
         <MappingFragment StoreEntitySet="MainStation">
@@ -942,42 +794,6 @@
           <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
           <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
           <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="vwBookPays">
-      <EntityTypeMapping TypeName="MibarimModel.vwBookPay">
-        <MappingFragment StoreEntitySet="vwBookPay">
-          <ScalarProperty Name="BrCreateTime" ColumnName="BrCreateTime" />
-          <ScalarProperty Name="PayReqUserId" ColumnName="PayReqUserId" />
-          <ScalarProperty Name="PayReqValue" ColumnName="PayReqValue" />
-          <ScalarProperty Name="PayReqRefID" ColumnName="PayReqRefID" />
-          <ScalarProperty Name="PayReqId" ColumnName="PayReqId" />
-          <ScalarProperty Name="TripId" ColumnName="TripId" />
-          <ScalarProperty Name="BookRequestId" ColumnName="BookRequestId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="vwRouteProfiles">
-      <EntityTypeMapping TypeName="MibarimModel.vwRouteProfile">
-        <MappingFragment StoreEntitySet="vwRouteProfile">
-          <ScalarProperty Name="UserName" ColumnName="UserName" />
-          <ScalarProperty Name="Gender" ColumnName="Gender" />
-          <ScalarProperty Name="Family" ColumnName="Family" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="VerifiedLevel" ColumnName="VerifiedLevel" />
-          <ScalarProperty Name="UserImageId" ColumnName="UserImageId" />
-          <ScalarProperty Name="RRPricingMinMax" ColumnName="RRPricingMinMax" />
-          <ScalarProperty Name="RouteRequestUId" ColumnName="RouteRequestUId" />
-          <ScalarProperty Name="IsDrive" ColumnName="IsDrive" />
-          <ScalarProperty Name="DstLongitude" ColumnName="DstLongitude" />
-          <ScalarProperty Name="DstLatitude" ColumnName="DstLatitude" />
-          <ScalarProperty Name="DstGAddress" ColumnName="DstGAddress" />
-          <ScalarProperty Name="SrcLatitude" ColumnName="SrcLatitude" />
-          <ScalarProperty Name="SrcLongitude" ColumnName="SrcLongitude" />
-          <ScalarProperty Name="SrcGAddress" ColumnName="SrcGAddress" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="RouteRequestId" ColumnName="RouteRequestId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1130,26 +946,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="vwPayRoutes">
-      <EntityTypeMapping TypeName="MibarimModel.vwPayRoute">
-        <MappingFragment StoreEntitySet="vwPayRoute">
-          <ScalarProperty Name="DrSrcStationId" ColumnName="DrSrcStationId" />
-          <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
-          <ScalarProperty Name="DriverRouteId" ColumnName="DriverRouteId" />
-          <ScalarProperty Name="DrIsDeleted" ColumnName="DrIsDeleted" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="TEmptySeat" ColumnName="TEmptySeat" />
-          <ScalarProperty Name="TState" ColumnName="TState" />
-          <ScalarProperty Name="TStartTime" ColumnName="TStartTime" />
-          <ScalarProperty Name="TripId" ColumnName="TripId" />
-          <ScalarProperty Name="PayReqId" ColumnName="PayReqId" />
-          <ScalarProperty Name="PayReqRefID" ColumnName="PayReqRefID" />
-          <ScalarProperty Name="PayReqStatus" ColumnName="PayReqStatus" />
-          <ScalarProperty Name="PayReqValue" ColumnName="PayReqValue" />
-          <ScalarProperty Name="PayReqUserId" ColumnName="PayReqUserId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="vwDriverTrips">
       <EntityTypeMapping TypeName="MibarimModel.vwDriverTrip">
         <MappingFragment StoreEntitySet="vwDriverTrip">
@@ -1182,6 +978,222 @@
           <ScalarProperty Name="TState" ColumnName="TState" />
           <ScalarProperty Name="TStartTime" ColumnName="TStartTime" />
           <ScalarProperty Name="TCreateTime" ColumnName="TCreateTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwRouteRequests">
+      <EntityTypeMapping TypeName="MibarimModel.vwRouteRequest">
+        <MappingFragment StoreEntitySet="vwRouteRequest">
+          <ScalarProperty Name="RouteRequestState" ColumnName="RouteRequestState" />
+          <ScalarProperty Name="CarPlateNo" ColumnName="CarPlateNo" />
+          <ScalarProperty Name="CarColor" ColumnName="CarColor" />
+          <ScalarProperty Name="CarType" ColumnName="CarType" />
+          <ScalarProperty Name="CarInfoId" ColumnName="CarInfoId" />
+          <ScalarProperty Name="IsDrive" ColumnName="IsDrive" />
+          <ScalarProperty Name="RRIsConfirmed" ColumnName="RRIsConfirmed" />
+          <ScalarProperty Name="ConfirmatedText" ColumnName="ConfirmatedText" />
+          <ScalarProperty Name="RRPricingMinMax" ColumnName="RRPricingMinMax" />
+          <ScalarProperty Name="RRPricingOption" ColumnName="RRPricingOption" />
+          <ScalarProperty Name="RouteRequestId" ColumnName="RouteRequestId" />
+          <ScalarProperty Name="AccompanyCount" ColumnName="AccompanyCount" />
+          <ScalarProperty Name="DstLongitude" ColumnName="DstLongitude" />
+          <ScalarProperty Name="DstLatitude" ColumnName="DstLatitude" />
+          <ScalarProperty Name="DstDetailAddress" ColumnName="DstDetailAddress" />
+          <ScalarProperty Name="DstGAddress" ColumnName="DstGAddress" />
+          <ScalarProperty Name="SrcLongitude" ColumnName="SrcLongitude" />
+          <ScalarProperty Name="SrcLatitude" ColumnName="SrcLatitude" />
+          <ScalarProperty Name="SrcDetailAddress" ColumnName="SrcDetailAddress" />
+          <ScalarProperty Name="SrcGAddress" ColumnName="SrcGAddress" />
+          <ScalarProperty Name="RouteRequestType" ColumnName="RouteRequestType" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Invites">
+      <EntityTypeMapping TypeName="MibarimModel.Invite">
+        <MappingFragment StoreEntitySet="Invite">
+          <ScalarProperty Name="InviterId" ColumnName="InviterId" />
+          <ScalarProperty Name="InviteType" ColumnName="InviteType" />
+          <ScalarProperty Name="InviterUserId" ColumnName="InviterUserId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="InviteCode" ColumnName="InviteCode" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="InviteId" ColumnName="InviteId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DiscountUsers">
+      <EntityTypeMapping TypeName="MibarimModel.DiscountUser">
+        <MappingFragment StoreEntitySet="DiscountUser">
+          <ScalarProperty Name="DuEndTime" ColumnName="DuEndTime" />
+          <ScalarProperty Name="TransId" ColumnName="TransId" />
+          <ScalarProperty Name="DuState" ColumnName="DuState" />
+          <ScalarProperty Name="DuCreateTime" ColumnName="DuCreateTime" />
+          <ScalarProperty Name="DiscountId" ColumnName="DiscountId" />
+          <ScalarProperty Name="RouteRequestId" ColumnName="RouteRequestId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="DuId" ColumnName="DuId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwDiscountUsers">
+      <EntityTypeMapping TypeName="MibarimModel.vwDiscountUser">
+        <MappingFragment StoreEntitySet="vwDiscountUser">
+          <ScalarProperty Name="DuEndTime" ColumnName="DuEndTime" />
+          <ScalarProperty Name="DiscountType" ColumnName="DiscountType" />
+          <ScalarProperty Name="DuId" ColumnName="DuId" />
+          <ScalarProperty Name="TransId" ColumnName="TransId" />
+          <ScalarProperty Name="DuState" ColumnName="DuState" />
+          <ScalarProperty Name="DuCreateTime" ColumnName="DuCreateTime" />
+          <ScalarProperty Name="DiscountId" ColumnName="DiscountId" />
+          <ScalarProperty Name="RouteRequestId" ColumnName="RouteRequestId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="DiscountEvenId" ColumnName="DiscountEvenId" />
+          <ScalarProperty Name="DiscountDesc" ColumnName="DiscountDesc" />
+          <ScalarProperty Name="DiscountEndTime" ColumnName="DiscountEndTime" />
+          <ScalarProperty Name="DiscountStartTime" ColumnName="DiscountStartTime" />
+          <ScalarProperty Name="DiscountCreateTime" ColumnName="DiscountCreateTime" />
+          <ScalarProperty Name="DiscountTitle" ColumnName="DiscountTitle" />
+          <ScalarProperty Name="DiscountCode" ColumnName="DiscountCode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Discounts">
+      <EntityTypeMapping TypeName="MibarimModel.Discount">
+        <MappingFragment StoreEntitySet="Discount">
+          <ScalarProperty Name="DiscountEvenId" ColumnName="DiscountEvenId" />
+          <ScalarProperty Name="DiscountDesc" ColumnName="DiscountDesc" />
+          <ScalarProperty Name="DiscountEndTime" ColumnName="DiscountEndTime" />
+          <ScalarProperty Name="DiscountStartTime" ColumnName="DiscountStartTime" />
+          <ScalarProperty Name="DiscountCreateTime" ColumnName="DiscountCreateTime" />
+          <ScalarProperty Name="DiscountTitle" ColumnName="DiscountTitle" />
+          <ScalarProperty Name="DiscountCode" ColumnName="DiscountCode" />
+          <ScalarProperty Name="DiscountType" ColumnName="DiscountType" />
+          <ScalarProperty Name="DiscountId" ColumnName="DiscountId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BookRequests">
+      <EntityTypeMapping TypeName="MibarimModel.BookRequest">
+        <MappingFragment StoreEntitySet="BookRequest">
+          <ScalarProperty Name="BookingType" ColumnName="BookingType" />
+          <ScalarProperty Name="Credit" ColumnName="Credit" />
+          <ScalarProperty Name="DuId" ColumnName="DuId" />
+          <ScalarProperty Name="IsBooked" ColumnName="IsBooked" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="PayReqId" ColumnName="PayReqId" />
+          <ScalarProperty Name="BrCreateTime" ColumnName="BrCreateTime" />
+          <ScalarProperty Name="TripId" ColumnName="TripId" />
+          <ScalarProperty Name="BookRequestId" ColumnName="BookRequestId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwRouteSuggests">
+      <EntityTypeMapping TypeName="MibarimModel.vwRouteSuggest">
+        <MappingFragment StoreEntitySet="vwRouteSuggest">
+          <ScalarProperty Name="RouteRequestUId" ColumnName="RouteRequestUId" />
+          <ScalarProperty Name="UserImageId" ColumnName="UserImageId" />
+          <ScalarProperty Name="RecommendPathId" ColumnName="RecommendPathId" />
+          <ScalarProperty Name="CarPlateNo" ColumnName="CarPlateNo" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="IsDrive" ColumnName="IsDrive" />
+          <ScalarProperty Name="SelfRouteRequestId" ColumnName="SelfRouteRequestId" />
+          <ScalarProperty Name="RouteRequestId" ColumnName="RouteRequestId" />
+          <ScalarProperty Name="Gender" ColumnName="Gender" />
+          <ScalarProperty Name="RRPricingOption" ColumnName="RRPricingOption" />
+          <ScalarProperty Name="RRPricingMinMax" ColumnName="RRPricingMinMax" />
+          <ScalarProperty Name="IsSuggestRejected" ColumnName="IsSuggestRejected" />
+          <ScalarProperty Name="IsSuggestAccepted" ColumnName="IsSuggestAccepted" />
+          <ScalarProperty Name="IsSuggestSeen" ColumnName="IsSuggestSeen" />
+          <ScalarProperty Name="IsSuggestSent" ColumnName="IsSuggestSent" />
+          <ScalarProperty Name="CarColor" ColumnName="CarColor" />
+          <ScalarProperty Name="CarType" ColumnName="CarType" />
+          <ScalarProperty Name="CarInfoId" ColumnName="CarInfoId" />
+          <ScalarProperty Name="AccompanyCount" ColumnName="AccompanyCount" />
+          <ScalarProperty Name="DstLongitude" ColumnName="DstLongitude" />
+          <ScalarProperty Name="DstLatitude" ColumnName="DstLatitude" />
+          <ScalarProperty Name="DstDetailAddress" ColumnName="DstDetailAddress" />
+          <ScalarProperty Name="DstGAddress" ColumnName="DstGAddress" />
+          <ScalarProperty Name="SrcLongitude" ColumnName="SrcLongitude" />
+          <ScalarProperty Name="SrcLatitude" ColumnName="SrcLatitude" />
+          <ScalarProperty Name="SrcDetailAddress" ColumnName="SrcDetailAddress" />
+          <ScalarProperty Name="SrcGAddress" ColumnName="SrcGAddress" />
+          <ScalarProperty Name="SDstDistance" ColumnName="SDstDistance" />
+          <ScalarProperty Name="SSrcDistance" ColumnName="SSrcDistance" />
+          <ScalarProperty Name="Family" ColumnName="Family" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwBookPays">
+      <EntityTypeMapping TypeName="MibarimModel.vwBookPay">
+        <MappingFragment StoreEntitySet="vwBookPay">
+          <ScalarProperty Name="PayReqValue" ColumnName="PayReqValue" />
+          <ScalarProperty Name="Credit" ColumnName="Credit" />
+          <ScalarProperty Name="BookingType" ColumnName="BookingType" />
+          <ScalarProperty Name="DuId" ColumnName="DuId" />
+          <ScalarProperty Name="IsBooked" ColumnName="IsBooked" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="BrCreateTime" ColumnName="BrCreateTime" />
+          <ScalarProperty Name="PayReqUserId" ColumnName="PayReqUserId" />
+          <ScalarProperty Name="PayReqRefID" ColumnName="PayReqRefID" />
+          <ScalarProperty Name="PayReqId" ColumnName="PayReqId" />
+          <ScalarProperty Name="TripId" ColumnName="TripId" />
+          <ScalarProperty Name="BookRequestId" ColumnName="BookRequestId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PayReqs">
+      <EntityTypeMapping TypeName="MibarimModel.PayReq">
+        <MappingFragment StoreEntitySet="PayReq">
+          <ScalarProperty Name="ReferenceNumber" ColumnName="ReferenceNumber" />
+          <ScalarProperty Name="TraceNumber" ColumnName="TraceNumber" />
+          <ScalarProperty Name="PayReqRefID" ColumnName="PayReqRefID" />
+          <ScalarProperty Name="PayReqStatus" ColumnName="PayReqStatus" />
+          <ScalarProperty Name="PayReqAuthority" ColumnName="PayReqAuthority" />
+          <ScalarProperty Name="PayReqValue" ColumnName="PayReqValue" />
+          <ScalarProperty Name="PayReqUserId" ColumnName="PayReqUserId" />
+          <ScalarProperty Name="PayReqCreateTime" ColumnName="PayReqCreateTime" />
+          <ScalarProperty Name="PayReqId" ColumnName="PayReqId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwPayRoutes">
+      <EntityTypeMapping TypeName="MibarimModel.vwPayRoute">
+        <MappingFragment StoreEntitySet="vwPayRoute">
+          <ScalarProperty Name="DrSrcStationId" ColumnName="DrSrcStationId" />
+          <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
+          <ScalarProperty Name="DriverRouteId" ColumnName="DriverRouteId" />
+          <ScalarProperty Name="DrIsDeleted" ColumnName="DrIsDeleted" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="TEmptySeat" ColumnName="TEmptySeat" />
+          <ScalarProperty Name="TState" ColumnName="TState" />
+          <ScalarProperty Name="TStartTime" ColumnName="TStartTime" />
+          <ScalarProperty Name="TripId" ColumnName="TripId" />
+          <ScalarProperty Name="PayReqId" ColumnName="PayReqId" />
+          <ScalarProperty Name="PayReqRefID" ColumnName="PayReqRefID" />
+          <ScalarProperty Name="PayReqStatus" ColumnName="PayReqStatus" />
+          <ScalarProperty Name="PayReqValue" ColumnName="PayReqValue" />
+          <ScalarProperty Name="PayReqUserId" ColumnName="PayReqUserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="GetNotificationUsers" FunctionName="MibarimModel.Store.GetNotificationUsers" />
+    <EntitySetMapping Name="vwBookedTrips">
+      <EntityTypeMapping TypeName="MibarimModel.vwBookedTrip">
+        <MappingFragment StoreEntitySet="vwBookedTrips">
+          <ScalarProperty Name="DriverMobile" ColumnName="DriverMobile" />
+          <ScalarProperty Name="PassMobile" ColumnName="PassMobile" />
+          <ScalarProperty Name="dstName" ColumnName="dstName" />
+          <ScalarProperty Name="srcName" ColumnName="srcName" />
+          <ScalarProperty Name="DriverFamily" ColumnName="DriverFamily" />
+          <ScalarProperty Name="DriverName" ColumnName="DriverName" />
+          <ScalarProperty Name="PassFamily" ColumnName="PassFamily" />
+          <ScalarProperty Name="Passname" ColumnName="Passname" />
+          <ScalarProperty Name="TEmptySeat" ColumnName="TEmptySeat" />
+          <ScalarProperty Name="TState" ColumnName="TState" />
+          <ScalarProperty Name="TStartTime" ColumnName="TStartTime" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

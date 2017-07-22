@@ -44,6 +44,6 @@ namespace CoreDA
         public string CarPlateNo { get; set; }
         public Nullable<long> RecommendPathId { get; set; }
         public Nullable<System.Guid> UserImageId { get; set; }
-        public Nullable<System.Guid> SuggestRouteRequestUId { get; set; }
+        public Nullable<System.Guid> RouteRequestUId { get; set; }
     }
 }

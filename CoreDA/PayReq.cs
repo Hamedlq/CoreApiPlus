@@ -17,9 +17,11 @@ namespace CoreDA
         public long PayReqId { get; set; }
         public System.DateTime PayReqCreateTime { get; set; }
         public int PayReqUserId { get; set; }
-        public int PayReqValue { get; set; }
+        public double PayReqValue { get; set; }
         public string PayReqAuthority { get; set; }
         public string PayReqStatus { get; set; }
         public string PayReqRefID { get; set; }
+        public string TraceNumber { get; set; }
+        public string ReferenceNumber { get; set; }
     }
 }

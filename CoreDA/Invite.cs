@@ -19,5 +19,7 @@ namespace CoreDA
         public string InviteCode { get; set; }
         public Nullable<int> UserId { get; set; }
         public Nullable<int> InviterUserId { get; set; }
+        public Nullable<short> InviteType { get; set; }
+        public Nullable<long> InviterId { get; set; }
     }
 }

@@ -394,13 +394,85 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to با معرفی راننده در مسیرهای تعریف شده در اپلیکیشن، پس از ۲۰ بار ثبت مسیر در یک ماه توسط راننده ۳۰،۰۰۰ تومان وجه نقد دریافت نمایید و ۳۰۰۰ تومان به ازای هر سفر به راننده هدیه دهید .
+        /// </summary>
+        public static string InviteDriverDriver {
+            get {
+                return ResourceManager.GetString("InviteDriverDriver", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to معرفی راننده جدید.
+        /// </summary>
+        public static string InviteDriverDriverTitle {
+            get {
+                return ResourceManager.GetString("InviteDriverDriverTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to با معرفی مسافر در مسیر خود، پس از انجام ۱۰ سفر در یک ماه علاوه بر دریافت ۱۰،۰۰۰ تومان وجه نقد یک سفر رایگان به او هدیه دهید .
+        /// </summary>
+        public static string InviteDriverPass {
+            get {
+                return ResourceManager.GetString("InviteDriverPass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to معرفی مسافر.
+        /// </summary>
+        public static string InviteDriverPassTitle {
+            get {
+                return ResourceManager.GetString("InviteDriverPassTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to سفر ارزان و راحت با خودروی اشتراکی
-        /// با اپلیکیشن «می‌بریم» مسیر روزانه خود را ثبت کنید و با هزینه بسیار پایین به محل کار بروید. شما با این دعوت نامه 3 روز سفر رایگان دریافت می‌کنید و با معرفی کردن 10 نفر می‌توانید تا 30 روز رایگان بین خانه تا محل کار خود جابجا شوید. 
+        /// با اپلیکیشن «می‌بریم» مسیر روزانه خود را ثبت کنید و با هزینه بسیار پایین به محل کار بروید. شما با این دعوت نامه یک روز سفر رایگان دریافت می‌کنید. 
         ///می‌بریم را از http://mibarim.com دریافت کرده و در کد معرفی عبارت {0} را وارد کنید.
         /// </summary>
         public static string InviteLink {
             get {
                 return ResourceManager.GetString("InviteLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to با معرفی راننده در مسیرهای تعریف شده در اپلیکیشن و انجام ۱۰ سفر در یک ماه با او  ۵۰،۰۰۰ تومان اعتبار رایگان دریافت نمایید و ۳۰۰۰ تومان به ازای هر سفر به راننده هدیه دهید.
+        /// </summary>
+        public static string InvitePassDriver {
+            get {
+                return ResourceManager.GetString("InvitePassDriver", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to معرفی راننده در مسیر خود.
+        /// </summary>
+        public static string InvitePassDriverTitle {
+            get {
+                return ResourceManager.GetString("InvitePassDriverTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to با معرفی دوستان خود در مسیرهای تعریف شده در اپلیکیشن، پس از اولین سفر او در یک ماه  ۱۰،۰۰۰ تومان اعتبار رایگان دریافت نمایید و یک سفر رایگان به دوست خود هدیه دهید..
+        /// </summary>
+        public static string InvitePassPass {
+            get {
+                return ResourceManager.GetString("InvitePassPass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to معرفی به دوستان.
+        /// </summary>
+        public static string InvitePassPassTitle {
+            get {
+                return ResourceManager.GetString("InvitePassPassTitle", resourceCulture);
             }
         }
         
@@ -522,6 +594,15 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ظرفیت تکمیل شده است.
+        /// </summary>
+        public static string NoEmptySeat {
+            get {
+                return ResourceManager.GetString("NoEmptySeat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to مقدار مورد درخواست شما یافت نشد.
         /// </summary>
         public static string NotFound {
@@ -635,6 +716,15 @@ namespace CoreManager.Resources {
         public static string PayMoneyDesc {
             get {
                 return ResourceManager.GetString("PayMoneyDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مبلغ نامعتبر است.
+        /// </summary>
+        public static string PricesUnDefined {
+            get {
+                return ResourceManager.GetString("PricesUnDefined", resourceCulture);
             }
         }
         
@@ -765,7 +855,7 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to صندلی خودروی شما برای مسیر {0} به {1} ساعت {2} رزرو شد.
+        ///   Looks up a localized string similar to صندلی خودروی شما برای مسیر {0} به {1} ساعت {2} رزرو شد. لطفا حتما در ساعت {2} در  {0} حضور داشته باشید..
         /// </summary>
         public static string SeatReservedFor {
             get {
@@ -864,6 +954,15 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to سفر رزرو شده است.
+        /// </summary>
+        public static string TripAlreadyReserved {
+            get {
+                return ResourceManager.GetString("TripAlreadyReserved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to امکان غیرفعال کردن سفر وجود ندارد. لطفا با پشتیبانی تماس بگیرید.
         /// </summary>
         public static string TripAlreadySet {
@@ -878,6 +977,15 @@ namespace CoreManager.Resources {
         public static string TripExists {
             get {
                 return ResourceManager.GetString("TripExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to با انجام {0} سفر در یک ماه، {3} تومان اعتبار جایزه دریافت نمایید.
+        /// </summary>
+        public static string TripWizard {
+            get {
+                return ResourceManager.GetString("TripWizard", resourceCulture);
             }
         }
         
@@ -941,6 +1049,15 @@ namespace CoreManager.Resources {
         public static string UserPicNotUploaded {
             get {
                 return ResourceManager.GetString("UserPicNotUploaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to کد تایید.
+        /// </summary>
+        public static string VerificationCode {
+            get {
+                return ResourceManager.GetString("VerificationCode", resourceCulture);
             }
         }
         

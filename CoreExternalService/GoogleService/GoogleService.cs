@@ -228,7 +228,7 @@ namespace CoreExternalService
 
         }
 
-        public string SendGroupNotification(List<string> deviceIds, string title, string message, string action, string selectedTab)
+        public string SendGroupNotification(List<string> deviceIds, string title, string message, string action, string selectedTab,string url)
         {
             var value = message;
             WebRequest tRequest;
@@ -241,7 +241,7 @@ namespace CoreExternalService
             tRequest.Headers.Add(string.Format("Sender: id={0}", SENDER_ID));
 
             //string postData = "collapse_key=score_update&delay_while_idle=0&data.title=" + title + "&data.body=" + message + "&data.action=" + action + "&data.tab=" + selectedTab + "&registration_ids=" + string.Join(",", deviceIds) + "";
-            string postData = "{\"collapse_key\":\"score_update\",\"delay_while_idle\":false,\"data\": { \"title\" : " + "\"" + title + "\",\"body\": " + "\"" + message + "\",\"action\": " + "\"" + action + "\",\"tab\": " + "\"" + selectedTab + "\"},\"registration_ids\":[\"" + string.Join("\",\"", deviceIds) + "\"]}";
+            string postData = "{\"collapse_key\":\"score_update\",\"delay_while_idle\":false,\"data\": { \"title\" : " + "\"" + title + "\",\"body\": " + "\"" + message + "\",\"action\": " + "\"" + action + "\",\"tab\": " + "\"" + selectedTab + "\",\"link\": " + "\"" + url + "\"},\"registration_ids\":[\"" + string.Join("\",\"", deviceIds) + "\"]}";
             //Console.WriteLine(postData);
             Byte[] byteArray = Encoding.UTF8.GetBytes(postData);
             tRequest.ContentLength = byteArray.Length;

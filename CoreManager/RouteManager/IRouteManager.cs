@@ -56,7 +56,8 @@ namespace CoreManager.RouteManager
         //UserRouteModel GetTripProfile(int RouteRequestId, int userId);
 
         List<PassRouteModel> GetPassengerRoutes(int userId, PassFilterModel model);
-        PaymentDetailModel RequestBooking(int userId, long modelTripId);
+        PaymentDetailModel RequestBooking(int userId, long modelTripId, long modelChargeAmount);
+        PaymentDetailModel RequestPayBooking(int userId, long modelTripId, long modelChargeAmount);
         List<StationRouteModel> GetStationRoutes();
         List<StationRouteModel> GetPassengerStationRoutes();
         bool SetUserRoute(int userId, long modelStRouteId, long stationId);
@@ -69,5 +70,10 @@ namespace CoreManager.RouteManager
         DriverTripModel SetTripLocation(int userId, DriverTripModel model);
         PassRouteModel SetPassLocation(int userId, PassRouteModel model);
         List<SubStationModel> GetStations(long stRouteId);
+        bool IsPayValid(int userId, PayModel model);
+        PaymentDetailModel BookSeat(int userId, PayModel model);
+        //PasargadPayModel PayPasargad(int userId, long tripId, long chargeAmount);
+        bool ReserveSeat(long payReqId);
+        bool HasCapacity(PayModel model);
     }
 }

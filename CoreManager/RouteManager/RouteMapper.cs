@@ -272,7 +272,7 @@ namespace CoreManager.RouteManager
                 //populate RouteRequestModel Object
                 Mapper.CreateMap<vwRouteRequest, RouteRequestModel>();
                 RouteRequestModel routeRequestModel = Mapper.Map<vwRouteRequest, RouteRequestModel>(request);
-                routeRequestModel.RouteUId = request.RouteRequestUId;
+                //routeRequestModel.RouteUId = request.RouteRequestUId;
                 routeRequestModel.PriceOption = (PricingOptions) request.RRPricingOption;
 
                 routeRequestModel.CostMinMax = request.RRPricingMinMax != null

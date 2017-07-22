@@ -17,6 +17,7 @@ namespace CoreManager.Models
         public Guid? UserImageId { set; get; }
         public string  TimingString{ set; get; }
         public string  PricingString{ set; get; }
+        public long  Price{ set; get; }
         public string  CarString{ set; get; }
         public string  CarPlate{ set; get; }
         public string SrcAddress { set; get; }

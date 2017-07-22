@@ -42,6 +42,7 @@ namespace CoreManager.UserManager
         NotificationModel GetNotifications(string mobile);
         List<ContactModel> GetUserContacts(int userId);
         ScoreModel GetUserScores(int userId);
+        ScoreModel GetPassScores(int userId, PayModel paymodel);
         void InsertGoogleToken(int userId, Gtoken model);
         List<PersoanlInfoModel> GetUserByInfo(UserSearchModel model);
         ImageResponse GetImageById(ImageRequest model);
@@ -62,18 +63,24 @@ namespace CoreManager.UserManager
         List<WithdrawRequestModel> GetWithdraw(int userId);
         bool WithdrawlValid(WithdrawRequestModel model, int userId);
 
-        InviteModel GetUserInvite(int userId);
+        InviteModel GetUserInvite(int userId, InviteTypes inviteType);
+/*
+        InviteModel GetDriverInvite(int userId);
+        InviteModel GetDriverInvite(int userId);
+*/
         void ValidatingTry(int id);
         void SendNotif();
         ScoreModel GetUserScoresByContact(int userId, long contactId);
         string InsertUserScore(int userId, ContactScoreModel model);
         UserInitialInfo GetUserInitialInfo(int userId);
-        void RegisterUserInfo(ApplicationUser user, PersoanlInfoModel model);
+        void RegisterUserInfo(ApplicationUser user, PersoanlInfoModel model, InviteTypes inviteType);
         UserInfoModel UpdateFanapUserInfo(FanapModel model);
         bool RegisterFanap(string nickname);
 
         UserInitialInfo GetDriverInitialInfo(int userId);
         UserModel GetFanapUserInfo(FanapModel fanapModel);
         void SaveFanapUser(int userId, int fModelUserName);
+        bool DoDiscount(InviteTypes intype,string discountCode, int userid);
+        List<PassRouteModel> GetPassengers();
     }
 }

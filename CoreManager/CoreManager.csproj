@@ -108,6 +108,10 @@
   <ItemGroup>
     <Compile Include="Models\ClusterModel.cs" />
     <Compile Include="Models\ClusterListModel.cs" />
+    <Compile Include="Models\PasargadPayModel.cs" />
+    <Compile Include="Models\PasargadPaymentModel.cs" />
+    <Compile Include="Models\PasargadResponseModel.cs" />
+    <Compile Include="Models\PayModel.cs" />
     <Compile Include="Models\PassengerModels\DriverTripModel.cs" />
     <Compile Include="Models\RouteModels\SubStationModel.cs" />
     <Compile Include="Models\TripTimeModel.cs" />
@@ -172,6 +176,8 @@
     <Compile Include="AdminManager\IAdminManager.cs" />
     <Compile Include="AdminManager\AdminManager.cs" />
     <Compile Include="AdminManager\AdminMapper.cs" />
+    <Compile Include="DiscountManager\IDiscountManager.cs" />
+    <Compile Include="DiscountManager\DiscountManager.cs" />
     <Compile Include="TransactionManager\ITransactionManager.cs" />
     <Compile Include="TransactionManager\TransactionManager.cs" />
     <Compile Include="ResponseProvider\IResponseProvider.cs" />

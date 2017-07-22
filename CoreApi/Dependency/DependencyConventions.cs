@@ -5,6 +5,7 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using System.Web.Http.Controllers;
 using CoreManager.AdminManager;
+using CoreManager.DiscountManager;
 using CoreManager.GroupManager;
 using CoreManager.LogProvider;
 using CoreManager.NotificationManager;
@@ -38,6 +39,8 @@ namespace CoreApi.Dependency
                         Component.For<INotificationManager, NotificationManager>().ImplementedBy<NotificationManager>(),
 
                         Component.For<ITransactionManager, TransactionManager>().ImplementedBy<TransactionManager>(),
+
+                        Component.For<IDiscountManager, DiscountManager>().ImplementedBy<DiscountManager>(),
 
                         //Component.For<IResponseProvider>().ImplementedBy<ResponseProvider>(),
 

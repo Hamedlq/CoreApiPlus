@@ -21,5 +21,6 @@ namespace CoreDA
         public System.DateTime DuCreateTime { get; set; }
         public short DuState { get; set; }
         public Nullable<long> TransId { get; set; }
+        public Nullable<System.DateTime> DuEndTime { get; set; }
     }
 }

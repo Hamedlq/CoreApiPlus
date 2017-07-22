@@ -11,5 +11,8 @@ namespace CoreManager.PaymentManager
     {
         PaymentDetailModel ChargeAccount(int userId, int chargeValue, string userNameFamilyString);
         PaymentDetailModel VerifyPayment(PaymentDetailModel model);
+        PasargadResponseModel VerifyPasargadPayment(PasargadPaymentModel model);
+        PasargadPayModel ChargePasargad(int userId, long chargeAmount, string userNameFamilyString,long tripId,DateTime tripTime);
+        PasargadPayModel Getpayment(long modelReqId);
     }
 }

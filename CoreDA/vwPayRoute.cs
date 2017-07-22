@@ -15,7 +15,7 @@ namespace CoreDA
     public partial class vwPayRoute
     {
         public int PayReqUserId { get; set; }
-        public int PayReqValue { get; set; }
+        public double PayReqValue { get; set; }
         public string PayReqStatus { get; set; }
         public string PayReqRefID { get; set; }
         public long PayReqId { get; set; }
