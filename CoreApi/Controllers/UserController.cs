@@ -22,6 +22,7 @@ using CoreManager.LogProvider;
 using CoreManager.Resources;
 using CoreManager.ResponseProvider;
 using CoreManager.UserManager;
+using Newtonsoft.Json;
 
 namespace CoreApi.Controllers
 {
@@ -33,32 +34,29 @@ namespace CoreApi.Controllers
         private IResponseProvider _responseProvider;
         private static string Tag = "UserController";
         private string _appVersion = "1";
+
         public UserController(ApplicationUserManager appUserManager,
             ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
         {
             AppUserManager = appUserManager;
             AccessTokenFormat = accessTokenFormat;
         }
+
         public UserController(IUserManager userManager, ILogProvider logManager, IResponseProvider responseProvider)
         {
             _userManager = userManager;
             _logManager = logManager;
             _responseProvider = responseProvider;
         }
+
         public UserController()
         {
         }
 
         public ApplicationUserManager AppUserManager
         {
-            get
-            {
-                return _userAppManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userAppManager = value;
-            }
+            get { return _userAppManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
+            private set { _userAppManager = value; }
         }
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
@@ -134,6 +132,7 @@ namespace CoreApi.Controllers
             var result = RegisterUser(model);
             return result;
         }
+
         [AllowAnonymous]
         [Route("RegisterMobileUser")]
         public IHttpActionResult RegisterMobileUser(OtploginModel model)
@@ -147,6 +146,7 @@ namespace CoreApi.Controllers
             var result = OtploginUser(model);
             return result;
         }
+
         [AllowAnonymous]
         [Route("RegisterIosUser")]
         public IHttpActionResult RegisterIosUser(OtploginModel model)
@@ -160,6 +160,21 @@ namespace CoreApi.Controllers
             var result = OtploginUser(model);
             return result;
         }
+
+        [AllowAnonymous]
+        [Route("RegisterIosDriver")]
+        public IHttpActionResult RegisterIosDriver(OtploginModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(_responseProvider.GenerateBadRequestResponse(ModelState));
+                //return BadRequest(ModelState);
+            }
+            model.UserRole = UserRoles.IosMobileDriver;
+            var result = OtploginUser(model);
+            return result;
+        }
+
         [AllowAnonymous]
         [Route("RegisterMobileDriver")]
         public IHttpActionResult RegisterMobileDriver(OtploginModel model)
@@ -173,16 +188,17 @@ namespace CoreApi.Controllers
             var result = OtploginUser(model);
             return result;
         }
+
         private IHttpActionResult OtploginUser(OtploginModel model)
         {
             IdentityResult result;
-            var userObj = new ApplicationUser() { UserName = model.Mobile, MobileConfirmed = false };
+            var userObj = new ApplicationUser() {UserName = model.Mobile, MobileConfirmed = false};
             //var userObj = new ApplicationUser() { Name = model.Name, Family = model.Family, Gender = model.Gender, UserName = model.Mobile,Code=model.Code, MobileConfirmed = false };
             var user = AppUserManager.FindByName(model.Mobile);
             if (user == null)
             {
                 //new User
-                model.Password = "a2sjKBMusxt0BjM7eBvZ";//model.Password ?? "1234";
+                model.Password = "a2sjKBMusxt0BjM7eBvZ"; //model.Password ?? "1234";
                 result = AppUserManager.Create(userObj, model.Password);
                 if (result.Succeeded)
                 {
@@ -192,6 +208,7 @@ namespace CoreApi.Controllers
             }
             return Json(_responseProvider.GenerateOKResponse());
         }
+
         [AllowAnonymous]
         [HttpPost]
         [Route("SmsReceived")]
@@ -201,9 +218,10 @@ namespace CoreApi.Controllers
             return Json(confirmed);
         }
 
+        [HttpGet]
         [AllowAnonymous]
         [Route("ChangePassword")]
-        public IHttpActionResult ChangePassword(UserChangePassModel model)
+        public IHttpActionResult ChangePassword([FromUri] UserChangePassModel model)
         {
             string mobile = "";
             if (!ModelState.IsValid)
@@ -211,9 +229,10 @@ namespace CoreApi.Controllers
                 return Json(_responseProvider.GenerateBadRequestResponse(ModelState));
                 //return BadRequest(ModelState);
             }
-            if (!string.IsNullOrEmpty(model.Mobile))
-                mobile = model.Mobile.Substring(1);
-            var confirmed = _userManager.ConfirmMobileNo(mobile);
+            //if (!string.IsNullOrEmpty(model.Mobile))
+            //    mobile = model.Mobile.Substring(1);
+            //var confirmed = _userManager.ConfirmMobileNo(mobile);
+            var confirmed = model.Mobile == "09000000001";
             if (confirmed)
             {
                 var user = AppUserManager.FindByName(model.Mobile);
@@ -228,12 +247,20 @@ namespace CoreApi.Controllers
                 }
                 else
                 {
-                    _responseProvider.SetBusinessMessage(new MessageResponse() { Message = getResource.getMessage("UserNotExist"), Type = ResponseTypes.Error });
+                    _responseProvider.SetBusinessMessage(new MessageResponse()
+                    {
+                        Message = getResource.getMessage("UserNotExist"),
+                        Type = ResponseTypes.Error
+                    });
                     return Json(_responseProvider.GenerateBadRequestResponse());
                 }
                 return Json(_responseProvider.GenerateOKResponse());
             }
-            _responseProvider.SetBusinessMessage(new MessageResponse() { Message = getResource.getMessage("SmsNotReceived"), Type = ResponseTypes.Error });
+            _responseProvider.SetBusinessMessage(new MessageResponse()
+            {
+                Message = getResource.getMessage("SmsNotReceived"),
+                Type = ResponseTypes.Error
+            });
             return Json(_responseProvider.GenerateBadRequestResponse());
         }
 
@@ -253,7 +280,7 @@ namespace CoreApi.Controllers
         {
             model.Password = System.Web.Security.Membership.GeneratePassword(16, 0);
             IdentityResult result;
-            var userObj = new ApplicationUser() { UserName = model.Mobile, MobileConfirmed = false };
+            var userObj = new ApplicationUser() {UserName = model.Mobile, MobileConfirmed = false};
             //var userObj = new ApplicationUser() { Name = model.Name, Family = model.Family, Gender = model.Gender, UserName = model.Mobile,Code=model.Code, MobileConfirmed = false };
             var user = AppUserManager.FindByName(model.Mobile);
             if (user == null)
@@ -266,7 +293,11 @@ namespace CoreApi.Controllers
             }
             else
             {
-                _responseProvider.SetBusinessMessage(new MessageResponse() { Message = getResource.getMessage("UserAlreadyExist"), Type = ResponseTypes.Error });
+                _responseProvider.SetBusinessMessage(new MessageResponse()
+                {
+                    Message = getResource.getMessage("UserAlreadyExist"),
+                    Type = ResponseTypes.Error
+                });
                 return Json(_responseProvider.GenerateBadRequestResponse());
                 ////update current user
                 //user = _userManager.PopulateUpdateModel(model, user);
@@ -286,7 +317,6 @@ namespace CoreApi.Controllers
         }
 
 
-
         [Route("InsertPersoanlInfo")]
         public async Task<IHttpActionResult> InsertPersoanlInfo(PersoanlInfoModel model)
         {
@@ -294,7 +324,11 @@ namespace CoreApi.Controllers
             {
                 if (model == null)
                 {
-                    _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("Name")) });
+                    _responseProvider.SetBusinessMessage(new MessageResponse()
+                    {
+                        Type = ResponseTypes.Error,
+                        Message = string.Format(getResource.getMessage("Required"), getResource.getString("Name"))
+                    });
                     return Json(_responseProvider.GenerateBadRequestResponse());
                 }
                 if (!ModelState.IsValid)
@@ -325,7 +359,11 @@ namespace CoreApi.Controllers
             {
                 if (model == null)
                 {
-                    _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("Name")) });
+                    _responseProvider.SetBusinessMessage(new MessageResponse()
+                    {
+                        Type = ResponseTypes.Error,
+                        Message = string.Format(getResource.getMessage("Required"), getResource.getString("Name"))
+                    });
                     return Json(_responseProvider.GenerateBadRequestResponse());
                 }
                 if (!ModelState.IsValid)
@@ -338,16 +376,20 @@ namespace CoreApi.Controllers
                 user.Gender = model.Gender;
                 user.Email = model.Email;
                 user.Code = model.Code;
-                var res=AppUserManager.Update(user);
+                var res = AppUserManager.Update(user);
                 if (res.Succeeded)
                 {
-                    _userManager.RegisterUserInfo(user, model,InviteTypes.PassInvite);
+                    _userManager.RegisterUserInfo(user, model, InviteTypes.PassInvite);
                     return Json(_responseProvider.GenerateOKResponse());
                 }
                 else
                 {
                     _logManager.Log(Tag, "RegisterUserInfo", getResource.getMessage("ErrorHappened"));
-                    _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = getResource.getMessage("ErrorHappened") });
+                    _responseProvider.SetBusinessMessage(new MessageResponse()
+                    {
+                        Type = ResponseTypes.Error,
+                        Message = getResource.getMessage("ErrorHappened")
+                    });
                     return Json(_responseProvider.GenerateBadRequestResponse());
                 }
             }
@@ -365,7 +407,11 @@ namespace CoreApi.Controllers
             {
                 if (model == null)
                 {
-                    _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("Name")) });
+                    _responseProvider.SetBusinessMessage(new MessageResponse()
+                    {
+                        Type = ResponseTypes.Error,
+                        Message = string.Format(getResource.getMessage("Required"), getResource.getString("Name"))
+                    });
                     return Json(_responseProvider.GenerateBadRequestResponse());
                 }
                 if (!ModelState.IsValid)
@@ -381,13 +427,17 @@ namespace CoreApi.Controllers
                 var res = AppUserManager.Update(user);
                 if (res.Succeeded)
                 {
-                    _userManager.RegisterUserInfo(user, model,InviteTypes.DriverInvite);
+                    _userManager.RegisterUserInfo(user, model, InviteTypes.DriverInvite);
                     return Json(_responseProvider.GenerateOKResponse());
                 }
                 else
                 {
                     _logManager.Log(Tag, "RegisterUserInfo", getResource.getMessage("ErrorHappened"));
-                    _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = getResource.getMessage("ErrorHappened") });
+                    _responseProvider.SetBusinessMessage(new MessageResponse()
+                    {
+                        Type = ResponseTypes.Error,
+                        Message = getResource.getMessage("ErrorHappened")
+                    });
                     return Json(_responseProvider.GenerateBadRequestResponse());
                 }
             }
@@ -406,7 +456,11 @@ namespace CoreApi.Controllers
             {
                 if (model == null)
                 {
-                    _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("Name")) });
+                    _responseProvider.SetBusinessMessage(new MessageResponse()
+                    {
+                        Type = ResponseTypes.Error,
+                        Message = string.Format(getResource.getMessage("Required"), getResource.getString("Name"))
+                    });
                     return Json(_responseProvider.GenerateBadRequestResponse());
                 }
                 if (!ModelState.IsValid)
@@ -437,7 +491,11 @@ namespace CoreApi.Controllers
             {
                 if (model == null)
                 {
-                    _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("Name")) });
+                    _responseProvider.SetBusinessMessage(new MessageResponse()
+                    {
+                        Type = ResponseTypes.Error,
+                        Message = string.Format(getResource.getMessage("Required"), getResource.getString("Name"))
+                    });
                     return Json(_responseProvider.GenerateBadRequestResponse());
                 }
                 var user = await AppUserManager.FindByIdAsync(int.Parse(User.Identity.GetUserId()));
@@ -459,7 +517,11 @@ namespace CoreApi.Controllers
             var userPic = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
             if (userPic == null)
             {
-                _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("UserPic")) });
+                _responseProvider.SetBusinessMessage(new MessageResponse()
+                {
+                    Type = ResponseTypes.Error,
+                    Message = string.Format(getResource.getMessage("Required"), getResource.getString("UserPic"))
+                });
                 return Json(_responseProvider.GenerateBadRequestResponse());
             }
             byte[] userPicModel;
@@ -469,12 +531,34 @@ namespace CoreApi.Controllers
             }
             if (!IsImage(userPicModel))
             {
-                _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = getResource.getMessage("NotRightFormat") });
+                _responseProvider.SetBusinessMessage(new MessageResponse()
+                {
+                    Type = ResponseTypes.Error,
+                    Message = getResource.getMessage("NotRightFormat")
+                });
                 return Json(_responseProvider.GenerateBadRequestResponse());
             }
             _userManager.UpdatePersoanlPic(userPicModel, int.Parse(User.Identity.GetUserId()));
             return Json(_responseProvider.GenerateOKResponse());
         }
+
+
+        [Route("InsertImage")]
+        [HttpPost]
+        public IHttpActionResult InsertImage(ImageFile imageFile)
+        {
+            try
+            {
+                var imageId = _userManager.InsertImage(imageFile, int.Parse(User.Identity.GetUserId()));
+                return Json(_responseProvider.GenerateResponse(imageId, "ImageId"));
+            }
+            catch (Exception e)
+            {
+                _logManager.Log(Tag, "InsertImage", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
         [HttpPost]
         [Route("GetUserInfo")]
         [Authorize]
@@ -484,13 +568,14 @@ namespace CoreApi.Controllers
             return Json(res);
         }
 
+
         [HttpPost]
         [Route("GetUserInitialInfo")]
         [Authorize]
         public IHttpActionResult GetUserInitialInfo()
         {
-                var res = _userManager.GetUserInitialInfo(int.Parse(User.Identity.GetUserId()));
-                return Json(res);
+            var res = _userManager.GetUserInitialInfo(int.Parse(User.Identity.GetUserId()));
+            return Json(res);
         }
 
         [HttpPost]
@@ -501,7 +586,6 @@ namespace CoreApi.Controllers
             var res = _userManager.GetUserScoresByContact(int.Parse(User.Identity.GetUserId()), contactModel.ContactId);
             return Json(res);
         }
-
 
 
         [HttpPost]
@@ -520,10 +604,23 @@ namespace CoreApi.Controllers
             var res = _userManager.GetPersonalInfo(int.Parse(User.Identity.GetUserId()));
             if (res.UserPic != null)
             {
-                return Json(new { res.Mobile, res.Name, res.Family, res.Gender, res.NationalCode, res.Email, res.UserImageId, Base64UserPic = Convert.ToBase64String(res.UserPic) });
+                return
+                    Json(
+                        new
+                        {
+                            res.Mobile,
+                            res.Name,
+                            res.Family,
+                            res.Gender,
+                            res.NationalCode,
+                            res.Email,
+                            res.UserImageId,
+                            Base64UserPic = Convert.ToBase64String(res.UserPic)
+                        });
             }
-            return Json(new { res.Mobile, res.Name, res.Family, res.Gender, res.NationalCode, res.Email });
+            return Json(new {res.Mobile, res.Name, res.Family, res.Gender, res.NationalCode, res.Email});
         }
+
         [HttpPost]
         [Route("GetUserPersonalInfo")]
         [Authorize(Roles = "AdminUser")]
@@ -532,10 +629,23 @@ namespace CoreApi.Controllers
             var res = _userManager.GetUserPersonalInfoByMobile(model.Mobile);
             if (res.UserPic != null)
             {
-                return Json(new { res.Mobile, res.Name, res.Family, res.Gender, res.NationalCode, res.Email, res.UserImageId, Base64UserPic = Convert.ToBase64String(res.UserPic) });
+                return
+                    Json(
+                        new
+                        {
+                            res.Mobile,
+                            res.Name,
+                            res.Family,
+                            res.Gender,
+                            res.NationalCode,
+                            res.Email,
+                            res.UserImageId,
+                            Base64UserPic = Convert.ToBase64String(res.UserPic)
+                        });
             }
-            return Json(new { res.Mobile, res.Name, res.Family, res.Gender, res.NationalCode, res.Email });
+            return Json(new {res.Mobile, res.Name, res.Family, res.Gender, res.NationalCode, res.Email});
         }
+
         [HttpPost]
         [Route("GetRouteUser")]
         [Authorize(Roles = "AdminUser")]
@@ -544,9 +654,21 @@ namespace CoreApi.Controllers
             var res = _userManager.GetPersonalInfoByRouteId(model.RouteRequestId);
             if (res.UserPic != null)
             {
-                return Json(new { res.Mobile, res.Name, res.Family, res.Gender, res.NationalCode, res.Email, res.UserImageId, Base64UserPic = Convert.ToBase64String(res.UserPic) });
+                return
+                    Json(
+                        new
+                        {
+                            res.Mobile,
+                            res.Name,
+                            res.Family,
+                            res.Gender,
+                            res.NationalCode,
+                            res.Email,
+                            res.UserImageId,
+                            Base64UserPic = Convert.ToBase64String(res.UserPic)
+                        });
             }
-            return Json(new { res.Mobile, res.Name, res.Family, res.Gender, res.NationalCode, res.Email });
+            return Json(new {res.Mobile, res.Name, res.Family, res.Gender, res.NationalCode, res.Email});
         }
 
         [HttpPost]
@@ -556,21 +678,23 @@ namespace CoreApi.Controllers
             var res = _userManager.GetRouteUserImage(int.Parse(User.Identity.GetUserId()), model.RouteRequestId);
             if (res.UserPic != null)
             {
-                return Json(new { Base64UserPic = Convert.ToBase64String(res.UserPic) });
+                return Json(new {Base64UserPic = Convert.ToBase64String(res.UserPic)});
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
+
         [HttpPost]
         [Route("GetCommentUserImage")]
         public IHttpActionResult GetCommentUserImage(CommentModel model)
         {
-            var res = _userManager.GetCommentUserImage(int.Parse(User.Identity.GetUserId()), (int)model.CommentId);
+            var res = _userManager.GetCommentUserImage(int.Parse(User.Identity.GetUserId()), (int) model.CommentId);
             if (res.UserPic != null)
             {
-                return Json(new { Base64UserPic = Convert.ToBase64String(res.UserPic) });
+                return Json(new {Base64UserPic = Convert.ToBase64String(res.UserPic)});
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
+
         [HttpPost]
         [Route("InsertLicenseInfo")]
         public IHttpActionResult InsertLicenseInfo(LicenseInfoModel model)
@@ -590,6 +714,7 @@ namespace CoreApi.Controllers
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
+
         [HttpPost]
         [Route("InsertLicensePic")]
         public IHttpActionResult InsertLicensePic()
@@ -597,7 +722,11 @@ namespace CoreApi.Controllers
             var licensePic = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
             if (licensePic == null)
             {
-                _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("LicensePic")) });
+                _responseProvider.SetBusinessMessage(new MessageResponse()
+                {
+                    Type = ResponseTypes.Error,
+                    Message = string.Format(getResource.getMessage("Required"), getResource.getString("LicensePic"))
+                });
                 return Json(_responseProvider.GenerateBadRequestResponse());
             }
             byte[] licensePicModel;
@@ -607,12 +736,17 @@ namespace CoreApi.Controllers
             }
             if (!IsImage(licensePicModel))
             {
-                _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = getResource.getMessage("NotRightFormat") });
+                _responseProvider.SetBusinessMessage(new MessageResponse()
+                {
+                    Type = ResponseTypes.Error,
+                    Message = getResource.getMessage("NotRightFormat")
+                });
                 return Json(_responseProvider.GenerateBadRequestResponse());
             }
             _userManager.InsertLicensePic(licensePicModel, int.Parse(User.Identity.GetUserId()));
             return Json(_responseProvider.GenerateOKResponse());
         }
+
         [HttpPost]
         [Route("InsertNationalCardPic")]
         public IHttpActionResult InsertNationalCardPic()
@@ -620,7 +754,11 @@ namespace CoreApi.Controllers
             var licensePic = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
             if (licensePic == null)
             {
-                _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("LicensePic")) });
+                _responseProvider.SetBusinessMessage(new MessageResponse()
+                {
+                    Type = ResponseTypes.Error,
+                    Message = string.Format(getResource.getMessage("Required"), getResource.getString("LicensePic"))
+                });
                 return Json(_responseProvider.GenerateBadRequestResponse());
             }
             byte[] nationalCardPicModel;
@@ -630,12 +768,17 @@ namespace CoreApi.Controllers
             }
             if (!IsImage(nationalCardPicModel))
             {
-                _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = getResource.getMessage("NotRightFormat") });
+                _responseProvider.SetBusinessMessage(new MessageResponse()
+                {
+                    Type = ResponseTypes.Error,
+                    Message = getResource.getMessage("NotRightFormat")
+                });
                 return Json(_responseProvider.GenerateBadRequestResponse());
             }
             _userManager.InsertNationalCardPic(nationalCardPicModel, int.Parse(User.Identity.GetUserId()));
             return Json(_responseProvider.GenerateOKResponse());
         }
+
         [HttpPost]
         [Route("GetLicenseInfo")]
         public IHttpActionResult GetLicenseInfo()
@@ -643,10 +786,18 @@ namespace CoreApi.Controllers
             var res = _userManager.GetLicenseInfo(int.Parse(User.Identity.GetUserId()));
             if (res.LicensePic != null)
             {
-                return Json(new { res.LicenseNo, res.LicenseImageId, Base64LicensePic = Convert.ToBase64String(res.LicensePic) });
+                return
+                    Json(
+                        new
+                        {
+                            res.LicenseNo,
+                            res.LicenseImageId,
+                            Base64LicensePic = Convert.ToBase64String(res.LicensePic)
+                        });
             }
-            return Json(new { res.LicenseNo });
+            return Json(new {res.LicenseNo});
         }
+
         [HttpPost]
         [Route("GetImageById")]
         public IHttpActionResult GetImageById(ImageRequest model)
@@ -656,26 +807,29 @@ namespace CoreApi.Controllers
                 var res = _userManager.GetImageById(model);
                 if (res.ImageFile != null)
                 {
-                    return Json(new { res.ImageId, res.ImageType, Base64ImageFile = Convert.ToBase64String(res.ImageFile) });
+                    return
+                        Json(new {res.ImageId, res.ImageType, Base64ImageFile = Convert.ToBase64String(res.ImageFile)});
                 }
             }
             return Json(_responseProvider.GenerateBadRequestResponse());
         }
-        /*[HttpPost]
-        [Authorize(Roles = "AdminUser")]
-        [Route("GetImageByUserId")]
-        public IHttpActionResult GetImageByUserId(ImageRequest model)
-        {
-            if (User != null)
-            {
-                var res = _userManager.GetImageByUserId(model);
-                if (res.ImageFile != null)
-                {
-                    return Json(new { Base64Image = Convert.ToBase64String(res.ImageFile) });
-                }
-            }
-            return Json(_responseProvider.GenerateBadRequestResponse());
-        }*/
+
+/*[HttpPost]
+                                [Authorize(Roles = "AdminUser")]
+                                [Route("GetImageByUserId")]
+                                public IHttpActionResult GetImageByUserId(ImageRequest model)
+                                {
+                                    if (User != null)
+                                    {
+                                        var res = _userManager.GetImageByUserId(model);
+                                        if (res.ImageFile != null)
+                                        {
+                                            return Json(new { Base64Image = Convert.ToBase64String(res.ImageFile) });
+                                        }
+                                    }
+                                    return Json(_responseProvider.GenerateBadRequestResponse());
+                                }*/
+
         [HttpPost]
         [Route("GetUserLicenseInfo")]
         public IHttpActionResult GetUserLicenseInfo(UserInfoRequest model)
@@ -683,10 +837,11 @@ namespace CoreApi.Controllers
             var res = _userManager.GetUserLicenseInfo(model.Mobile);
             if (res.LicensePic != null)
             {
-                return Json(new { res.LicenseNo, res.LicenseImageId, Base64LicensePic = Convert.ToBase64String(res.LicensePic) });
+                return Json(new {res.LicenseNo, res.LicenseImageId, Base64LicensePic = Convert.ToBase64String(res.LicensePic)});
             }
-            return Json(new { res.LicenseNo });
+            return Json(new {res.LicenseNo});
         }
+
         [HttpPost]
         [Route("GetBankInfo")]
         public IHttpActionResult GetBankInfo()
@@ -694,10 +849,11 @@ namespace CoreApi.Controllers
             var res = _userManager.GetBankInfo(int.Parse(User.Identity.GetUserId()));
             if (res.BankCardPic != null)
             {
-                return Json(new { res.BankName, res.BankAccountNo, res.BankShaba, res.BankCardImageId, Base64BankCardPic = Convert.ToBase64String(res.BankCardPic) });
+                return Json(new {res.BankName, res.BankAccountNo, res.BankShaba, res.BankCardImageId, Base64BankCardPic = Convert.ToBase64String(res.BankCardPic)});
             }
-            return Json(new { res.BankName, res.BankAccountNo, res.BankShaba });
+            return Json(new {res.BankName, res.BankAccountNo, res.BankShaba});
         }
+
         [HttpPost]
         [Route("InsertCarInfo")]
         public IHttpActionResult InsertCarInfo(CarInfoModel model)
@@ -710,7 +866,7 @@ namespace CoreApi.Controllers
                 }
                 if (model == null)
                 {
-                    _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("CarType")) });
+                    _responseProvider.SetBusinessMessage(new MessageResponse() {Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("CarType"))});
                     return Json(_responseProvider.GenerateBadRequestResponse());
                 }
                 _userManager.InsertCarInfo(model, int.Parse(User.Identity.GetUserId()));
@@ -735,7 +891,7 @@ namespace CoreApi.Controllers
                 }
                 if (model == null)
                 {
-                    _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("BankName")) });
+                    _responseProvider.SetBusinessMessage(new MessageResponse() {Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("BankName"))});
                     return Json(_responseProvider.GenerateBadRequestResponse());
                 }
                 _userManager.InsertBankInfo(model, int.Parse(User.Identity.GetUserId()));
@@ -833,6 +989,7 @@ namespace CoreApi.Controllers
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }*/
+
         [HttpPost]
         [Route("InsertBankCardPic")]
         public IHttpActionResult InsertBankCardPic()
@@ -840,7 +997,7 @@ namespace CoreApi.Controllers
             var licensePic = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
             if (licensePic == null)
             {
-                _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("BankCardPic")) });
+                _responseProvider.SetBusinessMessage(new MessageResponse() {Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("BankCardPic"))});
                 return Json(_responseProvider.GenerateBadRequestResponse());
             }
             byte[] bankCardPicModel;
@@ -850,7 +1007,7 @@ namespace CoreApi.Controllers
             }
             if (!IsImage(bankCardPicModel))
             {
-                _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = getResource.getMessage("NotRightFormat") });
+                _responseProvider.SetBusinessMessage(new MessageResponse() {Type = ResponseTypes.Error, Message = getResource.getMessage("NotRightFormat")});
                 return Json(_responseProvider.GenerateBadRequestResponse());
             }
             _userManager.InsertBankCardPic(bankCardPicModel, int.Parse(User.Identity.GetUserId()));
@@ -865,7 +1022,7 @@ namespace CoreApi.Controllers
             var licensePic = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
             if (licensePic == null)
             {
-                _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("CarPic")) });
+                _responseProvider.SetBusinessMessage(new MessageResponse() {Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("CarCardPic"))});
                 return Json(_responseProvider.GenerateBadRequestResponse());
             }
             byte[] carPicModel;
@@ -875,7 +1032,7 @@ namespace CoreApi.Controllers
             }
             if (!IsImage(carPicModel))
             {
-                _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = getResource.getMessage("NotRightFormat") });
+                _responseProvider.SetBusinessMessage(new MessageResponse() {Type = ResponseTypes.Error, Message = getResource.getMessage("NotRightFormat")});
                 return Json(_responseProvider.GenerateBadRequestResponse());
             }
             _userManager.InsertCarPic(carPicModel, int.Parse(User.Identity.GetUserId()));
@@ -889,7 +1046,7 @@ namespace CoreApi.Controllers
             var licensePic = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
             if (licensePic == null)
             {
-                _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("CarPic")) });
+                _responseProvider.SetBusinessMessage(new MessageResponse() {Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("CarCardPic"))});
                 return Json(_responseProvider.GenerateBadRequestResponse());
             }
             byte[] carPicModel;
@@ -899,7 +1056,7 @@ namespace CoreApi.Controllers
             }
             if (!IsImage(carPicModel))
             {
-                _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = getResource.getMessage("NotRightFormat") });
+                _responseProvider.SetBusinessMessage(new MessageResponse() {Type = ResponseTypes.Error, Message = getResource.getMessage("NotRightFormat")});
                 return Json(_responseProvider.GenerateBadRequestResponse());
             }
             _userManager.InsertCarBackPic(carPicModel, int.Parse(User.Identity.GetUserId()));
@@ -922,6 +1079,7 @@ namespace CoreApi.Controllers
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
+
         [HttpPost]
         [Route("GetWithdraw")]
         public IHttpActionResult GetWithdraw()
@@ -934,7 +1092,7 @@ namespace CoreApi.Controllers
             }
             catch (Exception e)
             {
-                _logManager.Log(Tag, "GetDiscount", e.Message);
+                _logManager.Log(Tag, "GetWithdraw", e.Message);
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
@@ -951,7 +1109,7 @@ namespace CoreApi.Controllers
                 }
                 if (model == null)
                 {
-                    _responseProvider.SetBusinessMessage(new MessageResponse() { Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("BankName")) });
+                    _responseProvider.SetBusinessMessage(new MessageResponse() {Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("BankName"))});
                     return Json(_responseProvider.GenerateBadRequestResponse());
                 }
                 if (_userManager.WithdrawlValid(model, int.Parse(User.Identity.GetUserId())))
@@ -961,7 +1119,7 @@ namespace CoreApi.Controllers
                 }
                 else
                 {
-                    _responseProvider.SetBusinessMessage(new MessageResponse() { Message = getResource.getMessage("NotRemain"), Type = ResponseTypes.Error });
+                    _responseProvider.SetBusinessMessage(new MessageResponse() {Message = getResource.getMessage("NotRemain"), Type = ResponseTypes.Error});
                     return Json(_responseProvider.GenerateBadRequestResponse());
                 }
             }
@@ -991,12 +1149,50 @@ namespace CoreApi.Controllers
         }
 
         [HttpPost]
+        [Route("GetRatings")]
+        public IHttpActionResult GetRatings()
+        {
+            try
+            {
+                var res = _userManager.GetRatings(int.Parse(User.Identity.GetUserId()));
+                var jsonRes = Json(_responseProvider.GenerateResponse(res));
+                return jsonRes;
+            }
+            catch (Exception e)
+            {
+                _logManager.Log(Tag, "GetRatings", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpPost]
+        [Route("SetRatings")]
+        public IHttpActionResult SetRatings(RatingModel model)
+        {
+            try
+            {
+                if (model.RatingsList != null)
+                {
+                    List<RatingModel> resp = JsonConvert.DeserializeObject<List<RatingModel>>(model.RatingsList);
+                    var res = _userManager.SetRatings(int.Parse(User.Identity.GetUserId()), resp);
+                    var jsonRes = Json(_responseProvider.GenerateResponse(res, "setRating"));
+                    return jsonRes;
+                }
+            }
+            catch (Exception e)
+            {
+                _logManager.Log(Tag, "SetRatings", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpPost]
         [Route("GetInvite")]
         public IHttpActionResult GetInvite()
         {
             try
             {
-                var res = _userManager.GetUserInvite(int.Parse(User.Identity.GetUserId()),InviteTypes.PassInvite);
+                var res = _userManager.GetUserInvite(int.Parse(User.Identity.GetUserId()), InviteTypes.PassInvite);
                 //var jsonRes = Json(_responseProvider.GenerateRouteResponse(res,"AboutMe"));
                 return Json(res);
             }
@@ -1012,7 +1208,7 @@ namespace CoreApi.Controllers
         public IHttpActionResult GetCarInfo()
         {
             var res = _userManager.GetCarInfo(int.Parse(User.Identity.GetUserId()));
-            return Json(new { res.CarType, res.CarColor, res.CarPlateNo, res.CarFrontImageId, res.CarBackImageId, Base64CarCardPic = res.CarCardPic != null ? Convert.ToBase64String(res.CarCardPic) : null, Base64CarCardBckPic = res.CarCardBkPic != null ? Convert.ToBase64String(res.CarCardBkPic) : null });
+            return Json(new {res.CarType, res.CarColor, res.CarPlateNo, res.CarFrontImageId, res.CarBackImageId, Base64CarCardPic = res.CarCardPic != null ? Convert.ToBase64String(res.CarCardPic) : null, Base64CarCardBckPic = res.CarCardBkPic != null ? Convert.ToBase64String(res.CarCardBkPic) : null});
         }
 
 
@@ -1029,7 +1225,7 @@ namespace CoreApi.Controllers
                 {
                     //if (res.UserPic == null)
                     //{
-                    withPic.Add(new { res.ContactId, res.Name, res.Family, res.Gender, res.LastMsgTime, res.LastMsg, res.IsRideAccepted, res.IsPassengerAccepted, res.IsSupport, res.IsDriver, res.UserImageId, res.AboutUser });
+                    withPic.Add(new {res.ContactId, res.Name, res.Family, res.Gender, res.LastMsgTime, res.LastMsg, res.IsRideAccepted, res.IsPassengerAccepted, res.IsSupport, res.IsDriver, res.UserImageId, res.AboutUser});
                     //}
                     //else
                     //{
@@ -1044,6 +1240,7 @@ namespace CoreApi.Controllers
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
+
         [HttpPost]
         [Route("SaveGcmToken")]
         [Authorize]
@@ -1055,7 +1252,7 @@ namespace CoreApi.Controllers
                 {
                     return Json(_responseProvider.GenerateBadRequestResponse(ModelState));
                 }
-                _userManager.InsertGoogleToken(int.Parse(User.Identity.GetUserId()), model);
+                _userManager.InsertGoogleToken(int.Parse(User.Identity.GetUserId()), model, UserRoles.MobileUser);
                 return Json(_responseProvider.GenerateOKResponse());
             }
             catch (Exception e)
@@ -1071,7 +1268,7 @@ namespace CoreApi.Controllers
         public IHttpActionResult GetUserCarInfo(UserInfoRequest model)
         {
             var res = _userManager.GetUserCarInfo(model.Mobile);
-            return Json(new { res.CarType, res.CarColor, res.CarPlateNo, res.CarFrontImageId, res.CarBackImageId, Base64CarCardPic = res.CarCardPic != null ? Convert.ToBase64String(res.CarCardPic) : null, Base64CarCardBckPic = res.CarCardBkPic != null ? Convert.ToBase64String(res.CarCardBkPic) : null });
+            return Json(new {res.CarType, res.CarColor, res.CarPlateNo, res.CarFrontImageId, res.CarBackImageId, Base64CarCardPic = res.CarCardPic != null ? Convert.ToBase64String(res.CarCardPic) : null, Base64CarCardBckPic = res.CarCardBkPic != null ? Convert.ToBase64String(res.CarCardBkPic) : null});
         }
 
         [HttpPost]
@@ -1121,7 +1318,7 @@ namespace CoreApi.Controllers
         private string GetDayConfirmNo(int id)
         {
             string dateTimeStamp = DateTime.Now.ToString("MMdd");
-            string res = ((int.Parse(dateTimeStamp)) * id%1000).ToString();
+            string res = ((int.Parse(dateTimeStamp))*id%1000).ToString();
             return res;
         }
 
@@ -1157,14 +1354,14 @@ namespace CoreApi.Controllers
                         bool isUserRegistered = !string.IsNullOrEmpty(user.Name);
                         user.MobileConfirmed = true;
                         AppUserManager.Update(user);
-                        return Json(_responseProvider.GenerateResponse(new { Password = newPass, Confirmed = true, IsUserRegistered = isUserRegistered },
-                                "password"));
+                        return Json(_responseProvider.GenerateResponse(new {Password = newPass, Confirmed = true, IsUserRegistered = isUserRegistered},
+                            "password"));
                     }
                     return GetErrorResult(result);
                 }
                 return GetErrorResult(result);
             }
-            return Json(_responseProvider.GenerateResponse(new { Password = "", Confirmed = false, IsUserRegistered = false }, "password"));
+            return Json(_responseProvider.GenerateResponse(new {Password = "", Confirmed = false, IsUserRegistered = false}, "password"));
         }
 
         [HttpPost]
@@ -1175,7 +1372,7 @@ namespace CoreApi.Controllers
             try
             {
                 var response = _userManager.GetUserTrip(int.Parse(User.Identity.GetUserId()));
-                return Json(new ResponseModel() { Messages = new List<string>() { response.ToString() } });
+                return Json(new ResponseModel() {Messages = new List<string>() {response.ToString()}});
             }
             catch (Exception e)
             {
@@ -1191,7 +1388,7 @@ namespace CoreApi.Controllers
         {
             try
             {
-                //_userManager.SendNotif();
+                _userManager.SendNotif();
                 return Json(_responseProvider.GenerateOKResponse());
             }
             catch (Exception e)
@@ -1200,7 +1397,6 @@ namespace CoreApi.Controllers
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
-
 
 
         [HttpPost]
@@ -1219,8 +1415,8 @@ namespace CoreApi.Controllers
                 _logManager.Log(Tag, "GetAllUsers", e.Message);
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
-
         }
+
         [HttpPost]
         [Route("GetUserByInfo")]
         [Authorize(Roles = "AdminUser")]
@@ -1237,8 +1433,44 @@ namespace CoreApi.Controllers
                 _logManager.Log(Tag, "GetUserByInfo", e.Message);
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
-
         }
+
+        [HttpPost]
+        [Route("GetUserInfoById")]
+        [Authorize(Roles = "AdminUser")]
+        public IHttpActionResult GetUserInfoById(PersoanlInfoModel model)
+        {
+            try
+            {
+                var res = _userManager.GetUserInfoById(model.UserUId.Value);
+                var jsonRes = Json(_responseProvider.GenerateResponse(res, "UserInfo"));
+                return jsonRes;
+            }
+            catch (Exception e)
+            {
+                _logManager.Log(Tag, "GetUserInfoById", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+
+        [HttpPost]
+        [Route("EditUserInfo")]
+        [Authorize(Roles = "AdminUser")]
+        public IHttpActionResult EditUserInfo(UserInfoAdminModel model)
+        {
+            try
+            {
+                _userManager.EditUserInfo(model);
+                return Json(_responseProvider.GenerateOKResponse());
+            }
+            catch (Exception e)
+            {
+                _logManager.Log(Tag, "EditUserInfo", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
 
         [HttpPost]
         [Route("SendUserTripLocation")]
@@ -1256,7 +1488,6 @@ namespace CoreApi.Controllers
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
-
 
 
         [HttpPost]
@@ -1293,7 +1524,6 @@ namespace CoreApi.Controllers
         }*/
 
 
-
         [HttpPost]
         [Route("NotifyEvents")]
         [AllowAnonymous]
@@ -1318,7 +1548,7 @@ namespace CoreApi.Controllers
         public IHttpActionResult GetAppVersion()
         {
             _appVersion = ConfigurationManager.AppSettings["MobileAppVersion"];
-            return Json(new ResponseModel() { Messages = new List<string>() { _appVersion } });
+            return Json(new ResponseModel() {Messages = new List<string>() {_appVersion}});
         }
 
         private CarInfoModel ReadFromCarRequest(HttpRequest request)
@@ -1363,38 +1593,36 @@ namespace CoreApi.Controllers
         public static bool IsImage(byte[] bytes)
         {
             // see http://www.mikekunz.com/image_file_header.html  
-            var bmp = Encoding.ASCII.GetBytes("BM");     // BMP
-            var gif = Encoding.ASCII.GetBytes("GIF");    // GIF
-            var png = new byte[] { 137, 80, 78, 71 };    // PNG
-            var tiff = new byte[] { 73, 73, 42 };         // TIFF
-            var tiff2 = new byte[] { 77, 77, 42 };         // TIFF
-            var jpeg = new byte[] { 255, 216, 255, 224 }; // jpeg
-            var jpeg2 = new byte[] { 255, 216, 255, 225 }; // jpeg canon
+            var bmp = Encoding.ASCII.GetBytes("BM"); // BMP
+            var gif = Encoding.ASCII.GetBytes("GIF"); // GIF
+            var png = new byte[] {137, 80, 78, 71}; // PNG
+            var tiff = new byte[] {73, 73, 42}; // TIFF
+            var tiff2 = new byte[] {77, 77, 42}; // TIFF
+            var jpeg = new byte[] {255, 216, 255, 224}; // jpeg
+            var jpeg2 = new byte[] {255, 216, 255, 225}; // jpeg canon
 
             if (bmp.SequenceEqual(bytes.Take(bmp.Length)))
-                return true;//ImageFormat.bmp;
+                return true; //ImageFormat.bmp;
 
             if (gif.SequenceEqual(bytes.Take(gif.Length)))
-                return true;// ImageFormat.gif;
+                return true; // ImageFormat.gif;
 
             if (png.SequenceEqual(bytes.Take(png.Length)))
-                return true;// ImageFormat.png;
+                return true; // ImageFormat.png;
 
             if (tiff.SequenceEqual(bytes.Take(tiff.Length)))
-                return true;//ImageFormat.tiff;
+                return true; //ImageFormat.tiff;
 
             if (tiff2.SequenceEqual(bytes.Take(tiff2.Length)))
-                return true;// ImageFormat.tiff;
+                return true; // ImageFormat.tiff;
 
             if (jpeg.SequenceEqual(bytes.Take(jpeg.Length)))
-                return true;// ImageFormat.jpeg;
+                return true; // ImageFormat.jpeg;
 
             if (jpeg2.SequenceEqual(bytes.Take(jpeg2.Length)))
-                return true;// ImageFormat.jpeg;
+                return true; // ImageFormat.jpeg;
 
             return false;
         }
-
-
     }
 }

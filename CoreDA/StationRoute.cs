@@ -20,5 +20,12 @@ namespace CoreDA
         public Nullable<long> DriverPrice { get; set; }
         public Nullable<long> PassPrice { get; set; }
         public Nullable<long> Duration { get; set; }
+        public Nullable<long> DistanceMin { get; set; }
+        public Nullable<long> DurationMin { get; set; }
+        public Nullable<long> DistanceMid { get; set; }
+        public Nullable<long> DurationMid { get; set; }
+        public Nullable<long> DistanceMax { get; set; }
+        public Nullable<long> DurationMax { get; set; }
+        public Nullable<bool> IsDeleted { get; set; }
     }
 }

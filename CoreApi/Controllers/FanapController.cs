@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.Results;
 using System.Web.Script.Serialization;
+using CoreManager.FanapManager;
 using CoreManager.LogProvider;
 using CoreManager.Models;
 using CoreManager.Models.RouteModels;
@@ -28,12 +29,13 @@ namespace CoreApi.Controllers
     {
         private static string Tag = "FanapController";
         private static string Sso_address = "http://sandbox.fanapium.com";
-        private static string Client_Id = "85504dcc9e6272b2f8ee45ae";
-        private static string redirect_Uri = "http://mibarimapp.com/coreapi/loginreturn";
+        private static string Client_Id = "b05741339a41cf30f58ac0e9";
+        private static string redirect_Uri = "http://mibarim.ir/loginreturn";
         private IRouteManager _routemanager;
         private IRouteGroupManager _routeGroupManager;
         private ILogProvider _logmanager;
         private IUserManager _userManager;
+        private IFanapManager _fanapManager;
         private IResponseProvider _responseProvider;
         private ApplicationUserManager _userAppManager;
 
@@ -45,13 +47,14 @@ namespace CoreApi.Controllers
             ILogProvider logManager,
             IUserManager userManager,
             IRouteGroupManager routeGroupManager,
+            IFanapManager fanapManager,
             IResponseProvider responseProvider)
         {
             _routemanager = routeManager;
             _routemanager = routeManager;
             _logmanager = logManager;
             _userManager = userManager;
-
+            _fanapManager = fanapManager;
             _routeGroupManager = routeGroupManager;
             _responseProvider = responseProvider;
         }
@@ -68,7 +71,7 @@ namespace CoreApi.Controllers
             }
         }
 
-        [HttpGet]
+/*        [HttpGet]
         [Route("FanapLogin")]
         public HttpResponseMessage FanapLogin()
         {
@@ -106,41 +109,65 @@ namespace CoreApi.Controllers
                 _logmanager.Log(Tag, "FanapLogin", e.Message);
             }
             return new HttpResponseMessage(HttpStatusCode.BadRequest);
-        }
+        }*/
 
         [HttpGet]
         [Route("Loginreturn")]
         [AllowAnonymous]
-        public HttpResponseMessage Loginreturn([FromUri] FanapModel fanapModel)
+        public IHttpActionResult Loginreturn([FromUri] FanapModel fanapModel)
         {
             try
             {
-                var fModel = _userManager.GetFanapUserInfo(fanapModel);
+                var res = new UserRegisterModel();
+                var fModel = _fanapManager.GetFanapUserInfo(fanapModel);
                 IdentityResult result;
                 var userObj = new ApplicationUser() { UserName = fModel.UserName, Name = fModel.Name, Family = fModel.Family, MobileConfirmed = false, Code ="Fanap" };
                 //var userObj = new ApplicationUser() { Name = model.Name, Family = model.Family, Gender = model.Gender, UserName = model.Mobile,Code=model.Code, MobileConfirmed = false };
                 var user = AppUserManager.FindByName(fModel.UserName);
+                var newPass = System.Web.Security.Membership.GeneratePassword(16, 0);
                 if (user == null)
                 {
-                    var newPass = System.Web.Security.Membership.GeneratePassword(16, 0);
                     result = AppUserManager.Create(userObj, newPass);
                     if (result.Succeeded)
                     {
                         user = AppUserManager.FindByName(fModel.UserName);
                         AppUserManager.AddToRole(user.Id, UserRoles.MobileDriver.ToString());
-                        _userManager.SaveFanapUser(user.Id, fModel.UserId);
-                        var url = "http://exitthisactivity";
+                        _fanapManager.SaveFanapUser(user.Id, fModel.UserId);
+                        res.Mobile = fModel.UserName;
+                        res.Password= newPass;
+                        return Json(_responseProvider.GenerateResponse(res,"userpass"));
+                        /*var url = "http://exitthisactivity";
                         var response = Request.CreateResponse(HttpStatusCode.Moved);
                         response.Headers.Location = new Uri(url);
-                        return response;
+                        return response;*/
+
                     }
+                }
+                else
+                {
+                    _fanapManager.SaveFanapUser(user.Id, fModel.UserId);
+                    result = AppUserManager.RemovePassword(user.Id);
+                    if (result.Succeeded)
+                    {
+                        result = AppUserManager.AddPassword(user.Id, newPass);
+                        if (result.Succeeded)
+                        {
+                            bool isUserRegistered = !string.IsNullOrEmpty(user.Name);
+                            user.MobileConfirmed = true;
+                            AppUserManager.Update(user);
+                            res.Mobile = fModel.UserName;
+                            res.Password = newPass;
+                            return Json(_responseProvider.GenerateResponse(res, "userpass"));
+                        }
+                    }
+                    
                 }
             }
             catch (Exception e)
             {
                 _logmanager.Log(Tag, "Loginreturn", e.Message);
             }
-            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
 
         [HttpGet]
@@ -160,8 +187,41 @@ namespace CoreApi.Controllers
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
 
+        [HttpPost]
+        [Route("FanapBookTrip")]
+        public IHttpActionResult FanapBookTrip(PayModel model)
+        {
+            try
+            {
+                int ff;
+                if (User != null && int.TryParse(User.Identity.GetUserId(), out ff))
+                {
+                    var res=_fanapManager.FanapBookTrip(ff, model.TripId);
+                    return Json(_responseProvider.GenerateResponse(res, "FanapBookTrip"));
+                }
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "FanapBookTrip", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
 
-
-
+        [HttpPost]
+        [Route("PayReturn")]
+        [AllowAnonymous]
+        public IHttpActionResult PayReturn(PaymentDetailModel model)
+        {
+            try
+            {
+                    var res = _fanapManager.Payresult(model.ReqId);
+                    return Json(_responseProvider.GenerateResponse(res, "PayReturn"));
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "PayReturn", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
     }
 }

@@ -96,30 +96,30 @@ namespace CoreApi.Controllers
         }
 
 /*
-                                [HttpPost]
-                                [Route("RequestBooking")]
-                                public IHttpActionResult RequestBooking(PassRouteModel model)
-                                {
-                                    try
-                                    {
-                                        int ff;
-                                        if (User != null && int.TryParse(User.Identity.GetUserId(), out ff))
-                                        {
-                                            var res = _routemanager.RequestBooking(ff, model.TripId);
-                                            return Json(res);
-                                        }
-                                        else
-                                        {
-                                            return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "You are unauthorized to see Info!"));
-                                        }
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        _logmanager.Log(Tag, "RequestBooking", e.Message);
-                                    }
-                                    return Json(_responseProvider.GenerateUnknownErrorResponse());
-                                }
-                        */
+                                                                [HttpPost]
+                                                                [Route("RequestBooking")]
+                                                                public IHttpActionResult RequestBooking(PassRouteModel model)
+                                                                {
+                                                                    try
+                                                                    {
+                                                                        int ff;
+                                                                        if (User != null && int.TryParse(User.Identity.GetUserId(), out ff))
+                                                                        {
+                                                                            var res = _routemanager.RequestBooking(ff, model.TripId);
+                                                                            return Json(res);
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "You are unauthorized to see Info!"));
+                                                                        }
+                                                                    }
+                                                                    catch (Exception e)
+                                                                    {
+                                                                        _logmanager.Log(Tag, "RequestBooking", e.Message);
+                                                                    }
+                                                                    return Json(_responseProvider.GenerateUnknownErrorResponse());
+                                                                }
+                                                        */
 
         [HttpPost]
         [Route("RequestPayBooking")]
@@ -134,35 +134,57 @@ namespace CoreApi.Controllers
                     {
                         if (_routemanager.HasCapacity(model))
                         {
-                            if (model.ChargeAmount > 0)
+                            if (!_routemanager.HasReserved(model, ff))
                             {
-                                //gotobank
-                                var res = _routemanager.RequestPayBooking(ff, model.TripId, model.ChargeAmount);
-                                return Json(res);
-                                /*var res = _routemanager.RequestBooking(ff, model.TripId, model.ChargeAmount);
-                                return Json(res);*/
+                                if (model.ChargeAmount > 0)
+                                {
+                                    //gotobank
+                                    var res = _routemanager.RequestPayBooking(ff, model.TripId, model.ChargeAmount);
+                                    return Json(res);
+                                    /*var res = _routemanager.RequestBooking(ff, model.TripId, model.ChargeAmount);
+                                    return Json(res);*/
+                                }
+                                else
+                                {
+                                    var res1 = _routemanager.BookSeat(ff, model);
+                                    return Json(res1);
+                                }
                             }
                             else
                             {
-                                var res1 = _routemanager.BookSeat(ff, model);
-                                return Json(res1);
+                                _responseProvider.SetBusinessMessage(new MessageResponse()
+                                {
+                                    Type = ResponseTypes.Error,
+                                    Message = getResource.getMessage("SeatPreviouslyReserved")
+                                });
+                                return Json(_responseProvider.GenerateBadRequestResponse());
                             }
                         }
                         else
                         {
-                            _responseProvider.SetBusinessMessage(new MessageResponse() {Type = ResponseTypes.Error, Message = getResource.getMessage("NoEmptySeat")});
+                            _responseProvider.SetBusinessMessage(new MessageResponse()
+                            {
+                                Type = ResponseTypes.Error,
+                                Message = getResource.getMessage("NoEmptySeat")
+                            });
                             return Json(_responseProvider.GenerateBadRequestResponse());
                         }
                     }
                     else
                     {
-                        _responseProvider.SetBusinessMessage(new MessageResponse() {Type = ResponseTypes.Error, Message = getResource.getMessage("PricesUnDefined")});
+                        _responseProvider.SetBusinessMessage(new MessageResponse()
+                        {
+                            Type = ResponseTypes.Error,
+                            Message = getResource.getMessage("PricesUnDefined")
+                        });
                         return Json(_responseProvider.GenerateBadRequestResponse());
                     }
                 }
                 else
                 {
-                    return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "You are unauthorized to see Info!"));
+                    return
+                        ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Unauthorized,
+                            "You are unauthorized to see Info!"));
                 }
             }
             catch (Exception e)
@@ -219,6 +241,56 @@ namespace CoreApi.Controllers
         }
 
         [HttpPost]
+        [Route("CancelBooking")]
+        [Authorize]
+        public IHttpActionResult CancelBooking(PassRouteModel model)
+        {
+            var res = _routemanager.CancelBooking(int.Parse(User.Identity.GetUserId()), model.TripId);
+            return Json(res.IsSubmited);
+        }
+
+        [HttpPost]
+        [Route("GetIosVersion")]
+        [AllowAnonymous]
+        public IHttpActionResult GetIosVersion([FromUri]int version)
+        {//سپند استفاده میکند اما نمیدونم واسه کجا؟
+            var _appVersion = int.Parse(ConfigurationManager.AppSettings["MobileIosVersion"]);
+            var _appCriticalVersion = int.Parse(ConfigurationManager.AppSettings["MobileCriticalIosVersion"]);
+            if (version < _appVersion)
+            {
+                return Json(2);
+            }
+            else if(version < _appCriticalVersion)
+            {
+                return Json(3);
+            }
+            else
+            {
+                return Json(1);
+            }
+        }
+
+        [HttpGet]
+        [Route("IosVersion")]
+        [AllowAnonymous]
+        public IHttpActionResult IosVersion()
+        {//آرش استفاه میکند
+            try
+            {
+                IosVersionModel v = new IosVersionModel();
+                v.UrlCode = 1;
+                v.VersionCode = 2;
+                v.NewUrl = "https://new.sibapp.com/applications/mibarimapp";
+                return Json(v);
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "IosVersion", e.Message + "-" + e.InnerException.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpPost]
         [Route("SubmitPassDiscount")]
         public IHttpActionResult SubmitPassDiscount(DiscountModel model)
         {
@@ -226,13 +298,20 @@ namespace CoreApi.Controllers
             {
                 if (model == null)
                 {
-                    _responseProvider.SetBusinessMessage(new MessageResponse() {Type = ResponseTypes.Error, Message = string.Format(getResource.getMessage("Required"), getResource.getString("VerificationCode"))});
+                    _responseProvider.SetBusinessMessage(new MessageResponse()
+                    {
+                        Type = ResponseTypes.Error,
+                        Message =
+                            string.Format(getResource.getMessage("Required"), getResource.getString("VerificationCode"))
+                    });
                     return Json(_responseProvider.GenerateBadRequestResponse());
                 }
-                var res = _userManager.DoDiscount(InviteTypes.PassInvite, model.DiscountCode, int.Parse(User.Identity.GetUserId()));
+                var res = _userManager.DoDiscount(InviteTypes.PassInvite, model.DiscountCode,
+                    int.Parse(User.Identity.GetUserId()));
                 if (res)
                 {
-                    return Json(_responseProvider.GenerateResponse(getResource.getMessage("CodeSubmitted"), "CodeSubmitted"));
+                    return
+                        Json(_responseProvider.GenerateResponse(getResource.getMessage("CodeSubmitted"), "CodeSubmitted"));
                 }
                 else
                 {
@@ -264,24 +343,68 @@ namespace CoreApi.Controllers
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
 
+
+        [HttpPost]
+        [Authorize(Roles = "AdminUser")]
+        [Route("GetPassengers")]
+        public IHttpActionResult GetPassengers()
+        {
+            try
+            {
+                var res = _userManager.GetPassengers();
+                return Json(_responseProvider.GenerateRouteResponse(res, "ActiveTrips"));
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "GetPassengers", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
         [HttpGet]
+        [Route("RequestInvoice")]
+        [AllowAnonymous]
+        public IHttpActionResult RequestInvoice([FromUri]PayModel model)
+        {
+            try
+            {
+                if (model.TripId == 90356)
+                {
+                    //gotobank
+                    var res = _routemanager.RequestInvoice(12325, model.ChargeAmount);
+                    return Json(res);
+                }
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "RequestInvoice", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+
+        /*[HttpGet]
         [AllowAnonymous]
         [Route("GetPassengers")]
-        public HttpResponseMessage GetPassengers()
+        public HttpResponseMessage GetPassengers([FromUri] string id)
         {
             var show = "هیچی";
             try
             {
-                var res = _userManager.GetPassengers();
-                show = "اسم راننده" + " | " + "شماره راننده" + " | " + "ساعت سفر" + " | " + "مبدا" + " | " + "مقصد" +
-                           " | " + "صندلی خالی" + " | " + "اسم مسافر" + " | " + "شماره مسافر" +"\n</br>";
-                foreach (var passRouteModel in res)
+                if (id == "miba")
                 {
-                    show += passRouteModel.CarString + " | " + passRouteModel.CarPlate + " | " +
-                            passRouteModel.TimingString + " | " + passRouteModel.SrcAddress + " | " +
-                            passRouteModel.DstAddress + " | " + passRouteModel.EmptySeats + " | " + passRouteModel.Name +
-                            " " + passRouteModel.Family + " | " +
-                            passRouteModel.MobileNo  + "\n</br>";
+                    var res = _userManager.GetPassengers();
+                    show = "اسم راننده" + " | " + "شماره راننده" + " | " + "ساعت سفر" + " | " + "مبدا" + " | " + "مقصد" +
+                           " | " + "صندلی خالی" + " | " + "اسم مسافر" + " | " + "شماره مسافر" + "\n</br>";
+                    foreach (var passRouteModel in res)
+                    {
+                        show += passRouteModel.CarString + " | " + passRouteModel.CarPlate + " | " +
+                                passRouteModel.TimingString + " | " + passRouteModel.SrcAddress + " | " +
+                                passRouteModel.DstAddress + " | " + passRouteModel.EmptySeats + " | " +
+                                passRouteModel.Name +
+                                " " + passRouteModel.Family + " | " +
+                                passRouteModel.MobileNo + "\n</br>";
+                    }
                 }
             }
             catch (Exception e)
@@ -291,11 +414,11 @@ namespace CoreApi.Controllers
             return new HttpResponseMessage()
             {
                 Content = new StringContent(
-                       show,
-                       Encoding.UTF8,
-                       "text/html"
-                   )
+                    show,
+                    Encoding.UTF8,
+                    "text/html"
+                )
             };
-        }
+        }*/
     }
 }

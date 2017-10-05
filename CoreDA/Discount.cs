@@ -15,7 +15,6 @@ namespace CoreDA
     public partial class Discount
     {
         public int DiscountId { get; set; }
-        public int DiscountType { get; set; }
         public string DiscountCode { get; set; }
         public string DiscountTitle { get; set; }
         public System.DateTime DiscountCreateTime { get; set; }
@@ -23,5 +22,7 @@ namespace CoreDA
         public System.DateTime DiscountEndTime { get; set; }
         public string DiscountDesc { get; set; }
         public Nullable<long> DiscountEvenId { get; set; }
+        public int DiscountType { get; set; }
+        public Nullable<int> DiscountPercent { get; set; }
     }
 }

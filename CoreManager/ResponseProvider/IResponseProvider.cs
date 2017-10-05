@@ -27,6 +27,7 @@ namespace CoreManager.ResponseProvider
 
         //string GenerateInvalidUserPassResponse();
         ResponseModel GenerateRouteResponse(List<RouteResponseModel> list);
+        ResponseModel GenerateRouteResponse(List<StationModel> list);
         ResponseModel GenerateRouteResponse(List<StationRouteModel> list);
         ResponseModel GenerateRouteResponse(List<SubStationModel> list);
         ResponseModel GenerateRouteResponse(List<PersoanlInfoModel> list);
@@ -35,6 +36,7 @@ namespace CoreManager.ResponseProvider
         ResponseModel GenerateRouteResponse(List<BriefRouteModel> list);
         ResponseModel GenerateDiscountResponse(List<DiscountModel> list);
         ResponseModel GenerateWithdrawResponse(List<WithdrawRequestModel> res);
+        ResponseModel GenerateWithdrawResponse(List<WithdrawUserReqModel> res);
         ResponseModel GenerateRouteResponse(List<SuggestBriefRouteModel> list);
         ResponseModel GenerateRouteResponse(List<Object> list,string listType);
         ResponseModel GenerateRouteResponse(Object obj,string objType);
@@ -42,6 +44,7 @@ namespace CoreManager.ResponseProvider
         ResponseModel GenerateRouteSuggestResponse(List<RouteSuggestModel> list);
         ResponseModel GenerateSuggestAcceptResponse(string messageResponse);
         ResponseModel GenerateResponse(List<string> messages, string type);
+        ResponseModel GenerateResponse(List<RatingModel> res);
         ResponseModel GenerateResponse(List<CommentModel> res);
         ResponseModel GenerateResponse(AppointmentModel appointmentModel);
         ResponseModel GenerateEventResponse(List<EventModel> response);

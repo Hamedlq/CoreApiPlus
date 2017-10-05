@@ -21,6 +21,7 @@ namespace CoreManager.Models
         public string  CarString{ set; get; }
         public string  CarPlate{ set; get; }
         public string SrcAddress { set; get; }
+        public string SrcMainAddress { set; get; }
         public string SrcLink { set; get; }
         public string SrcDistance { set; get; }
         public string SrcLatitude { set; get; }

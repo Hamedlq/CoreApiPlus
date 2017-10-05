@@ -23,5 +23,6 @@ namespace CoreDA
         public double UserBalance { get; set; }
         public double WithdrawAmount { get; set; }
         public int WithdrawState { get; set; }
+        public string Shaba { get; set; }
     }
 }

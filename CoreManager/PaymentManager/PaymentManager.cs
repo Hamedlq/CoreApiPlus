@@ -161,6 +161,14 @@ namespace CoreManager.PaymentManager
                         responseModel.Result = verify.Result;
                         responseModel.ResultMessage = verify.ResultMessage;
                     }
+                    else
+                    {
+                        responseModel.Result = false;
+                    }
+                }
+                else
+                {
+                    responseModel.Result = false;
                 }
             }
             return responseModel;
@@ -226,6 +234,32 @@ namespace CoreManager.PaymentManager
                 passPayModel.BankLink = pasargadPayModel.BankLink;
                 return passPayModel;
             }
+        }
+
+        public List<WithdrawUserReqModel> GetPayingRequests()
+        {
+            var res = new List<WithdrawUserReqModel>();
+            using (var dataModel = new MibarimEntities())
+            {
+                var withdrawReqs =
+                    dataModel.Withdraws.Where(x => x.WithdrawState == (int)WithdrawStates.Submitted ).OrderByDescending(x => x.CreateTime).ToList();
+                foreach (var withdrawReq in withdrawReqs)
+                {
+                    var user = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == withdrawReq.UserId);
+                    var with = new WithdrawUserReqModel();
+                    with.Name = user.Name;
+                    with.Family= user.Family;
+                    with.Mobile= user.UserName;
+                    with.WithdrawAmount = withdrawReq.WithdrawAmount.ToString();
+                    with.ShabaNo = withdrawReq.Shaba;
+                    with.WithdrawDate = _timingService.GetTimingString(withdrawReq.CreateTime);
+                    with.WithdrawState = (WithdrawStates)withdrawReq.WithdrawState;
+                    with.WithdrawStateString =
+                        getResource.getString(((WithdrawStates)withdrawReq.WithdrawState).ToString());
+                    res.Add(with);
+                }
+            }
+            return res;
         }
     }
 }

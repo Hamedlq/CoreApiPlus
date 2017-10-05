@@ -202,8 +202,17 @@ namespace CoreExternalService
             tRequest.Headers.Add(string.Format("Authorization: key={0}", SERVER_API_KEY));
 
             tRequest.Headers.Add(string.Format("Sender: id={0}", SENDER_ID));
+            string postData = "";
 
-            string postData = "collapse_key=score_update&delay_while_idle=0&data.title=" + title + "&data.body=" + message + "&data.action=" + action + "&data.tab=" + thetab + "&data.requestCode=" + requestCode + "&data.notificationId=" + notificationId + "&data.link=" + url + "&registration_id=" + deviceId + "";
+            if (!string.IsNullOrEmpty(url))
+            {
+                postData = "collapse_key=score_update&delay_while_idle=0&data.title=" + title + "&data.body=" + message + "&data.action=" + action + "&data.tab=" + thetab + "&data.requestCode=" + requestCode + "&data.notificationId=" + notificationId + "&data.link=" + url + "&registration_id=" + deviceId + "";
+            }
+            else
+            {
+                postData = "collapse_key=score_update&delay_while_idle=0&data.title=" + title + "&data.body=" + message + "&data.action=" + action + "&data.tab=" + thetab + "&data.requestCode=" + requestCode + "&data.notificationId=" + notificationId + "&registration_id=" + deviceId + "";
+            }
+            
             Console.WriteLine(postData);
             Byte[] byteArray = Encoding.UTF8.GetBytes(postData);
             tRequest.ContentLength = byteArray.Length;
@@ -277,7 +286,6 @@ namespace CoreExternalService
             restRequest.AddParameter("format", "JPEG");
             restRequest.AddParameter("maptype", "roadmap");
             restRequest.AddParameter("language", "fa");
-
             var marker = "color:green|label:S|";
             marker += request.Src.Lat + "," + request.Src.Lng + "|";
             restRequest.AddParameter("markers", marker);

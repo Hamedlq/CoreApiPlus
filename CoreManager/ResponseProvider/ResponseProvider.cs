@@ -68,7 +68,7 @@ namespace CoreManager.ResponseProvider
         }
         public ResponseModel GenerateUnknownErrorResponse()
         {
-            var responseModel = new ResponseModel() { Status = HttpStatusCode.BadRequest.ToString(), StatusCode = HttpStatusCode.BadRequest, Count = 0, Type = "UnknownError" };
+            var responseModel = new ResponseModel() { Status = HttpStatusCode.BadRequest.ToString(), StatusCode = HttpStatusCode.BadRequest, Count = 0, Type = "UnknownError", Errors = _errors };
             return responseModel;
         }
         public ResponseModel GenerateInternalServerErrorResponse()
@@ -135,6 +135,11 @@ namespace CoreManager.ResponseProvider
             var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "SuggestRoute", Messages = list.Select(x => Json.Encode(x)).ToList() };
             return responseModel;
         }
+        public ResponseModel GenerateRouteResponse(List<StationModel> list)
+        {
+            var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "StationModel", Messages = list.Select(x => Json.Encode(x)).ToList() };
+            return responseModel;
+        }
 
         public ResponseModel GenerateDiscountResponse(List<DiscountModel> list)
         {
@@ -145,6 +150,12 @@ namespace CoreManager.ResponseProvider
         public ResponseModel GenerateWithdrawResponse(List<WithdrawRequestModel> list)
         {
             var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "Withdraw", Messages = list.Select(x => Json.Encode(x)).ToList() };
+            return responseModel;
+        }
+
+        public ResponseModel GenerateWithdrawResponse(List<WithdrawUserReqModel> res)
+        {
+            var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = res.Count, Type = "Withdraw", Messages = res.Select(x => Json.Encode(x)).ToList() };
             return responseModel;
         }
 
@@ -197,6 +208,12 @@ namespace CoreManager.ResponseProvider
             {
                 responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = messages.Count, Type = type, Messages = messages, Warnings = _warnings, Infos = _infos, Errors = _errors };
             }
+            return responseModel;
+        }
+
+        public ResponseModel GenerateResponse(List<RatingModel> list)
+        {
+            var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "Ratings", Messages = list.Select(x => Json.Encode(x)).ToList() ,Warnings = _warnings, Infos = _infos, Errors = _errors };
             return responseModel;
         }
 

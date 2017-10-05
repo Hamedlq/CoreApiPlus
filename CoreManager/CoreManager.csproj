@@ -108,12 +108,16 @@
   <ItemGroup>
     <Compile Include="Models\ClusterModel.cs" />
     <Compile Include="Models\ClusterListModel.cs" />
+    <Compile Include="Models\ActiveTripModel.cs" />
+    <Compile Include="Models\IosVersionModel.cs" />
+    <Compile Include="Models\ImageFile.cs" />
     <Compile Include="Models\PasargadPayModel.cs" />
     <Compile Include="Models\PasargadPaymentModel.cs" />
     <Compile Include="Models\PasargadResponseModel.cs" />
     <Compile Include="Models\PayModel.cs" />
     <Compile Include="Models\PassengerModels\DriverTripModel.cs" />
     <Compile Include="Models\RouteModels\SubStationModel.cs" />
+    <Compile Include="Models\StationModel.cs" />
     <Compile Include="Models\TripTimeModel.cs" />
     <Compile Include="Models\ContactScoreModel.cs" />
     <Compile Include="Models\ContactStateModel.cs" />
@@ -125,8 +129,12 @@
     <Compile Include="Models\PassengerModels\PassRouteModel.cs" />
     <Compile Include="Models\RouteModels\StationRouteModel.cs" />
     <Compile Include="Models\RouteModels\UserRouteModel.cs" />
+    <Compile Include="Models\ImageDescription.cs" />
+    <Compile Include="Models\UserInfoAdminModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Models\UserInitialInfo.cs" />
+    <Compile Include="Models\RatingModel.cs" />
+    <Compile Include="Models\WithdrawUserReqModel.cs" />
     <Compile Include="Models\WithdrawRequestModel.cs" />
     <Compile Include="Models\DiscountModel.cs" />
     <Compile Include="Models\LocalRouteUserModel.cs" />
@@ -226,6 +234,8 @@
     <Compile Include="TimingService\TimingStrategy.cs" />
     <Compile Include="TimingService\TodayTiming.cs" />
     <Compile Include="TimingService\WeeklyTiming.cs" />
+    <Compile Include="FanapManager\IFanapManager.cs" />
+    <Compile Include="FanapManager\FanapManager.cs" />
     <Compile Include="UserManager\AgencyDriver.cs" />
     <Compile Include="UserManager\IUserManager.cs" />
     <Compile Include="UserManager\UserMapper.cs" />

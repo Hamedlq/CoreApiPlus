@@ -73,6 +73,8 @@
     <Compile Include="KavenegarService\KavenegarService.cs" />
     <Compile Include="Models\FanapTokenResponse.cs" />
     <Compile Include="Models\FanapUserInfo.cs" />
+    <Compile Include="Models\FanapBusiness.cs" />
+    <Compile Include="Models\FanapResult.cs" />
     <Compile Include="Models\FanapPlatformRegisterResponse.cs" />
     <Compile Include="Models\PasargadPayResponse.cs" />
     <Compile Include="Models\PasargadPayModel.cs" />

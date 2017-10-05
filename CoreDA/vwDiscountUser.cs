@@ -30,5 +30,6 @@ namespace CoreDA
         public long DuId { get; set; }
         public int DiscountType { get; set; }
         public Nullable<System.DateTime> DuEndTime { get; set; }
+        public Nullable<int> DiscountPercent { get; set; }
     }
 }

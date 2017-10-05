@@ -16,6 +16,7 @@ namespace CoreManager.Models
         public int TimingMin { set; get; }
         public string PricingString { set; get; }
         public string CarString { set; get; }
+        public string SrcMainAddress { set; get; }
         public string SrcAddress { set; get; }
         public string SrcLink { set; get; }
         public string SrcLat { set; get; }

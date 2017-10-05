@@ -12,5 +12,6 @@ namespace CoreExternalService
         string SendSmsMessages(string mobileBrief, string rand);
         string SendVoiceMessages(string mobileBrief, string rand);
         string SendAdminSms(string mobileBrief, string rand);
+        string GetLastMessage();
     }
 }

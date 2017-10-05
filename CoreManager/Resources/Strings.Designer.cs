@@ -716,5 +716,14 @@ namespace CoreManager.Resources {
                 return ResourceManager.GetString("WithoutCar", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to شماره شبا اشتباه است.
+        /// </summary>
+        public static string WrongShaba {
+            get {
+                return ResourceManager.GetString("WrongShaba", resourceCulture);
+            }
+        }
     }
 }

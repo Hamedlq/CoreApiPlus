@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Web;
 using CoreDA;
 using CoreManager.Models;
+using Image = CoreDA.Image;
 
 namespace CoreManager.UserManager
 {
@@ -40,7 +41,21 @@ namespace CoreManager.UserManager
             pi.NationalCode = ui.NationalCode;
             pi.Email = ui.Email;
             pi.UserImageId = ui.UserImageId;
-            pi.NationalCardImageId = ui.NationalCardImageId;
+            //pi.NationalCardImageId = ui.NationalCardImageId;
+            pi.UserImageId = ui.UserImageId;
+            return pi;
+        }
+        public static UserInfoAdminModel CastPersonalInfoToUserInfoAdminModel(vwUserInfo ui)
+        {
+            var pi = new UserInfoAdminModel();
+            pi.Name = ui.Name;
+            pi.Mobile = ui.UserName;
+            pi.Family = ui.Family;
+            pi.Gender = (Gender)ui.Gender;
+            pi.NationalCode = ui.NationalCode;
+            pi.Email = ui.Email;
+            pi.UserImageId = ui.UserImageId;
+            //pi.NationalCardImageId = ui.NationalCardImageId;
             pi.UserImageId = ui.UserImageId;
             return pi;
         }
@@ -53,6 +68,7 @@ namespace CoreManager.UserManager
             pi.Gender = (Gender)ui.Gender;
             pi.NationalCode = ui.NationalCode;
             pi.Email = ui.Email;
+            pi.UserUId = ui.UserUId;
             return pi;
         }
 
@@ -67,8 +83,18 @@ namespace CoreManager.UserManager
             ui.CarColor = cis.CarColor;
             ui.CarType = cis.CarType;
             ui.CarPlateNo = cis.CarPlateNo;
-            ui.CarCardImageId = cis.CarFrontImageId;
-            ui.CarCardBckImageId = cis.CarBackImageId;
+            //ui.CarCardImageId = cis.CarFrontImageId;
+            //ui.CarCardBckImageId = cis.CarBackImageId;
+            return ui;
+        }
+
+        public static UserInfoAdminModel FillCarInfoInUserInfoModel(UserInfoAdminModel ui, CarInfo cis)
+        {
+            ui.CarColor = cis.CarColor;
+            ui.CarType = cis.CarType;
+            ui.CarPlateNo = cis.CarPlateNo;
+            //ui.CarCardImageId = cis.CarFrontImageId;
+            //ui.CarCardBckImageId = cis.CarBackImageId;
             return ui;
         }
 
@@ -77,7 +103,7 @@ namespace CoreManager.UserManager
             ui.BankName = bankdb.BankName;
             ui.BankAccountNo = bankdb.BankAccountNo;
             ui.BankShaba = bankdb.BankShabaNo;
-            ui.BankImageId = bankdb.BankCardImageId;
+            //ui.BankImageId = bankdb.BankCardImageId;
             return ui;
         }
 
@@ -95,7 +121,7 @@ namespace CoreManager.UserManager
         {
             ui.CompanyName = comp.CompanyName;
             ui.Code = comp.Code;
-            ui.CompanyImageId = comp.CompanyImageId;
+            //ui.CompanyImageId = comp.CompanyImageId;
             return ui;
         }
 
@@ -114,6 +140,201 @@ namespace CoreManager.UserManager
             input = input.Replace("8", "۸");
             input = input.Replace("9", "۹");
             return input;
+        }
+
+        public static UserInfoModel SetImageValues(UserInfoModel ui, List<vwImageReject> lis)
+        {
+            var nationcard = lis.FirstOrDefault(x => x.ImageType == (int)ImageType.UserNationalCard);
+            ui.NationalCardImage = new ImageDescription();
+            if (nationcard == null)
+            {
+                ui.NationalCardImage.State = DocState.NotSent;
+            }
+            else
+            {
+                if (nationcard.IsVerified != null)
+                {
+                    ui.NationalCardImage.State = nationcard.IsVerified.Value ? DocState.Accepted : DocState.Rejected;
+                    ui.NationalCardImage.RejectionDescription = nationcard.RejectDescription;
+                }
+                else
+                {
+                    ui.NationalCardImage.State = DocState.UnderChecking;
+                }
+            }
+            var license = lis.FirstOrDefault(x => x.ImageType == (int)ImageType.LicensePic);
+            ui.LicenseImage = new ImageDescription();
+            if (license == null)
+            {
+                ui.LicenseImage.State = DocState.NotSent;
+            }
+            else
+            {
+                if (license.IsVerified != null)
+                {
+                    ui.LicenseImage.State = license.IsVerified.Value ? DocState.Accepted : DocState.Rejected;
+                    ui.LicenseImage.RejectionDescription = license.RejectDescription;
+                }
+                else
+                {
+                    ui.LicenseImage.State = DocState.UnderChecking;
+                }
+            }
+            var carCard = lis.FirstOrDefault(x => x.ImageType == (int)ImageType.CarCardPic);
+            ui.CarCardImage = new ImageDescription();
+            if (carCard == null)
+            {
+                ui.CarCardImage.State = DocState.NotSent;
+            }
+            else
+            {
+                if (carCard.IsVerified != null)
+                {
+                    ui.CarCardImage.State = carCard.IsVerified.Value ? DocState.Accepted : DocState.Rejected;
+                    ui.CarCardImage.RejectionDescription = carCard.RejectDescription;
+                }
+                else
+                {
+                    ui.CarCardImage.State = DocState.UnderChecking;
+                }
+            }
+            var carCardBck = lis.FirstOrDefault(x => x.ImageType == (int)ImageType.CarCardBckPic);
+            ui.CarCardBckImage = new ImageDescription();
+            if (carCardBck == null)
+            {
+                ui.CarCardBckImage.State = DocState.NotSent;
+            }
+            else
+            {
+                if (carCardBck.IsVerified != null)
+                {
+                    ui.CarCardBckImage.State = carCardBck.IsVerified.Value ? DocState.Accepted : DocState.Rejected;
+                    ui.CarCardBckImage.RejectionDescription = carCardBck.RejectDescription;
+                }
+                else
+                {
+                    ui.CarCardBckImage.State = DocState.UnderChecking;
+                }
+            }
+            var carImg = lis.FirstOrDefault(x => x.ImageType == (int)ImageType.CarPic);
+            ui.CarImage = new ImageDescription();
+            if (carImg == null)
+            {
+                ui.CarImage.State = DocState.NotSent;
+            }
+            else
+            {
+                if (carImg.IsVerified != null)
+                {
+                    ui.CarImage.State = carImg.IsVerified.Value ? DocState.Accepted : DocState.Rejected;
+                    ui.CarImage.RejectionDescription = carImg.RejectDescription;
+                }
+                else
+                {
+                    ui.CarImage.State = DocState.UnderChecking;
+                }
+            }
+            return ui;
+        }
+
+        public static UserInfoAdminModel SetImageValues(UserInfoAdminModel ui, List<vwImageReject> lis)
+        {
+            var nationcard = lis.FirstOrDefault(x => x.ImageType == (int)ImageType.UserNationalCard);
+            ui.NationalCardImage = new ImageDescription();
+            if (nationcard == null)
+            {
+                ui.NationalCardImage.State = DocState.NotSent;
+            }
+            else
+            {
+                ui.NationalCardImageId = nationcard.ImageId;
+                if (nationcard.IsVerified != null)
+                {
+                    ui.NationalCardImage.State = nationcard.IsVerified.Value ? DocState.Accepted : DocState.Rejected;
+                    ui.NationalCardImage.RejectionDescription = nationcard.RejectDescription;
+                }
+                else
+                {
+                    ui.NationalCardImage.State = DocState.UnderChecking;
+                }
+            }
+            var license = lis.FirstOrDefault(x => x.ImageType == (int)ImageType.LicensePic);
+            ui.LicenseImage = new ImageDescription();
+            if (license == null)
+            {
+                ui.LicenseImage.State = DocState.NotSent;
+            }
+            else
+            {
+                ui.LicenseImageId = license.ImageId;
+                if (license.IsVerified != null)
+                {
+                    ui.LicenseImage.State = license.IsVerified.Value ? DocState.Accepted : DocState.Rejected;
+                    ui.LicenseImage.RejectionDescription = license.RejectDescription;
+                }
+                else
+                {
+                    ui.LicenseImage.State = DocState.UnderChecking;
+                }
+            }
+            var carCard = lis.FirstOrDefault(x => x.ImageType == (int)ImageType.CarCardPic);
+            ui.CarCardImage = new ImageDescription();
+            if (carCard == null)
+            {
+                ui.CarCardImage.State = DocState.NotSent;
+            }
+            else
+            {
+                ui.CarCardImageId = carCard.ImageId;
+                if (carCard.IsVerified != null)
+                {
+                    ui.CarCardImage.State = carCard.IsVerified.Value ? DocState.Accepted : DocState.Rejected;
+                    ui.CarCardImage.RejectionDescription = carCard.RejectDescription;
+                }
+                else
+                {
+                    ui.CarCardImage.State = DocState.UnderChecking;
+                }
+            }
+            var carCardBck = lis.FirstOrDefault(x => x.ImageType == (int)ImageType.CarCardBckPic);
+            ui.CarCardBckImage = new ImageDescription();
+            if (carCardBck == null)
+            {
+                ui.CarCardBckImage.State = DocState.NotSent;
+            }
+            else
+            {
+                ui.CarCardBckImageId = carCardBck.ImageId;
+                if (carCardBck.IsVerified != null)
+                {
+                    ui.CarCardBckImage.State = carCardBck.IsVerified.Value ? DocState.Accepted : DocState.Rejected;
+                    ui.CarCardBckImage.RejectionDescription = carCardBck.RejectDescription;
+                }
+                else
+                {
+                    ui.CarCardBckImage.State = DocState.UnderChecking;
+                }
+            }
+            var carImg = lis.FirstOrDefault(x => x.ImageType == (int)ImageType.CarPic);
+            ui.CarImage = new ImageDescription();
+            if (carImg == null)
+            {
+                ui.CarImage.State = DocState.NotSent;
+            }
+            else
+            {
+                ui.CarImageId = carImg.ImageId;
+                if (carImg.IsVerified != null)
+                {
+                    ui.CarImage.State = carImg.IsVerified.Value ? DocState.Accepted : DocState.Rejected;
+                    ui.CarImage.RejectionDescription = carImg.RejectDescription;
+                }
+                else
+                {
+                    ui.CarImage.State = DocState.UnderChecking;
+                }
+            }
+            return ui;
         }
     }
 }

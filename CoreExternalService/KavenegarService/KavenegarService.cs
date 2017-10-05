@@ -65,5 +65,14 @@ namespace CoreExternalService
             IRestResponse response = client.Execute(restRequest);
             return response.Content;
         }
+
+        public string GetLastMessage()
+        {
+            var client = new RestClient(sendUrl);
+            var restRequest = new RestRequest("latestoutbox.json", Method.POST);
+            restRequest.AddParameter("pagesize", 1);
+            IRestResponse response = client.Execute(restRequest);
+            return response.Content;
+        }
     }
 }

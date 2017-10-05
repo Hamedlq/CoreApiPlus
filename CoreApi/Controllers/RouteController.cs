@@ -81,7 +81,6 @@ namespace CoreApi.Controllers
                     return Json(_responseProvider.GenerateBadRequestResponse(ModelState));
                 }
                 _routemanager.InsertUserEventRoute(model, int.Parse(User.Identity.GetUserId()));
-
                 ResponseModel responseModel = _responseProvider.GenerateOKResponse();
                 return Json(responseModel);
             }

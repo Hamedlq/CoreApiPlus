@@ -19,5 +19,6 @@ namespace CoreDA
         public int ImageUserId { get; set; }
         public System.DateTime ImageCreateTime { get; set; }
         public byte[] ImageFile { get; set; }
+        public Nullable<bool> IsVerified { get; set; }
     }
 }

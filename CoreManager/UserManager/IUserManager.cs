@@ -43,7 +43,7 @@ namespace CoreManager.UserManager
         List<ContactModel> GetUserContacts(int userId);
         ScoreModel GetUserScores(int userId);
         ScoreModel GetPassScores(int userId, PayModel paymodel);
-        void InsertGoogleToken(int userId, Gtoken model);
+        void InsertGoogleToken(int userId, Gtoken model, UserRoles role);
         List<PersoanlInfoModel> GetUserByInfo(UserSearchModel model);
         ImageResponse GetImageById(ImageRequest model);
         //        ImageResponse GetImageByUserId(ImageRequest model);
@@ -78,9 +78,14 @@ namespace CoreManager.UserManager
         bool RegisterFanap(string nickname);
 
         UserInitialInfo GetDriverInitialInfo(int userId);
-        UserModel GetFanapUserInfo(FanapModel fanapModel);
-        void SaveFanapUser(int userId, int fModelUserName);
+        
+        
         bool DoDiscount(InviteTypes intype,string discountCode, int userid);
-        List<PassRouteModel> GetPassengers();
+        List<ActiveTripModel> GetPassengers();
+        Guid InsertImage(ImageFile imageFile, int userId);
+        List<RatingModel> GetRatings(int userId);
+        UserInfoAdminModel GetUserInfoById(Guid userUId);
+        void EditUserInfo(UserInfoAdminModel model);
+        bool SetRatings(int userId, List<RatingModel> model);
     }
 }

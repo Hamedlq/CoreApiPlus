@@ -136,9 +136,23 @@ namespace CoreApi.Controllers
                 var res = _paymentManager.VerifyPasargadPayment(model);
                 if (res.Result)
                 {
-                    _routeManager.ReserveSeat(model.In);
                     sb.AppendFormat("<H2 style='margin: 0px auto'>{0}</H2>", "تراکنش با موفقیت انجام شد");
                     sb.AppendFormat("<H3>{0}</H3>", res.ResultMessage);
+                    sb.AppendFormat("<H3>شماره پیگیری: {0}</H3>", res.TraceNumber);
+                    sb.AppendFormat("<H3>شماره ارجاع: {0}</H3>", res.ReferenceNumber);
+
+                    var reserve=_routeManager.ReserveSeat(model.In);
+                    if (reserve)
+                    {
+                        sb.AppendFormat("<H2 style='margin: 0px auto'>{0}</H2>", "سفر رزرو شد");
+                    }
+                    /*else
+                    {
+                        
+                        sb.AppendFormat("<H3>{0}</H3>", res.ResultMessage);
+                        sb.AppendFormat("<H3>شماره پیگیری: {0}</H3>", res.TraceNumber);
+                        sb.AppendFormat("<H3>شماره ارجاع: {0}</H3>", res.ReferenceNumber);
+                    }*/
                 }
                 else
                 {
@@ -189,6 +203,25 @@ namespace CoreApi.Controllers
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
 
+        [HttpPost]
+        [Route("GetPayingRequests")]
+        [Authorize(Roles = "AdminUser")]
+        public IHttpActionResult GetPayingRequests()
+        {
+            try
+            {
+                var res = _paymentManager.GetPayingRequests();
+                var jsonRes = Json(_responseProvider.GenerateWithdrawResponse(res));
+                return jsonRes;
+            }
+            catch (Exception e)
+            {
+                _logProvider.Log(Tag, "GetPayingRequests", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+
+        }
+
 
         private string GetUserNameFamilyString(ApplicationUser user)
         {
@@ -207,5 +240,6 @@ namespace CoreApi.Controllers
             }
             return res + user.Name + " " + user.Family;
         }
+
     }
 }

@@ -44,8 +44,7 @@ namespace CoreExternalService
 
         public string SendSmsMessages(string mobileBrief, string smsBody)
         {
-            try
-            {
+            
                 List<SMSirSentAndReceivedMessages.WebServiceSmsSend> sendDetails = new List<SMSirSentAndReceivedMessages.WebServiceSmsSend>();
                 sendDetails.Add(new SMSirSentAndReceivedMessages.WebServiceSmsSend()
                 {
@@ -64,11 +63,7 @@ namespace CoreExternalService
                     sbResult.Append(current + ",");
                 var res = sbResult.ToString();
                 return res;
-            }
-            catch (Exception)
-            {
-                return "not";
-            }
+            
         }
     }
 }

@@ -60,7 +60,8 @@ namespace CoreManager.RouteManager
         PaymentDetailModel RequestPayBooking(int userId, long modelTripId, long modelChargeAmount);
         List<StationRouteModel> GetStationRoutes();
         List<StationRouteModel> GetPassengerStationRoutes();
-        bool SetUserRoute(int userId, long modelStRouteId, long stationId);
+        long SetUserRoute(int userId, long modelStRouteId, long stationId);
+        long SetRoute(int userId, long srcSubStId, long dstStId);
         List<DriverRouteModel> GetDriverRoutes(int userId);
         TripTimeModel SetDriverTrip(int userId, DriverRouteModel model);
         string InvokeTrips();
@@ -75,5 +76,15 @@ namespace CoreManager.RouteManager
         //PasargadPayModel PayPasargad(int userId, long tripId, long chargeAmount);
         bool ReserveSeat(long payReqId);
         bool HasCapacity(PayModel model);
+        bool HasReserved(PayModel model, int userId);
+        TripTimeModel CancelBooking(int userId, long tripId);
+        long SubmitMainStation(int userId, string modelName, string modelStLat, string modelStLng);
+        long SubmitStation(int userId, string modelName, string modelStLat, string modelStLng, long modelMainStationId);
+        List<StationModel> GetMainStations();
+        StationRouteModel GetStationRoute(long srcStId, long dstStId);
+        List<SubStationModel> GetSubStations(long mainStationId);
+        bool MakeStationRoutes(Boolean isnew);
+
+        PaymentDetailModel RequestInvoice(int userId, long chargeAmount);
     }
 }

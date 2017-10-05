@@ -60,7 +60,35 @@ namespace CoreApi.Controllers
                 if (User != null && int.TryParse(User.Identity.GetUserId(), out ff))
                 {
                     var res = _routemanager.SetUserRoute(ff, model.StRouteId,model.StationId);
-                    return Json(_responseProvider.GenerateRouteResponse(new {IsSubmited = res}, "SetUserRoute"));
+                    bool isSubmitted = res > 0;
+                    return Json(_responseProvider.GenerateRouteResponse(new {IsSubmited = isSubmitted, DriverRouteId =res}, "SetUserRoute"));
+                }
+                else
+                {
+                    return
+                        ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Unauthorized,
+                            "You are unauthorized to see Info!"));
+                }
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "SetUserRoute", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+        [HttpPost]
+        [Route("SetRoute")]
+        [Authorize]
+        public IHttpActionResult SetRoute(StationRouteModel model)
+        {
+            try
+            {
+                int ff;
+                if (User != null && int.TryParse(User.Identity.GetUserId(), out ff))
+                {
+                    var res = _routemanager.SetRoute(ff, model.SrcStId, model.DstStId);
+                    bool isSubmitted = res > 0;
+                    return Json(_responseProvider.GenerateRouteResponse(new { IsSubmited = isSubmitted, DriverRouteId = res }, "SetUserRoute"));
                 }
                 else
                 {
@@ -210,6 +238,7 @@ namespace CoreApi.Controllers
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
+
         [HttpPost]
         [Route("GetStations")]
         [AllowAnonymous]
@@ -259,6 +288,12 @@ namespace CoreApi.Controllers
         [Authorize]
         public IHttpActionResult SetTrip(DriverRouteModel model)
         {
+            //_responseProvider.SetBusinessMessage(new MessageResponse()
+            //{
+            //    Type = ResponseTypes.Error,
+            //    Message = getResource.getMessage("CodeUsed")
+            //});
+
             try
             {
                 int ff;
@@ -334,6 +369,8 @@ namespace CoreApi.Controllers
             return Json(new ResponseModel() {Messages = new List<string>() {_appVersion}});
         }
 
+
+
         [HttpPost]
         [Route("GetDriverInvite")]
         public IHttpActionResult GetDriverInvite()
@@ -351,5 +388,64 @@ namespace CoreApi.Controllers
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
 
+        [HttpPost]
+        [Route("SaveDriverGcmToken")]
+        [Authorize]
+        public IHttpActionResult SaveDriverGcmToken(Gtoken model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return Json(_responseProvider.GenerateBadRequestResponse(ModelState));
+                }
+                _userManager.InsertGoogleToken(int.Parse(User.Identity.GetUserId()), model,UserRoles.MobileDriver);
+                return Json(_responseProvider.GenerateOKResponse());
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "SaveDriverGcmToken", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpGet]
+        [Route("MakeStationRoutes")]
+        [AllowAnonymous]
+        public IHttpActionResult MakeStationRoutes([FromUri]Boolean isnew,int key)
+        {
+            try
+            {
+                if (key == 123) { 
+                var res = _routemanager.MakeStationRoutes(isnew);
+                return Json(_responseProvider.GenerateOKResponse());
+                }
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "MakeStationRoutes", e.Message + "-" + e.InnerException.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpGet]
+        [Route("DriverIosVersion")]
+        [AllowAnonymous]
+        public IHttpActionResult DriverIosVersion()
+        {
+            try
+            {
+                IosVersionModel v = new IosVersionModel();
+                v.UrlCode = 1;
+                v.VersionCode = 1;
+                v.NewUrl = "https://new.sibapp.com/applications/mibarimapp";
+                return Json(v);
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "DriverIosVersion", e.Message + "-" + e.InnerException.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
     }
 }

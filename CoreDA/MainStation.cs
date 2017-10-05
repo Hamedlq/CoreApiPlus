@@ -20,5 +20,6 @@ namespace CoreDA
         public decimal MainStLng { get; set; }
         public System.Data.Entity.Spatial.DbGeography MainStGeo { get; set; }
         public long MainStRadius { get; set; }
+        public Nullable<bool> IsDeleted { get; set; }
     }
 }

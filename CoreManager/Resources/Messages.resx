@@ -429,7 +429,7 @@
     <value>معرفی راننده جدید</value>
   </data>
   <data name="InviteDriverPass" xml:space="preserve">
-    <value>با معرفی مسافر در مسیر خود، پس از انجام ۱۰ سفر در یک ماه علاوه بر دریافت ۱۰،۰۰۰ تومان وجه نقد یک سفر رایگان به او هدیه دهید </value>
+    <value>با معرفی مسافر در مسیر خود، پس از انجام ۵ سفر در یک ماه علاوه بر دریافت ۱۰،۰۰۰ تومان وجه نقد یک سفر رایگان به او هدیه دهید </value>
   </data>
   <data name="InviteDriverPassTitle" xml:space="preserve">
     <value>معرفی مسافر</value>
@@ -457,5 +457,8 @@
   </data>
   <data name="TripAlreadyReserved" xml:space="preserve">
     <value>سفر رزرو شده است</value>
+  </data>
+  <data name="SeatPreviouslyReserved" xml:space="preserve">
+    <value>سفر قبلا رزرو شده است</value>
   </data>
 </root>

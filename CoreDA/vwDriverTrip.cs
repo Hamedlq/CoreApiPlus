@@ -43,5 +43,6 @@ namespace CoreDA
         public Nullable<long> DriverPrice { get; set; }
         public Nullable<long> PassPrice { get; set; }
         public Nullable<short> VerifiedLevel { get; set; }
+        public long StationRouteId { get; set; }
     }
 }

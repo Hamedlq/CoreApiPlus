@@ -336,4 +336,7 @@
   <data name="WithoutCar" xml:space="preserve">
     <value>بدون ماشین</value>
   </data>
+  <data name="WrongShaba" xml:space="preserve">
+    <value>شماره شبا اشتباه است</value>
+  </data>
 </root>

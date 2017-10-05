@@ -21,6 +21,7 @@ namespace CoreManager.Models
         MobileUser,
         MobileDriver,
         IosMobileUser,
+        IosMobileDriver,
 
     };
 
@@ -143,10 +144,11 @@ namespace CoreManager.Models
         UserPic = 1,
         UserNationalCard = 2,
         LicensePic = 3,
-        CarPic = 4,
-        CarBckPic = 5,
+        CarCardPic = 4,
+        CarCardBckPic = 5,
         BankPic=6,
-        MapImage=7
+        MapImage=7,
+        CarPic=8
     }
 
     public enum TripState
@@ -157,6 +159,7 @@ namespace CoreManager.Models
         InTripTime = 15,
         InRiding = 20,
         PassengerCall = 25,
+        DriverRiding=27,
         DriverNotCome = 30,
         PassengerNotCome = 35,
         InDriving = 40,
@@ -164,8 +167,9 @@ namespace CoreManager.Models
         Finished = 50,
         FinishedByTime = 55,
         FinishedByTrip = 60,
-        Canceled = 60
+        Canceled = 65
     }
+
     /*public enum TripState
     {
         Scheduled = 1,
@@ -231,6 +235,15 @@ namespace CoreManager.Models
         Calculated = 2,
         Payed = 3,
         Cenceled = 4,
+        WrongShaba = 5
+    }
+
+    public enum DocState
+    {
+        NotSent = 1,
+        UnderChecking = 2,
+        Accepted = 3,
+        Rejected = 4
     }
 
     public enum DiscountTypes
@@ -241,12 +254,14 @@ namespace CoreManager.Models
         FreeSeat = 4,
         EndlessFreeSeat = 5,
         AlwaysFreeSeat = 6,
+        PercentDiscount = 7,
     }
 
     public enum InviteTypes
     {
         DriverInvite = 1,
         PassInvite = 2,
+        TelegramInvite=3,
     }
 
     public enum BookingTypes
@@ -260,5 +275,12 @@ namespace CoreManager.Models
         ByPasargad = 7,
         ByCredit = 8,
         Cash = 9,
+        Fanap = 10,
+    }
+
+    public enum PaymentStatus
+    {
+        Payed = 100,
+        Canceled = 200,
     }
 }

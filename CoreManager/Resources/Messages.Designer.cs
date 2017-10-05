@@ -412,7 +412,7 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to با معرفی مسافر در مسیر خود، پس از انجام ۱۰ سفر در یک ماه علاوه بر دریافت ۱۰،۰۰۰ تومان وجه نقد یک سفر رایگان به او هدیه دهید .
+        ///   Looks up a localized string similar to با معرفی مسافر در مسیر خود، پس از انجام ۵ سفر در یک ماه علاوه بر دریافت ۱۰،۰۰۰ تومان وجه نقد یک سفر رایگان به او هدیه دهید .
         /// </summary>
         public static string InviteDriverPass {
             get {
@@ -842,6 +842,15 @@ namespace CoreManager.Resources {
         public static string ScoreSubmited {
             get {
                 return ResourceManager.GetString("ScoreSubmited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سفر قبلا رزرو شده است.
+        /// </summary>
+        public static string SeatPreviouslyReserved {
+            get {
+                return ResourceManager.GetString("SeatPreviouslyReserved", resourceCulture);
             }
         }
         

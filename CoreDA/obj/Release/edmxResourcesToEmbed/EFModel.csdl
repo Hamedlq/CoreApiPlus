@@ -9,9 +9,7 @@
     <EntitySet Name="Comments" EntityType="MibarimModel.Comment" />
     <EntitySet Name="ContactUs" EntityType="MibarimModel.ContactU" />
     <EntitySet Name="EventLogs" EntityType="MibarimModel.EventLog" />
-    <EntitySet Name="GoogleTokens" EntityType="MibarimModel.GoogleToken" />
     <EntitySet Name="Groups" EntityType="MibarimModel.Group" />
-    <EntitySet Name="Images" EntityType="MibarimModel.Image" />
     <EntitySet Name="LicenseInfoes" EntityType="MibarimModel.LicenseInfo" />
     <EntitySet Name="Notifications" EntityType="MibarimModel.Notification" />
     <EntitySet Name="RecommendPaths" EntityType="MibarimModel.RecommendPath" />
@@ -52,7 +50,6 @@
     <EntitySet Name="Contacts" EntityType="MibarimModel.Contact" />
     <EntitySet Name="Events" EntityType="MibarimModel.Event" />
     <EntitySet Name="AboutUsers" EntityType="MibarimModel.AboutUser" />
-    <EntitySet Name="Withdraws" EntityType="MibarimModel.Withdraw" />
     <EntitySet Name="RouteRequestGRoutes" EntityType="MibarimModel.RouteRequestGRoute" />
     <EntitySet Name="RouteRequestGPaths" EntityType="MibarimModel.RouteRequestGPath" />
     <FunctionImport Name="GenerateSimilarRoutes" ReturnType="Collection(MibarimModel.GenerateSimilarRoutes_Result)">
@@ -65,10 +62,7 @@
     <EntitySet Name="vwContactScores" EntityType="MibarimModel.vwContactScore" />
     <EntitySet Name="ContactScores" EntityType="MibarimModel.ContactScore" />
     <EntitySet Name="Trips" EntityType="MibarimModel.Trip" />
-    <EntitySet Name="MainStations" EntityType="MibarimModel.MainStation" />
-    <EntitySet Name="StationRoutes" EntityType="MibarimModel.StationRoute" />
     <EntitySet Name="DriverRoutes" EntityType="MibarimModel.DriverRoute" />
-    <EntitySet Name="vwDriverRoutes" EntityType="MibarimModel.vwDriverRoute" />
     <EntitySet Name="vwStationRoutes" EntityType="MibarimModel.vwStationRoute" />
     <EntitySet Name="UserInfoes" EntityType="MibarimModel.UserInfo" />
     <EntitySet Name="vwUserInfoes" EntityType="MibarimModel.vwUserInfo" />
@@ -80,12 +74,9 @@
     <EntitySet Name="Stations" EntityType="MibarimModel.Station" />
     <EntitySet Name="vwCarInfoes" EntityType="MibarimModel.vwCarInfo" />
     <EntitySet Name="TripLocations" EntityType="MibarimModel.TripLocation" />
-    <EntitySet Name="vwDriverTrips" EntityType="MibarimModel.vwDriverTrip" />
     <EntitySet Name="vwRouteRequests" EntityType="MibarimModel.vwRouteRequest" />
     <EntitySet Name="Invites" EntityType="MibarimModel.Invite" />
     <EntitySet Name="DiscountUsers" EntityType="MibarimModel.DiscountUser" />
-    <EntitySet Name="vwDiscountUsers" EntityType="MibarimModel.vwDiscountUser" />
-    <EntitySet Name="Discounts" EntityType="MibarimModel.Discount" />
     <EntitySet Name="BookRequests" EntityType="MibarimModel.BookRequest" />
     <EntitySet Name="vwRouteSuggests" EntityType="MibarimModel.vwRouteSuggest" />
     <EntitySet Name="vwBookPays" EntityType="MibarimModel.vwBookPay" />
@@ -93,6 +84,20 @@
     <EntitySet Name="vwPayRoutes" EntityType="MibarimModel.vwPayRoute" />
     <FunctionImport Name="GetNotificationUsers" ReturnType="Collection(Int32)" />
     <EntitySet Name="vwBookedTrips" EntityType="MibarimModel.vwBookedTrip" />
+    <EntitySet Name="GoogleTokens" EntityType="MibarimModel.GoogleToken" />
+    <EntitySet Name="Withdraws" EntityType="MibarimModel.Withdraw" />
+    <EntitySet Name="MainStations" EntityType="MibarimModel.MainStation" />
+    <EntitySet Name="StationRoutes" EntityType="MibarimModel.StationRoute" />
+    <EntitySet Name="Images" EntityType="MibarimModel.Image" />
+    <EntitySet Name="ImageRejects" EntityType="MibarimModel.ImageReject" />
+    <EntitySet Name="vwImageRejects" EntityType="MibarimModel.vwImageReject" />
+    <EntitySet Name="vwDriverTrips" EntityType="MibarimModel.vwDriverTrip" />
+    <EntitySet Name="vwDriverRoutes" EntityType="MibarimModel.vwDriverRoute" />
+    <EntitySet Name="Discounts" EntityType="MibarimModel.Discount" />
+    <EntitySet Name="vwDiscountUsers" EntityType="MibarimModel.vwDiscountUser" />
+    <EntitySet Name="Ratings" EntityType="MibarimModel.Rating" />
+    <EntitySet Name="vwRatings" EntityType="MibarimModel.vwRating" />
+    <EntitySet Name="vwMainStations" EntityType="MibarimModel.vwMainStation" />
   </EntityContainer>
   <EntityType Name="BankInfo">
     <Key>
@@ -189,15 +194,6 @@
     <Property Name="LogAction" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="LogMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
   </EntityType>
-  <EntityType Name="GoogleToken">
-    <Key>
-      <PropertyRef Name="GtokenId" />
-    </Key>
-    <Property Name="GtokenId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="GtokenCreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="GtokenUserId" Type="Int64" Nullable="false" />
-    <Property Name="GtokenKey" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
-  </EntityType>
   <EntityType Name="Group">
     <Key>
       <PropertyRef Name="GroupId" />
@@ -216,16 +212,6 @@
     <Property Name="GAppointAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="AppointTime" Type="DateTime" Precision="3" />
     <Property Name="ConfirmedPrice" Type="Decimal" Precision="19" Scale="4" />
-  </EntityType>
-  <EntityType Name="Image">
-    <Key>
-      <PropertyRef Name="ImageId" />
-    </Key>
-    <Property Name="ImageId" Type="Guid" Nullable="false" />
-    <Property Name="ImageType" Type="Int32" Nullable="false" />
-    <Property Name="ImageUserId" Type="Int32" Nullable="false" />
-    <Property Name="ImageCreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="ImageFile" Type="Binary" MaxLength="Max" FixedLength="false" />
   </EntityType>
   <EntityType Name="LicenseInfo">
     <Key>
@@ -778,20 +764,6 @@
     <Property Name="AboutCreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="AboutDesc" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
   </EntityType>
-  <EntityType Name="Withdraw">
-    <Key>
-      <PropertyRef Name="WithdrawId" />
-    </Key>
-    <Property Name="WithdrawId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="UserId" Type="Int32" Nullable="false" />
-    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="LastModification" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="WithdrawDate" Type="DateTime" Precision="3" />
-    <Property Name="TransId" Type="Int64" />
-    <Property Name="UserBalance" Type="Double" Nullable="false" />
-    <Property Name="WithdrawAmount" Type="Double" Nullable="false" />
-    <Property Name="WithdrawState" Type="Int32" Nullable="false" />
-  </EntityType>
   <EntityType Name="RouteRequestGRoute">
     <Key>
       <PropertyRef Name="RouteRequestRouteId" />
@@ -911,28 +883,6 @@
     <Property Name="TState" Type="Int16" Nullable="false" />
     <Property Name="TEmptySeat" Type="Int16" Nullable="false" />
   </EntityType>
-  <EntityType Name="MainStation">
-    <Key>
-      <PropertyRef Name="MainStationId" />
-    </Key>
-    <Property Name="MainStationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="MainStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
-    <Property Name="MainStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="MainStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="MainStGeo" Type="Geography" Nullable="false" />
-    <Property Name="MainStRadius" Type="Int64" Nullable="false" />
-  </EntityType>
-  <EntityType Name="StationRoute">
-    <Key>
-      <PropertyRef Name="StationRouteId" />
-    </Key>
-    <Property Name="StationRouteId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="SrcMStationId" Type="Int64" Nullable="false" />
-    <Property Name="DstMStationId" Type="Int64" Nullable="false" />
-    <Property Name="DriverPrice" Type="Int64" />
-    <Property Name="PassPrice" Type="Int64" />
-    <Property Name="Duration" Type="Int64" />
-  </EntityType>
   <EntityType Name="DriverRoute">
     <Key>
       <PropertyRef Name="DriverRouteId" />
@@ -944,34 +894,6 @@
     <Property Name="CarinfoId" Type="Int32" />
     <Property Name="StationRouteId" Type="Int64" Nullable="false" />
     <Property Name="DrSrcStationId" Type="Int64" Nullable="false" />
-  </EntityType>
-  <EntityType Name="vwDriverRoute">
-    <Key>
-      <PropertyRef Name="DrSrcStationId" />
-      <PropertyRef Name="SrcStLat" />
-      <PropertyRef Name="SrcStlng" />
-      <PropertyRef Name="SrcMainStName" />
-      <PropertyRef Name="DriverRouteId" />
-      <PropertyRef Name="UserId" />
-      <PropertyRef Name="DstMainStName" />
-      <PropertyRef Name="DstMainStLat" />
-      <PropertyRef Name="DstMainStLng" />
-    </Key>
-    <Property Name="DrSrcStationId" Type="Int64" Nullable="false" />
-    <Property Name="CarColor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="CarPlateNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-    <Property Name="CarType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="SrcStAdd" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
-    <Property Name="SrcStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="SrcStlng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="SrcMainStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
-    <Property Name="DriverRouteId" Type="Int64" Nullable="false" />
-    <Property Name="UserId" Type="Int64" Nullable="false" />
-    <Property Name="DstMainStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
-    <Property Name="DstMainStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="DstMainStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="DriverPrice" Type="Int64" />
-    <Property Name="PassPrice" Type="Int64" />
   </EntityType>
   <EntityType Name="vwStationRoute">
     <Key>
@@ -1104,47 +1026,6 @@
     <Property Name="TlLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
     <Property Name="TlGeo" Type="Geography" Nullable="false" />
   </EntityType>
-  <EntityType Name="vwDriverTrip">
-    <Key>
-      <PropertyRef Name="TCreateTime" />
-      <PropertyRef Name="TStartTime" />
-      <PropertyRef Name="TState" />
-      <PropertyRef Name="TEmptySeat" />
-      <PropertyRef Name="DriverRouteId" />
-      <PropertyRef Name="UserId" />
-      <PropertyRef Name="UserName" />
-      <PropertyRef Name="TripId" />
-    </Key>
-    <Property Name="TCreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="TStartTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="TState" Type="Int16" Nullable="false" />
-    <Property Name="TEmptySeat" Type="Int16" Nullable="false" />
-    <Property Name="DriverRouteId" Type="Int64" Nullable="false" />
-    <Property Name="UserId" Type="Int64" Nullable="false" />
-    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="Gender" Type="Int32" />
-    <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-    <Property Name="UserImageId" Type="Guid" />
-    <Property Name="CarType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="CarColor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="CarPlateNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-    <Property Name="TripId" Type="Int64" Nullable="false" />
-    <Property Name="SrcMainStName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
-    <Property Name="SrcMainStationId" Type="Int64" />
-    <Property Name="SrcMainStLat" Type="Decimal" Precision="20" Scale="17" />
-    <Property Name="SrcMainStLng" Type="Decimal" Precision="20" Scale="17" />
-    <Property Name="SrcMainStGeo" Type="Geography" />
-    <Property Name="SrcStAdd" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
-    <Property Name="SrcStLat" Type="Decimal" Precision="20" Scale="17" />
-    <Property Name="SrcStlng" Type="Decimal" Precision="20" Scale="17" />
-    <Property Name="DstMainStName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
-    <Property Name="DstMainStLat" Type="Decimal" Precision="20" Scale="17" />
-    <Property Name="DstMainStLng" Type="Decimal" Precision="20" Scale="17" />
-    <Property Name="DriverPrice" Type="Int64" />
-    <Property Name="PassPrice" Type="Int64" />
-    <Property Name="VerifiedLevel" Type="Int16" />
-  </EntityType>
   <EntityType Name="vwRouteRequest">
     <Key>
       <PropertyRef Name="UserId" />
@@ -1209,49 +1090,6 @@
     <Property Name="DuState" Type="Int16" Nullable="false" />
     <Property Name="TransId" Type="Int64" />
     <Property Name="DuEndTime" Type="DateTime" Precision="3" />
-  </EntityType>
-  <EntityType Name="vwDiscountUser">
-    <Key>
-      <PropertyRef Name="DiscountCode" />
-      <PropertyRef Name="DiscountCreateTime" />
-      <PropertyRef Name="DiscountStartTime" />
-      <PropertyRef Name="DiscountEndTime" />
-      <PropertyRef Name="DiscountId" />
-      <PropertyRef Name="DuCreateTime" />
-      <PropertyRef Name="DuState" />
-      <PropertyRef Name="DuId" />
-      <PropertyRef Name="DiscountType" />
-    </Key>
-    <Property Name="DiscountCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="DiscountTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="DiscountCreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="DiscountStartTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="DiscountEndTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="DiscountDesc" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-    <Property Name="DiscountEvenId" Type="Int64" />
-    <Property Name="UserId" Type="Int32" />
-    <Property Name="RouteRequestId" Type="Int64" />
-    <Property Name="DiscountId" Type="Int32" Nullable="false" />
-    <Property Name="DuCreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="DuState" Type="Int16" Nullable="false" />
-    <Property Name="TransId" Type="Int64" />
-    <Property Name="DuId" Type="Int64" Nullable="false" />
-    <Property Name="DiscountType" Type="Int32" Nullable="false" />
-    <Property Name="DuEndTime" Type="DateTime" Precision="3" />
-  </EntityType>
-  <EntityType Name="Discount">
-    <Key>
-      <PropertyRef Name="DiscountId" />
-    </Key>
-    <Property Name="DiscountId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="DiscountType" Type="Int32" Nullable="false" />
-    <Property Name="DiscountCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="DiscountTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="DiscountCreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="DiscountStartTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="DiscountEndTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="DiscountDesc" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-    <Property Name="DiscountEvenId" Type="Int64" />
   </EntityType>
   <EntityType Name="BookRequest">
     <Key>
@@ -1407,5 +1245,258 @@
     <Property Name="PassMobile" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
     <Property Name="DriverMobile" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
     <Property Name="BrCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="GoogleToken">
+    <Key>
+      <PropertyRef Name="GtokenId" />
+    </Key>
+    <Property Name="GtokenId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GtokenCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="GtokenUserId" Type="Int64" Nullable="false" />
+    <Property Name="GtokenKey" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="GtokenRole" Type="Int16" />
+  </EntityType>
+  <EntityType Name="Withdraw">
+    <Key>
+      <PropertyRef Name="WithdrawId" />
+    </Key>
+    <Property Name="WithdrawId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModification" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="WithdrawDate" Type="DateTime" Precision="3" />
+    <Property Name="TransId" Type="Int64" />
+    <Property Name="UserBalance" Type="Double" Nullable="false" />
+    <Property Name="WithdrawAmount" Type="Double" Nullable="false" />
+    <Property Name="WithdrawState" Type="Int32" Nullable="false" />
+    <Property Name="Shaba" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="MainStation">
+    <Key>
+      <PropertyRef Name="MainStationId" />
+    </Key>
+    <Property Name="MainStationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MainStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+    <Property Name="MainStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="MainStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="MainStGeo" Type="Geography" Nullable="false" />
+    <Property Name="MainStRadius" Type="Int64" Nullable="false" />
+    <Property Name="IsDeleted" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="StationRoute">
+    <Key>
+      <PropertyRef Name="StationRouteId" />
+    </Key>
+    <Property Name="StationRouteId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SrcMStationId" Type="Int64" Nullable="false" />
+    <Property Name="DstMStationId" Type="Int64" Nullable="false" />
+    <Property Name="DriverPrice" Type="Int64" />
+    <Property Name="PassPrice" Type="Int64" />
+    <Property Name="Duration" Type="Int64" />
+    <Property Name="DistanceMin" Type="Int64" />
+    <Property Name="DurationMin" Type="Int64" />
+    <Property Name="DistanceMid" Type="Int64" />
+    <Property Name="DurationMid" Type="Int64" />
+    <Property Name="DistanceMax" Type="Int64" />
+    <Property Name="DurationMax" Type="Int64" />
+    <Property Name="IsDeleted" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="Image">
+    <Key>
+      <PropertyRef Name="ImageId" />
+    </Key>
+    <Property Name="ImageId" Type="Guid" Nullable="false" />
+    <Property Name="ImageType" Type="Int32" Nullable="false" />
+    <Property Name="ImageUserId" Type="Int32" Nullable="false" />
+    <Property Name="ImageCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ImageFile" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="IsVerified" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="ImageReject">
+    <Key>
+      <PropertyRef Name="ImageDescId" />
+    </Key>
+    <Property Name="ImageDescId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ImageId" Type="Guid" Nullable="false" />
+    <Property Name="RejectDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="vwImageReject">
+    <Key>
+      <PropertyRef Name="ImageId" />
+      <PropertyRef Name="ImageType" />
+      <PropertyRef Name="ImageUserId" />
+      <PropertyRef Name="ImageCreateTime" />
+    </Key>
+    <Property Name="RejectDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="ImageId" Type="Guid" Nullable="false" />
+    <Property Name="ImageType" Type="Int32" Nullable="false" />
+    <Property Name="ImageUserId" Type="Int32" Nullable="false" />
+    <Property Name="ImageCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ImageFile" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="IsVerified" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="vwDriverTrip">
+    <Key>
+      <PropertyRef Name="TCreateTime" />
+      <PropertyRef Name="TStartTime" />
+      <PropertyRef Name="TState" />
+      <PropertyRef Name="TEmptySeat" />
+      <PropertyRef Name="DriverRouteId" />
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="UserName" />
+      <PropertyRef Name="TripId" />
+      <PropertyRef Name="StationRouteId" />
+    </Key>
+    <Property Name="TCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="TStartTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="TState" Type="Int16" Nullable="false" />
+    <Property Name="TEmptySeat" Type="Int16" Nullable="false" />
+    <Property Name="DriverRouteId" Type="Int64" Nullable="false" />
+    <Property Name="UserId" Type="Int64" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Gender" Type="Int32" />
+    <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="UserImageId" Type="Guid" />
+    <Property Name="CarType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CarColor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CarPlateNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="TripId" Type="Int64" Nullable="false" />
+    <Property Name="SrcMainStName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <Property Name="SrcMainStationId" Type="Int64" />
+    <Property Name="SrcMainStLat" Type="Decimal" Precision="20" Scale="17" />
+    <Property Name="SrcMainStLng" Type="Decimal" Precision="20" Scale="17" />
+    <Property Name="SrcMainStGeo" Type="Geography" />
+    <Property Name="SrcStAdd" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+    <Property Name="SrcStLat" Type="Decimal" Precision="20" Scale="17" />
+    <Property Name="SrcStlng" Type="Decimal" Precision="20" Scale="17" />
+    <Property Name="DstMainStName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <Property Name="DstMainStLat" Type="Decimal" Precision="20" Scale="17" />
+    <Property Name="DstMainStLng" Type="Decimal" Precision="20" Scale="17" />
+    <Property Name="DriverPrice" Type="Int64" />
+    <Property Name="PassPrice" Type="Int64" />
+    <Property Name="VerifiedLevel" Type="Int16" />
+    <Property Name="StationRouteId" Type="Int64" Nullable="false" />
+  </EntityType>
+  <EntityType Name="vwDriverRoute">
+    <Key>
+      <PropertyRef Name="DrSrcStationId" />
+      <PropertyRef Name="SrcStLat" />
+      <PropertyRef Name="SrcStlng" />
+      <PropertyRef Name="SrcMainStName" />
+      <PropertyRef Name="DriverRouteId" />
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="DstMainStName" />
+      <PropertyRef Name="DstMainStLat" />
+      <PropertyRef Name="DstMainStLng" />
+    </Key>
+    <Property Name="DrSrcStationId" Type="Int64" Nullable="false" />
+    <Property Name="CarColor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CarPlateNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="CarType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="SrcStAdd" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+    <Property Name="SrcStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="SrcStlng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="SrcMainStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+    <Property Name="DriverRouteId" Type="Int64" Nullable="false" />
+    <Property Name="UserId" Type="Int64" Nullable="false" />
+    <Property Name="DstMainStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+    <Property Name="DstMainStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="DstMainStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="DriverPrice" Type="Int64" />
+    <Property Name="PassPrice" Type="Int64" />
+  </EntityType>
+  <EntityType Name="Discount">
+    <Key>
+      <PropertyRef Name="DiscountId" />
+    </Key>
+    <Property Name="DiscountId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DiscountCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="DiscountTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="DiscountCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DiscountStartTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DiscountEndTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DiscountDesc" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="DiscountEvenId" Type="Int64" />
+    <Property Name="DiscountType" Type="Int32" Nullable="false" />
+    <Property Name="DiscountPercent" Type="Int32" />
+  </EntityType>
+  <EntityType Name="vwDiscountUser">
+    <Key>
+      <PropertyRef Name="DiscountCode" />
+      <PropertyRef Name="DiscountCreateTime" />
+      <PropertyRef Name="DiscountStartTime" />
+      <PropertyRef Name="DiscountEndTime" />
+      <PropertyRef Name="DiscountId" />
+      <PropertyRef Name="DuCreateTime" />
+      <PropertyRef Name="DuState" />
+      <PropertyRef Name="DuId" />
+      <PropertyRef Name="DiscountType" />
+    </Key>
+    <Property Name="DiscountCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="DiscountTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="DiscountCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DiscountStartTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DiscountEndTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DiscountDesc" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="DiscountEvenId" Type="Int64" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="RouteRequestId" Type="Int64" />
+    <Property Name="DiscountId" Type="Int32" Nullable="false" />
+    <Property Name="DuCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DuState" Type="Int16" Nullable="false" />
+    <Property Name="TransId" Type="Int64" />
+    <Property Name="DuId" Type="Int64" Nullable="false" />
+    <Property Name="DiscountType" Type="Int32" Nullable="false" />
+    <Property Name="DuEndTime" Type="DateTime" Precision="3" />
+    <Property Name="DiscountPercent" Type="Int32" />
+  </EntityType>
+  <EntityType Name="Rating">
+    <Key>
+      <PropertyRef Name="RateId" />
+    </Key>
+    <Property Name="RateId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TripId" Type="Int64" Nullable="false" />
+    <Property Name="RateCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="RaterUserId" Type="Int64" Nullable="false" />
+    <Property Name="FellowUserId" Type="Int64" Nullable="false" />
+    <Property Name="Rate" Type="Int16" />
+    <Property Name="RateDescription" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="vwRating">
+    <Key>
+      <PropertyRef Name="FellowUserId" />
+      <PropertyRef Name="RaterUserId" />
+      <PropertyRef Name="TripId" />
+      <PropertyRef Name="RateCreateTime" />
+      <PropertyRef Name="RateId" />
+    </Key>
+    <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="FellowUserId" Type="Int64" Nullable="false" />
+    <Property Name="RaterUserId" Type="Int64" Nullable="false" />
+    <Property Name="Rate" Type="Int16" />
+    <Property Name="TripId" Type="Int64" Nullable="false" />
+    <Property Name="RateCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="RateId" Type="Int64" Nullable="false" />
+    <Property Name="UserImageId" Type="Guid" />
+    <Property Name="Gender" Type="Int32" />
+    <Property Name="UserUId" Type="Guid" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="RateDescription" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="vwMainStation">
+    <Key>
+      <PropertyRef Name="MainStationId" />
+      <PropertyRef Name="MainStName" />
+      <PropertyRef Name="MainStLat" />
+      <PropertyRef Name="MainStRadius" />
+      <PropertyRef Name="MainStLng" />
+    </Key>
+    <Property Name="MainStationId" Type="Int64" Nullable="false" />
+    <Property Name="MainStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+    <Property Name="MainStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="MainStRadius" Type="Int64" Nullable="false" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <Property Name="MainStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
   </EntityType>
 </Schema>

@@ -18,5 +18,6 @@ namespace CoreDA
         public System.DateTime GtokenCreateTime { get; set; }
         public long GtokenUserId { get; set; }
         public string GtokenKey { get; set; }
+        public Nullable<short> GtokenRole { get; set; }
     }
 }

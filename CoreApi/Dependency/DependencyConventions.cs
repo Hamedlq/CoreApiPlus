@@ -6,6 +6,7 @@ using Castle.Windsor;
 using System.Web.Http.Controllers;
 using CoreManager.AdminManager;
 using CoreManager.DiscountManager;
+using CoreManager.FanapManager;
 using CoreManager.GroupManager;
 using CoreManager.LogProvider;
 using CoreManager.NotificationManager;
@@ -41,6 +42,8 @@ namespace CoreApi.Dependency
                         Component.For<ITransactionManager, TransactionManager>().ImplementedBy<TransactionManager>(),
 
                         Component.For<IDiscountManager, DiscountManager>().ImplementedBy<DiscountManager>(),
+
+                        Component.For<IFanapManager, FanapManager>().ImplementedBy<FanapManager>(),
 
                         //Component.For<IResponseProvider>().ImplementedBy<ResponseProvider>(),
 
