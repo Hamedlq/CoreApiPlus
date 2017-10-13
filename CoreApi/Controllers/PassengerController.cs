@@ -285,7 +285,14 @@ namespace CoreApi.Controllers
             }
             catch (Exception e)
             {
-                _logmanager.Log(Tag, "IosVersion", e.Message + "-" + e.InnerException.Message);
+                if (e.InnerException != null)
+                {
+                    _logmanager.Log(Tag, "IosVersion", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logmanager.Log(Tag, "IosVersion", e.Message);
+                }
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }

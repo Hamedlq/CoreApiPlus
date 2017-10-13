@@ -112,7 +112,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EFModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Employee.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Event.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EventAttendee.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EventLog.cs">

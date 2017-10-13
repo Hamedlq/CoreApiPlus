@@ -355,7 +355,14 @@ namespace CoreApi.Controllers
             }
             catch (Exception e)
             {
-                _logmanager.Log(Tag, "InvokeTrips", e.Message + "-" + e.InnerException.Message);
+                if (e.InnerException != null)
+                {
+                    _logmanager.Log(Tag, "InvokeTrips", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logmanager.Log(Tag, "InvokeTrips", e.Message);
+                }
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
@@ -412,18 +419,26 @@ namespace CoreApi.Controllers
         [HttpGet]
         [Route("MakeStationRoutes")]
         [AllowAnonymous]
-        public IHttpActionResult MakeStationRoutes([FromUri]Boolean isnew,int key)
+        public IHttpActionResult MakeStationRoutes([FromUri]int key)
         {
             try
             {
                 if (key == 123) { 
-                var res = _routemanager.MakeStationRoutes(isnew);
+                var res = _routemanager.MakeStationRoutes();
                 return Json(_responseProvider.GenerateOKResponse());
                 }
             }
             catch (Exception e)
             {
-                _logmanager.Log(Tag, "MakeStationRoutes", e.Message + "-" + e.InnerException.Message);
+                if (e.InnerException != null)
+                {
+                    _logmanager.Log(Tag, "MakeStationRoutes", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logmanager.Log(Tag, "MakeStationRoutes", e.Message);
+                }
+                
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
@@ -443,7 +458,14 @@ namespace CoreApi.Controllers
             }
             catch (Exception e)
             {
-                _logmanager.Log(Tag, "DriverIosVersion", e.Message + "-" + e.InnerException.Message);
+                if (e.InnerException != null)
+                {
+                    _logmanager.Log(Tag, "DriverIosVersion", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logmanager.Log(Tag, "DriverIosVersion", e.Message);
+                }
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }

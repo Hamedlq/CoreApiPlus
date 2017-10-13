@@ -101,9 +101,11 @@ namespace CoreDA
         public virtual DbSet<vwDriverRoute> vwDriverRoutes { get; set; }
         public virtual DbSet<Discount> Discounts { get; set; }
         public virtual DbSet<vwDiscountUser> vwDiscountUsers { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<vwMainStation> vwMainStations { get; set; }
         public virtual DbSet<Rating> Ratings { get; set; }
         public virtual DbSet<vwRating> vwRatings { get; set; }
-        public virtual DbSet<vwMainStation> vwMainStations { get; set; }
+        public virtual DbSet<EventAttendee> EventAttendees { get; set; }
     
         public virtual ObjectResult<GetLocalRoutes_Result> GetLocalRoutes(Nullable<decimal> lat, Nullable<decimal> lng, Nullable<int> routeDistance, Nullable<int> pointDistance)
         {

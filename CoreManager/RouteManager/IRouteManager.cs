@@ -81,10 +81,13 @@ namespace CoreManager.RouteManager
         long SubmitMainStation(int userId, string modelName, string modelStLat, string modelStLng);
         long SubmitStation(int userId, string modelName, string modelStLat, string modelStLng, long modelMainStationId);
         List<StationModel> GetMainStations();
+        List<StationModel> GetAdminMainStations();
         StationRouteModel GetStationRoute(long srcStId, long dstStId);
         List<SubStationModel> GetSubStations(long mainStationId);
-        bool MakeStationRoutes(Boolean isnew);
+        bool MakeStationRoutes();
 
         PaymentDetailModel RequestInvoice(int userId, long chargeAmount);
+        bool InsertEmployeeModel(EmployeeRequestModels model);
+        bool InsertEventAttendeeModel(EventAttendeeModel model);
     }
 }

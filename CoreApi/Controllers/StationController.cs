@@ -63,6 +63,23 @@ namespace CoreApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "AdminUser")]
+        [Route("GetAdminMainStations")]
+        public IHttpActionResult GetAdminMainStations()
+        {
+            try
+            {
+                var res = _routemanager.GetAdminMainStations();
+                return Json(_responseProvider.GenerateRouteResponse(res));
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "GetAdminMainStations", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpPost]
         [Authorize]
         [Route("GetStationRoute")]
         public IHttpActionResult GetStationRoute(StationRouteModel model)

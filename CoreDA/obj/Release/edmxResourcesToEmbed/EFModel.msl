@@ -1234,6 +1234,34 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Employees">
+      <EntityTypeMapping TypeName="MibarimModel.Employee">
+        <MappingFragment StoreEntitySet="Employee">
+          <ScalarProperty Name="Geo" ColumnName="Geo" />
+          <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+          <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+          <ScalarProperty Name="TimeEnd" ColumnName="TimeEnd" />
+          <ScalarProperty Name="TimeStart" ColumnName="TimeStart" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+          <ScalarProperty Name="Family" ColumnName="Family" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwMainStations">
+      <EntityTypeMapping TypeName="MibarimModel.vwMainStation">
+        <MappingFragment StoreEntitySet="vwMainStation">
+          <ScalarProperty Name="MainStLng" ColumnName="MainStLng" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="MainStRadius" ColumnName="MainStRadius" />
+          <ScalarProperty Name="MainStLat" ColumnName="MainStLat" />
+          <ScalarProperty Name="MainStName" ColumnName="MainStName" />
+          <ScalarProperty Name="MainStationId" ColumnName="MainStationId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Ratings">
       <EntityTypeMapping TypeName="MibarimModel.Rating">
         <MappingFragment StoreEntitySet="Rating">
@@ -1265,15 +1293,17 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="vwMainStations">
-      <EntityTypeMapping TypeName="MibarimModel.vwMainStation">
-        <MappingFragment StoreEntitySet="vwMainStation">
-          <ScalarProperty Name="MainStLng" ColumnName="MainStLng" />
-          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-          <ScalarProperty Name="MainStRadius" ColumnName="MainStRadius" />
-          <ScalarProperty Name="MainStLat" ColumnName="MainStLat" />
-          <ScalarProperty Name="MainStName" ColumnName="MainStName" />
-          <ScalarProperty Name="MainStationId" ColumnName="MainStationId" />
+    <EntitySetMapping Name="EventAttendees">
+      <EntityTypeMapping TypeName="MibarimModel.EventAttendee">
+        <MappingFragment StoreEntitySet="EventAttendee">
+          <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+          <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+          <ScalarProperty Name="EventAttendeeNo" ColumnName="EventAttendeeNo" />
+          <ScalarProperty Name="EventName" ColumnName="EventName" />
+          <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+          <ScalarProperty Name="Family" ColumnName="Family" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="EaId" ColumnName="EaId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

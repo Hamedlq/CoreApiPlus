@@ -36,6 +36,7 @@ namespace CoreManager.UserManager
         bool ConfirmMobileNo(string mobile);
         bool SendConfirmMobileSms(ApplicationUser model, MobileValidation mobileModel, string rand);
         List<PersoanlInfoModel> GetAllUsers();
+        List<PersoanlInfoModel> GetLastUploadUsers();
         PersoanlInfoModel GetUserPersonalInfoByMobile(string  mobile);
         LicenseInfoModel GetUserLicenseInfo(string mobile);
         CarInfoModel GetUserCarInfo(string mobile);
@@ -87,5 +88,6 @@ namespace CoreManager.UserManager
         UserInfoAdminModel GetUserInfoById(Guid userUId);
         void EditUserInfo(UserInfoAdminModel model);
         bool SetRatings(int userId, List<RatingModel> model);
+        
     }
 }

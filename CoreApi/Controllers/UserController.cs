@@ -1416,6 +1416,23 @@ namespace CoreApi.Controllers
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
+        [HttpPost]
+        [Route("GetLastUploadUsers")]
+        [Authorize(Roles = "AdminUser")]
+        public IHttpActionResult GetLastUploadUsers()
+        {
+            try
+            {
+                var res = _userManager.GetLastUploadUsers();
+                var jsonRes = Json(_responseProvider.GenerateRouteResponse(res));
+                return jsonRes;
+            }
+            catch (Exception e)
+            {
+                _logManager.Log(Tag, "GetLastUploadUsers", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
 
         [HttpPost]
         [Route("GetUserByInfo")]

@@ -95,9 +95,11 @@
     <EntitySet Name="vwDriverRoutes" EntityType="MibarimModel.vwDriverRoute" />
     <EntitySet Name="Discounts" EntityType="MibarimModel.Discount" />
     <EntitySet Name="vwDiscountUsers" EntityType="MibarimModel.vwDiscountUser" />
+    <EntitySet Name="Employees" EntityType="MibarimModel.Employee" />
+    <EntitySet Name="vwMainStations" EntityType="MibarimModel.vwMainStation" />
     <EntitySet Name="Ratings" EntityType="MibarimModel.Rating" />
     <EntitySet Name="vwRatings" EntityType="MibarimModel.vwRating" />
-    <EntitySet Name="vwMainStations" EntityType="MibarimModel.vwMainStation" />
+    <EntitySet Name="EventAttendees" EntityType="MibarimModel.EventAttendee" />
   </EntityContainer>
   <EntityType Name="BankInfo">
     <Key>
@@ -1253,7 +1255,7 @@
     <Property Name="GtokenId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="GtokenCreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="GtokenUserId" Type="Int64" Nullable="false" />
-    <Property Name="GtokenKey" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="GtokenKey" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
     <Property Name="GtokenRole" Type="Int16" />
   </EntityType>
   <EntityType Name="Withdraw">
@@ -1451,6 +1453,36 @@
     <Property Name="DuEndTime" Type="DateTime" Precision="3" />
     <Property Name="DiscountPercent" Type="Int32" />
   </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="EmployeeId" />
+    </Key>
+    <Property Name="EmployeeId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Family" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Mobile" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TimeStart" Type="DateTime" Precision="3" />
+    <Property Name="TimeEnd" Type="DateTime" Precision="3" />
+    <Property Name="Latitude" Type="Decimal" Precision="20" Scale="17" />
+    <Property Name="Longitude" Type="Decimal" Precision="20" Scale="17" />
+    <Property Name="Geo" Type="Geography" />
+  </EntityType>
+  <EntityType Name="vwMainStation">
+    <Key>
+      <PropertyRef Name="MainStationId" />
+      <PropertyRef Name="MainStName" />
+      <PropertyRef Name="MainStLat" />
+      <PropertyRef Name="MainStRadius" />
+      <PropertyRef Name="MainStLng" />
+    </Key>
+    <Property Name="MainStationId" Type="Int64" Nullable="false" />
+    <Property Name="MainStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+    <Property Name="MainStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="MainStRadius" Type="Int64" Nullable="false" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <Property Name="MainStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+  </EntityType>
   <EntityType Name="Rating">
     <Key>
       <PropertyRef Name="RateId" />
@@ -1484,19 +1516,17 @@
     <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="RateDescription" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
   </EntityType>
-  <EntityType Name="vwMainStation">
+  <EntityType Name="EventAttendee">
     <Key>
-      <PropertyRef Name="MainStationId" />
-      <PropertyRef Name="MainStName" />
-      <PropertyRef Name="MainStLat" />
-      <PropertyRef Name="MainStRadius" />
-      <PropertyRef Name="MainStLng" />
+      <PropertyRef Name="EaId" />
     </Key>
-    <Property Name="MainStationId" Type="Int64" Nullable="false" />
-    <Property Name="MainStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
-    <Property Name="MainStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-    <Property Name="MainStRadius" Type="Int64" Nullable="false" />
-    <Property Name="IsDeleted" Type="Boolean" />
-    <Property Name="MainStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+    <Property Name="EaId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Family" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Mobile" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+    <Property Name="EventName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="EventAttendeeNo" Type="Int32" />
+    <Property Name="Latitude" Type="Decimal" Precision="20" Scale="17" />
+    <Property Name="Longitude" Type="Decimal" Precision="20" Scale="17" />
   </EntityType>
 </Schema>

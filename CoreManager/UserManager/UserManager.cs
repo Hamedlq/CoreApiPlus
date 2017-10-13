@@ -730,6 +730,7 @@ namespace CoreManager.UserManager
                             if (mobileModel.SendCounter == 1)
                             {
                                 sendSmsKav(mobileModel.MobileBrief(), rand);
+                                //sendSmsir(mobileModel.MobileBrief(), rand);
                             }
                             if (mobileModel.SendCounter == 2)
                             {
@@ -737,6 +738,7 @@ namespace CoreManager.UserManager
                             }
                             if (mobileModel.SendCounter == 3)
                             {
+                                sendSmsKav(mobileModel.MobileBrief(), rand);
                                 sendSoundKav(mobileModel.MobileBrief(), rand);
                             }
                         }
@@ -778,8 +780,8 @@ namespace CoreManager.UserManager
             notifModel.NotificationId = 9;
             notifModel.RequestCode = 9;
             _notifManager.SendNotifToUser(notifModel, 1);
-            /*var smsService = new KavenegarService();
-            smsService.SendAdminSms(mobileBrief, rand);*/
+            var smsService = new KavenegarService();
+            smsService.SendAdminSms(mobileBrief, rand);
         }
 
         private void sendSoundKav(string mobileBrief, string rand)
@@ -806,12 +808,26 @@ namespace CoreManager.UserManager
             var pi = new List<PersoanlInfoModel>();
             using (var dataModel = new MibarimEntities())
             {
-                var uinfo = dataModel.vwUserInfoes.Take(30).OrderByDescending(x => x.UserId).ToList();
+                var uinfo = dataModel.vwUserInfoes.OrderByDescending(x => x.UserId).Take(30).ToList();
                 foreach (var vwUserInfo in uinfo)
                 {
                     pi.Add(UserMapper.CastPersonalInfoToModel(vwUserInfo));
                 }
             }
+            return pi;
+        }
+
+        public List<PersoanlInfoModel> GetLastUploadUsers()
+        {
+            var pi = new List<PersoanlInfoModel>();
+            /*using (var dataModel = new MibarimEntities())
+            {
+                var uinfo = dataModel.Images.OrderByDescending(x => x.ImageCreateTime).ToList();
+                foreach (var vwUserInfo in uinfo)
+                {
+                    pi.Add(UserMapper.CastPersonalInfoToModel(vwUserInfo));
+                }
+            }*/
             return pi;
         }
 
@@ -2440,6 +2456,7 @@ namespace CoreManager.UserManager
             }
 
         }
+        
 
         private string InviteCodeGenerator()
         {

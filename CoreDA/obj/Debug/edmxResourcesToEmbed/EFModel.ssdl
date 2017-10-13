@@ -198,6 +198,21 @@
     <Property Name="StationRouteId" Type="bigint" Nullable="false" />
     <Property Name="DrSrcStationId" Type="bigint" Nullable="false" />
   </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="EmployeeId" />
+    </Key>
+    <Property Name="EmployeeId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" />
+    <Property Name="Family" Type="nvarchar" MaxLength="50" />
+    <Property Name="Mobile" Type="nvarchar" MaxLength="16" />
+    <Property Name="Email" Type="nvarchar" MaxLength="50" />
+    <Property Name="TimeStart" Type="datetime" />
+    <Property Name="TimeEnd" Type="datetime" />
+    <Property Name="Latitude" Type="decimal" Precision="20" Scale="17" />
+    <Property Name="Longitude" Type="decimal" Precision="20" Scale="17" />
+    <Property Name="Geo" Type="geography" />
+  </EntityType>
   <EntityType Name="Event">
     <Key>
       <PropertyRef Name="EventId" />
@@ -219,6 +234,19 @@
     <Property Name="EventCoductorMobile" Type="nvarchar" MaxLength="256" />
     <Property Name="EventConfirmed" Type="smallint" />
     <Property Name="IsConfirmed" Type="bit" />
+  </EntityType>
+  <EntityType Name="EventAttendee">
+    <Key>
+      <PropertyRef Name="EaId" />
+    </Key>
+    <Property Name="EaId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" />
+    <Property Name="Family" Type="nvarchar" MaxLength="50" />
+    <Property Name="Mobile" Type="nvarchar" MaxLength="16" />
+    <Property Name="EventName" Type="nvarchar" MaxLength="50" />
+    <Property Name="EventAttendeeNo" Type="int" />
+    <Property Name="Latitude" Type="decimal" Precision="20" Scale="17" />
+    <Property Name="Longitude" Type="decimal" Precision="20" Scale="17" />
   </EntityType>
   <EntityType Name="EventLog">
     <Key>
@@ -253,7 +281,7 @@
     <Property Name="GtokenId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="GtokenCreateTime" Type="datetime" Nullable="false" />
     <Property Name="GtokenUserId" Type="bigint" Nullable="false" />
-    <Property Name="GtokenKey" Type="text" Nullable="false" />
+    <Property Name="GtokenKey" Type="text" />
     <Property Name="GtokenRole" Type="smallint" />
   </EntityType>
   <EntityType Name="Group">
@@ -1434,7 +1462,9 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     <EntitySet Name="Discount" EntityType="Self.Discount" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DiscountUser" EntityType="Self.DiscountUser" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DriverRoute" EntityType="Self.DriverRoute" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="EventAttendee" EntityType="Self.EventAttendee" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="EventLog" EntityType="Self.EventLog" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Fanap" EntityType="Self.Fanap" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="GoogleToken" EntityType="Self.GoogleToken" Schema="dbo" store:Type="Tables" />

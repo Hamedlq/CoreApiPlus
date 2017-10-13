@@ -15,6 +15,7 @@ using CoreManager.Resources;
 using CoreManager.ResponseProvider;
 using CoreManager.RouteGroupManager;
 using CoreManager.RouteManager;
+using CoreManager.UserManager;
 using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -87,6 +88,40 @@ namespace CoreApi.Controllers
             catch (Exception e)
             {
                 _logmanager.Log(Tag, "InsertUserEventRoute", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+        [HttpPost]
+        [Route("InsertEmployeeRoute")]
+        [AllowAnonymous]
+        public IHttpActionResult InsertEmployeeRoute(EmployeeRequestModels model)
+        {
+            try
+            {
+                var userId = _routemanager.InsertEmployeeModel(model);
+                ResponseModel responseModel = _responseProvider.GenerateOKResponse();
+                return Json(responseModel);
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "InsertUserRoute", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+        [HttpPost]
+        [Route("InsertEventAttendee")]
+        [AllowAnonymous]
+        public IHttpActionResult InsertEventAttendee(EventAttendeeModel model)
+        {
+            try
+            {
+                var userId = _routemanager.InsertEventAttendeeModel(model);
+                ResponseModel responseModel = _responseProvider.GenerateOKResponse();
+                return Json(responseModel);
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "InsertUserRoute", e.Message);
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }

@@ -1257,17 +1257,17 @@ namespace CoreManager.RouteManager
             }
             if (distance <= 500)
             {
-                res.SharedServicePrice = RemoveDecimalToman(5060 + extraPrice).ToString();
+                res.SharedServicePrice = RemoveDecimalToman(5566 + extraPrice).ToString();
             }
             else if (distance <= 7000)
             {
-                res.SharedServicePrice = RemoveDecimalToman((((distance - 500)/100)*230) + 5060 + extraPrice).ToString();
+                res.SharedServicePrice = RemoveDecimalToman((((distance - 500)/100)*253) + 5566 + extraPrice).ToString();
             }
             else if (distance > 7000)
             {
-                var first7000 = (65*230) + 5060;
+                var first7000 = (65* 253) + 5566;
                 res.SharedServicePrice =
-                    RemoveDecimalToman((((distance - 7000)/100)*184) + first7000 + extraPrice).ToString();
+                    RemoveDecimalToman((((distance - 7000)/100)*202) + first7000 + extraPrice).ToString();
             }
             /* if (distance > 50000)
             {
@@ -1282,17 +1282,17 @@ namespace CoreManager.RouteManager
             }
             if (distance <= 1330)
             {
-                res.PrivateServicePrice = RemoveDecimalToman(37260 + extraPrice).ToString();
+                res.PrivateServicePrice = RemoveDecimalToman(40986 + extraPrice).ToString();
             }
             else if (distance <= 2000)
             {
-                res.PrivateServicePrice = RemoveDecimalToman((((distance/100)*2781) + extraPrice)).ToString();
+                res.PrivateServicePrice = RemoveDecimalToman((((distance/100)*3059) + extraPrice)).ToString();
             }
             else if (distance > 2000)
             {
-                var first2000 = (20*2781);
+                var first2000 = (20* 3059);
                 res.PrivateServicePrice =
-                    RemoveDecimalToman((((distance - 2000)/100)*925) + first2000 + extraPrice).ToString();
+                    RemoveDecimalToman((((distance - 2000)/100)*1017) + first2000 + extraPrice).ToString();
             }
             /*if (distance > 50000)
             {
@@ -3649,6 +3649,24 @@ namespace CoreManager.RouteManager
             }
             return stlist;
         }
+        public List<StationModel> GetAdminMainStations()
+        {
+            var stlist = new List<StationModel>();
+            using (var dataModel = new MibarimEntities())
+            {
+                var ms = dataModel.MainStations;
+                foreach (var mainStation in ms)
+                {
+                    var st = new StationModel();
+                    st.Name = mainStation.MainStName;
+                    st.StLat = mainStation.MainStLat.ToString();
+                    st.StLng = mainStation.MainStLng.ToString();
+                    st.MainStationId = mainStation.MainStationId;
+                    stlist.Add(st);
+                }
+            }
+            return stlist;
+        }
 
         public StationRouteModel GetStationRoute(long srcStId, long dstStId)
         {
@@ -3693,7 +3711,7 @@ namespace CoreManager.RouteManager
             return stlist;
         }
 
-        public bool MakeStationRoutes(Boolean isnew)
+        public bool MakeStationRoutes()
         {
             using (var dataModel = new MibarimEntities())
             {
@@ -3706,10 +3724,11 @@ namespace CoreManager.RouteManager
                 long mintime = 1000000;
                 long midtime = 0;
                 long maxtime = 0;
-                var mainStations = dataModel.MainStations.ToList();
-                foreach (var srcmainStation in mainStations)
+                var srcmainStations = dataModel.vwMainStations.ToList();
+                var dstmainStations = dataModel.vwMainStations.ToList();
+                foreach (var srcmainStation in srcmainStations)
                 {
-                    foreach (var dstMainStation in mainStations)
+                    foreach (var dstMainStation in dstmainStations)
                     {
                         if (srcmainStation.MainStationId != dstMainStation.MainStationId)
                         {
@@ -3718,7 +3737,7 @@ namespace CoreManager.RouteManager
                                     x =>
                                         x.SrcMStationId == srcmainStation.MainStationId &&
                                         x.DstMStationId == dstMainStation.MainStationId);
-                            if (isnew || routeStation == null)
+                            if (routeStation == null || routeStation.DriverPrice==0)
                             {
                                 model = new SrcDstModel();
                                 model.SrcLat = srcmainStation.MainStLat.ToString();
@@ -3735,18 +3754,18 @@ namespace CoreManager.RouteManager
                                     min = mid = max = distance;
                                     foreach (var route in privateGRoute.Routes)
                                     {
-                                        if (route.Legs.FirstOrDefault().Distance.Value > min &&
+                                        if (route.Legs.Count>0 && route.Legs.FirstOrDefault().Distance.Value > min &&
                                             route.Legs.FirstOrDefault().Distance.Value < max)
                                         {
                                             mid = route.Legs.FirstOrDefault().Distance.Value;
                                             midtime = route.Legs.FirstOrDefault().Duration.Value;
                                         }
-                                        if (route.Legs.FirstOrDefault().Distance.Value <= min)
+                                        if (route.Legs.Count > 0 && route.Legs.FirstOrDefault().Distance.Value <= min)
                                         {
                                             min = route.Legs.FirstOrDefault().Distance.Value;
                                             mintime = route.Legs.FirstOrDefault().Duration.Value;
                                         }
-                                        if (route.Legs.FirstOrDefault().Distance.Value >= max)
+                                        if (route.Legs.Count > 0 && route.Legs.FirstOrDefault().Distance.Value >= max)
                                         {
                                             max = route.Legs.FirstOrDefault().Distance.Value;
                                             maxtime = route.Legs.FirstOrDefault().Duration.Value;
@@ -3754,33 +3773,40 @@ namespace CoreManager.RouteManager
                                     }
 
                                     var averageTime = (distance*3600)/15000;
+                                    //check it out
+                                    if (min < distance)
+                                    {
+                                        distance = min;
+                                    }
                                     long extraPrice = 0;
                                     if (averageTime < duration)
                                     {
-                                        extraPrice = ((duration - averageTime)/60)*132;
+                                        //extraPrice = ((duration - averageTime)/60)*132;
+                                        extraPrice = 0;
                                     }
                                     if (distance <= 500)
                                     {
-                                        res = RemoveDecimalToman(5570 + extraPrice);
+                                        res = RemoveDecimalToman(5566 + extraPrice);
                                     }
                                     else if (distance <= 7000)
                                     {
-                                        res = RemoveDecimalToman((((distance - 500)/100)*260) + 5570 + extraPrice);
+                                        res = RemoveDecimalToman((((distance - 500)/100)*253) + 5566 + extraPrice);
                                     }
                                     else if (distance <= 20000)
                                     {
-                                        var first7000 = (65*260) + 5570;
+                                        var first7000 = (65* 253) + 5566;
                                         res =
-                                            RemoveDecimalToman((((distance - 7000)/100)*203) + first7000 + extraPrice);
+                                            RemoveDecimalToman((((distance - 7000)/100)*202) + first7000 + extraPrice);
                                     }
                                     else if (distance > 20000)
                                     {
-                                        var first20000 = (125*203) + (65*260) + 5570;
+                                        var first20000 = (125*202) + (65* 253) + 5566;
                                         res =
-                                            RemoveDecimalToman((((distance - 20000)/100)*184) + first20000 + extraPrice);
+                                            RemoveDecimalToman((((distance - 20000)/100)*150) + first20000 + extraPrice);
                                     }
+
                                     var stationRoute = new StationRoute();
-                                    if (isnew)
+                                    if (routeStation == null)
                                     {
                                     var laststr =
                                         dataModel.StationRoutes.OrderByDescending(x => x.StationRouteId)
@@ -3802,13 +3828,14 @@ namespace CoreManager.RouteManager
                                     stationRoute.DurationMid = midtime;
                                     stationRoute.DistanceMax = max;
                                     stationRoute.DurationMax = maxtime;
-                                    stationRoute.PassPrice = (long) RemoveDecimalToman(res*11);
+                                    stationRoute.PassPrice = (long) RemoveDecimalToman(res*10);
                                     stationRoute.DriverPrice = (long) RemoveDecimalToman(res*9);
-                                    if (isnew)
+                                    if (routeStation == null)
                                     {
                                         dataModel.StationRoutes.Add(stationRoute);
                                     }
                                     dataModel.SaveChanges();
+                                    Thread.Sleep(5000);
                                 }
                             }
                         }
@@ -3833,6 +3860,44 @@ namespace CoreManager.RouteManager
                     payreq.State = 100;
             }
             return payreq;
+        }
+
+        public bool InsertEmployeeModel(EmployeeRequestModels model)
+        {
+            var em = new Employee();
+            using (var dataModel = new MibarimEntities())
+            {
+                em.Name = model.Name;
+                em.Family = model.Family;
+                em.Email= model.Email;
+                em.Mobile= model.Mobile;
+                em.TimeStart= model.TimeStart;
+                em.TimeEnd= model.TimeEnd;
+                em.Geo= RouteMapper.CreatePoint(model.Latitude, model.Longitude);
+                em.Latitude= decimal.Parse(model.Latitude);
+                em.Longitude= decimal.Parse(model.Longitude);
+                dataModel.Employees.Add(em);
+                dataModel.SaveChanges();
+            }
+            return true;
+        }
+
+        public bool InsertEventAttendeeModel(EventAttendeeModel model)
+        {
+            var em = new EventAttendee();
+            using (var dataModel = new MibarimEntities())
+            {
+                em.Name = model.Name;
+                em.Family = model.Family;
+                em.EventAttendeeNo = model.EventAttendeeNo;
+                em.Mobile = model.Mobile;
+                em.EventName = model.EventName;
+                em.Latitude = decimal.Parse(model.Latitude);
+                em.Longitude = decimal.Parse(model.Longitude);
+                dataModel.EventAttendees.Add(em);
+                dataModel.SaveChanges();
+            }
+            return true;
         }
 
 

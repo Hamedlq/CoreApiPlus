@@ -91,16 +91,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/18/2013 02:42:56</publishTime>
     </File>
     <File Include="bin/CoreApi.dll">
-      <publishTime>10/04/2017 14:55:00</publishTime>
+      <publishTime>10/14/2017 00:01:52</publishTime>
     </File>
     <File Include="bin/CoreDA.dll">
-      <publishTime>09/17/2017 21:31:36</publishTime>
+      <publishTime>10/08/2017 16:06:00</publishTime>
     </File>
     <File Include="bin/CoreExternalService.dll">
       <publishTime>10/03/2017 12:06:50</publishTime>
     </File>
     <File Include="bin/CoreManager.dll">
-      <publishTime>10/04/2017 14:05:49</publishTime>
+      <publishTime>10/13/2017 15:26:13</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>09/07/2015 20:58:45</publishTime>
