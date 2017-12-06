@@ -354,7 +354,7 @@
 می‌بریم را از http://mibarim.com دریافت کرده و در کد معرفی عبارت {0} را وارد کنید</value>
   </data>
   <data name="NotRemain" xml:space="preserve">
-    <value>مانده کافی نمی باشد</value>
+    <value>مانده کافی نمی‌باشد</value>
   </data>
   <data name="RequestSubmitted" xml:space="preserve">
     <value>درخواست با موفقیت ثبت شد</value>
@@ -399,7 +399,7 @@
     <value>مسیر اشتباه است</value>
   </data>
   <data name="TripExists" xml:space="preserve">
-    <value>سفری برای مسیر تعریف شده است</value>
+    <value>لطفا ابتدا سفر را غیرفعال کنید</value>
   </data>
   <data name="TripAlreadyDisabled" xml:space="preserve">
     <value>سفر فعال نیست</value>
@@ -460,5 +460,23 @@
   </data>
   <data name="SeatPreviouslyReserved" xml:space="preserve">
     <value>سفر قبلا رزرو شده است</value>
+  </data>
+  <data name="SetRoute" xml:space="preserve">
+    <value>مسیرتان را فعال کنید</value>
+  </data>
+  <data name="SetTime" xml:space="preserve">
+    <value>لطفا زمان حرکت فردا را در برنامه ثبت کنید</value>
+  </data>
+  <data name="AcceptRide" xml:space="preserve">
+    <value>سفر را قبول کنید</value>
+  </data>
+  <data name="GetAlong" xml:space="preserve">
+    <value>همراه شو</value>
+  </data>
+  <data name="SimilarDriverRoute" xml:space="preserve">
+    <value>در مسیر {0} به {1} ساعت {2}:{3} سفری ثبت شده است. در صورت تمایل سفر را قبول کنید</value>
+  </data>
+  <data name="SimilarRoute" xml:space="preserve">
+    <value>در مسیر {0} به {1} ساعت {2}:{3} سفری ثبت شده است. در صورت تمایل سفر را رزرو کنید</value>
   </data>
 </root>

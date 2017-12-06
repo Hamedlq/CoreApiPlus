@@ -123,6 +123,7 @@ namespace CoreManager.Models
         PassengerPay = 1,
         DriverReceipt = 2
     }
+    
 
     public enum NotificationType
     {
@@ -137,7 +138,10 @@ namespace CoreManager.Models
         GiftInvite = 9,
         MoneyTransaction=10,
         TripStateActivated=11,
-        AdminNotif=12
+        AdminNotif=12,
+        SetRouteReminder=13,
+        NotifForFilter = 20,
+        NotifForDriver = 21,
     }
     public enum ImageType
     {
@@ -167,7 +171,32 @@ namespace CoreManager.Models
         Finished = 50,
         FinishedByTime = 55,
         FinishedByTrip = 60,
-        Canceled = 65
+        Canceled = 65,
+    }
+    public enum DriverAppStates
+    {
+        TripActive = 101,
+        TripInActive=102,
+        TripMatched = 103,
+    }
+
+    public enum FilterState
+    {
+        Scheduled = 1,
+        CanceledByUser = 5,
+        InPreTripTime = 10,
+        InTripTime = 15,
+        InRiding = 20,
+        PassengerCall = 25,
+        DriverRiding = 27,
+        DriverNotCome = 30,
+        PassengerNotCome = 35,
+        InDriving = 40,
+        InRanking = 45,
+        Finished = 50,
+        FinishedByTime = 55,
+        FinishedByTrip = 60,
+        Canceled = 65,
     }
 
     /*public enum TripState
@@ -282,5 +311,21 @@ namespace CoreManager.Models
     {
         Payed = 100,
         Canceled = 200,
+    }
+
+    public enum TokenStatus
+    {
+        NotSet = 1,
+        Expired = 2,
+        Valid = 3,
+        Invalid = 4
+    }
+
+    public enum TokenApp
+    {
+        SnapApp = 1,
+        Tap30App = 2,
+        CarpinoApp = 3,
+        CarpinoRefreshApp = 4,
     }
 }

@@ -88,6 +88,7 @@ namespace CoreManager.UserManager
         UserInfoAdminModel GetUserInfoById(Guid userUId);
         void EditUserInfo(UserInfoAdminModel model);
         bool SetRatings(int userId, List<RatingModel> model);
-        
+        PersoanlInfoModel GetUser(int userId);
+        PaymentDetailModel RequestInvoiceByForm(int userId, InvoiceModel model);
     }
 }

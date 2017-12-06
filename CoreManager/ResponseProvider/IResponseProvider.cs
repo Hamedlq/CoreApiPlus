@@ -27,17 +27,21 @@ namespace CoreManager.ResponseProvider
 
         //string GenerateInvalidUserPassResponse();
         ResponseModel GenerateRouteResponse(List<RouteResponseModel> list);
+        ResponseModel GenerateRouteResponse(List<NotifModel> list);
         ResponseModel GenerateRouteResponse(List<StationModel> list);
         ResponseModel GenerateRouteResponse(List<StationRouteModel> list);
+        ResponseModel GenerateRouteResponse(List<FilterTimeModel> list);
         ResponseModel GenerateRouteResponse(List<SubStationModel> list);
         ResponseModel GenerateRouteResponse(List<PersoanlInfoModel> list);
         ResponseModel GenerateRouteResponse(List<PassRouteModel> list);
         ResponseModel GenerateRouteResponse(List<DriverRouteModel> list);
+        ResponseModel GenerateRouteResponse(List<GasRank> list);
         ResponseModel GenerateRouteResponse(List<BriefRouteModel> list);
         ResponseModel GenerateDiscountResponse(List<DiscountModel> list);
         ResponseModel GenerateWithdrawResponse(List<WithdrawRequestModel> res);
         ResponseModel GenerateWithdrawResponse(List<WithdrawUserReqModel> res);
         ResponseModel GenerateRouteResponse(List<SuggestBriefRouteModel> list);
+        ResponseModel GenerateRouteResponse(List<FilterModel> list);
         ResponseModel GenerateRouteResponse(List<Object> list,string listType);
         ResponseModel GenerateRouteResponse(Object obj,string objType);
         ResponseModel GenerateRouteResponse(RouteSuggestModel routeSuggestModel);
@@ -52,6 +56,7 @@ namespace CoreManager.ResponseProvider
         ResponseModel GenerateObjectResponse(List<Object> response, string type);
         ResponseModel GenerateRecommendRoutesResponse(List<PathPoint> res);
         ResponseModel GenerateRouteResponse(List<LocalRouteModel> response);
+        ResponseModel GenerateRouteResponse(List<SuggestModel> response);
 
 
     }

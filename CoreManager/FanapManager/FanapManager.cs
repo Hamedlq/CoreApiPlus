@@ -75,6 +75,8 @@ namespace CoreManager.FanapManager
                         fanap.score = userInfo.score.ToString();
                         dataModel.Fanaps.Add(fanap);
                         dataModel.SaveChanges();
+                        var business = fanapService.getBusiness();
+                        fanapService.FollowBusiness(cont.access_token, business.result.id);
                         return userInfomodel;
                     }
                 }
@@ -120,16 +122,19 @@ namespace CoreManager.FanapManager
                     dataModel.BookRequests.Add(bookreq);
                     dataModel.SaveChanges();
                 
-                var fanapUser = dataModel.Fanaps.FirstOrDefault(x => x.userId==userId);
+                var fanapUser = dataModel.Fanaps.Where(x => x.userId == userId).OrderByDescending(y=>y.FanapId).FirstOrDefault();
                 var user=dataModel.vwUserInfoes.FirstOrDefault(x=>x.UserId==userId);
                 var ott= fanapService.GetOneTimeToken();
                 var desc = string.Format(getResource.getMessage("PaymentDesc"), user.Name+" "+ user.Family, trip.PassPrice);
                 var factorId= fanapService.IssueInvoice(trip.PassPrice, fanapUser.fuserId, ott, desc);
-                res.BankLink = "http://sandbox.fanapium.com:1031/v1/pbc/payinvoice/?invoiceId=" + factorId
-                           + "&redirectUri=" + "http://ifanap.mibarim.ir/fanap/PayReturn/?payreqId=" + pr.PayReqId +
-                           "&callUri=" + "http://ifanap.mibarim.ir/fanap/PayReturn/?payreqId=" + pr.PayReqId;
-                pr.PayReqRefID = factorId;
-                dataModel.SaveChanges();
+                    /*res.BankLink = "http://sandbox.fanapium.com:1031/v1/pbc/payinvoice/?invoiceId=" + factorId
+                               + "&redirectUri=" + "http://ifanap.mibarim.ir/fanap/PayReturn/?payreqId=" + pr.PayReqId +
+                               "&callUri=" + "http://ifanap.mibarim.ir/fanap/PayReturn/?payreqId=" + pr.PayReqId;*/
+                    res.BankLink = "https://gw.fanapium.com/v1/pbc/payinvoice/?invoiceId=" + factorId
+                    + "&redirectUri=" + "http://ifanap.mibarim.ir/fanap/PayReturn/?payreqId=" + pr.PayReqId +
+                    "&callUri=" + "http://ifanap.mibarim.ir/fanap/PayReturn/?payreqId=" + pr.PayReqId;
+                    pr.PayReqRefID = factorId;
+                    dataModel.SaveChanges();
                     }
                 return res;
             }

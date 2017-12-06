@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
@@ -819,16 +820,24 @@ namespace CoreManager.UserManager
 
         public List<PersoanlInfoModel> GetLastUploadUsers()
         {
-            var pi = new List<PersoanlInfoModel>();
-            /*using (var dataModel = new MibarimEntities())
+            var piList = new List<PersoanlInfoModel>();
+            using (var dataModel = new MibarimEntities())
             {
-                var uinfo = dataModel.Images.OrderByDescending(x => x.ImageCreateTime).ToList();
-                foreach (var vwUserInfo in uinfo)
+                var unorderedImages = dataModel.Images.OrderByDescending(x => x.ImageCreateTime).Take(30).Select(x=>x.ImageUserId);
+                var vwusers = dataModel.vwUserInfoes.Where(x => unorderedImages.Contains(x.UserId));
+                foreach (var vwUserInfo in vwusers)
                 {
-                    pi.Add(UserMapper.CastPersonalInfoToModel(vwUserInfo));
+                    var pi=new PersoanlInfoModel();
+                    pi.Name = vwUserInfo.Name;
+                    pi.Family= vwUserInfo.Family;
+                    pi.Email= vwUserInfo.Email;
+                    pi.Mobile= vwUserInfo.UserName;
+                    pi.UserUId= vwUserInfo.UserUId;
+                    pi.Gender= (Gender)vwUserInfo.Gender;
+                    piList.Add(pi);
                 }
-            }*/
-            return pi;
+            }
+            return piList;
         }
 
         public PersoanlInfoModel GetUserPersonalInfoByMobile(string mobile)
@@ -2249,7 +2258,7 @@ namespace CoreManager.UserManager
             var res = new List<RatingModel>();
             using (var dataModel = new MibarimEntities())
             {
-                var ratings = dataModel.vwRatings.Where(x => x.RaterUserId == userId );
+                var ratings = dataModel.vwRatings.Where(x => x.RaterUserId == userId && x.Rate==null);
                 foreach (var vwRating in ratings)
                 {
                     var rating = new RatingModel();
@@ -2456,9 +2465,68 @@ namespace CoreManager.UserManager
             }
 
         }
-        
 
-        private string InviteCodeGenerator()
+        public PersoanlInfoModel GetUser(int userId)
+        {
+            using (var dataModel = new MibarimEntities())
+            {
+                var user = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == userId);
+                var ui=new PersoanlInfoModel();
+                if (user != null)
+                {
+                    ui.Name = user.Name;
+                    ui.Family= user.Family;
+                    ui.Email= user.Email;
+                    ui.UserUId= user.UserUId;
+                }
+                return ui;
+            }
+        }
+
+        public PaymentDetailModel RequestInvoiceByForm(int userId, InvoiceModel model)
+        {
+            
+            var payreq = new PaymentDetailModel();
+            using (var dataModel = new MibarimEntities())
+            {
+                if (userId == 0)
+                {
+                    var aspnetuser = new AspNetUser();
+                    aspnetuser.Family = model.Family;
+                    aspnetuser.Name = model.Name;
+                    aspnetuser.Gender = 0;
+                    aspnetuser.EmailConfirmed = false;
+                    string salt;
+                    var pass = HashPassword("mibarimpass", out salt);
+                    aspnetuser.PasswordHash = pass;
+                    aspnetuser.SecurityStamp = salt;
+                    aspnetuser.UserName = model.Mobile;
+                    aspnetuser.MobileConfirmed = false;
+                    dataModel.AspNetUsers.Add(aspnetuser);
+                    dataModel.SaveChanges();
+                    userId = aspnetuser.Id;
+                    var ui = new UserInfo();
+                    ui.UserId = aspnetuser.Id;
+                    ui.UserInfoCreateTime = DateTime.Now;
+                    ui.UserInfoIsDeleted = false;
+                    dataModel.UserInfoes.Add(ui);
+                    dataModel.SaveChanges();
+                }
+                var pr = new PayReq();
+                pr.PayReqCreateTime = DateTime.Now;
+                pr.PayReqUserId = userId;
+                pr.PayReqValue = model.ChargeAmount;
+                dataModel.PayReqs.Add(pr);
+                dataModel.SaveChanges();
+                payreq.BankLink = "http://mibarimapp.com/coreapi/PasargadPay?reqid=" + pr.PayReqId;
+                payreq.State = 100;
+            }
+            return payreq;
+
+    }
+
+
+    private string InviteCodeGenerator()
         {
             string[] str = new[] {"mb", "mi", "mr", "ba", "mm", "ma", "mb", "mib"};
             using (var dataModel = new MibarimEntities())
@@ -2473,6 +2541,28 @@ namespace CoreManager.UserManager
             string[] str = new[] {"mb", "mi", "mr", "ba", "mm"};
             var rndMember = str[random.Next(str.Length)];
             return rndMember + inviteId;*/
+        }
+
+        private string HashPassword(string password, out string outSalt)
+        {
+            if (password == null) throw new ArgumentNullException("password");
+
+            int saltSize = 16;
+            int iterations = 4000;
+
+            byte[] salt;
+            byte[] bytes;
+
+            using (Rfc2898DeriveBytes rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, saltSize, iterations))
+            {
+                salt = rfc2898DeriveBytes.Salt;
+                bytes = rfc2898DeriveBytes.GetBytes(32);
+            }
+            outSalt = salt.ToString();
+            byte[] inArray = new byte[saltSize + 32];
+            Buffer.BlockCopy((Array)salt, 0, (Array)inArray, 0, saltSize);
+            Buffer.BlockCopy((Array)bytes, 0, (Array)inArray, saltSize, 32);
+            return Convert.ToBase64String(inArray);
         }
     }
 }

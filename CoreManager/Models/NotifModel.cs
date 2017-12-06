@@ -31,7 +31,7 @@ namespace CoreManager.Models
         public String Url{ set; get; }
         public String Action{ set; get; }
         public int RequestCode { set; get; }
-        public int NotificationId { set; get; }
+        public long NotificationId { set; get; }
         public int Tab { set; get; }
     }
 }

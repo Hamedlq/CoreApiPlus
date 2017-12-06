@@ -9,6 +9,7 @@ using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.Results;
 using System.Web.Script.Serialization;
+using CoreManager.DriverManager;
 using CoreManager.LogProvider;
 using CoreManager.Models;
 using CoreManager.Models.RouteModels;
@@ -28,6 +29,7 @@ namespace CoreApi.Controllers
     {
         private static string Tag = "DriverController";
         private IRouteManager _routemanager;
+        private IDriverManager _drivermanager;
         private IUserManager _userManager;
         private ILogProvider _logmanager;
         private IResponseProvider _responseProvider;
@@ -40,11 +42,13 @@ namespace CoreApi.Controllers
         public DriverController(IRouteManager routeManager,
             ILogProvider logManager,
             IUserManager userManager,
+            IDriverManager driverManager,
             IResponseProvider responseProvider)
         {
             _routemanager = routeManager;
             _logmanager = logManager;
             _userManager = userManager;
+            _drivermanager = driverManager;
             _responseProvider = responseProvider;
         }
 
@@ -351,7 +355,7 @@ namespace CoreApi.Controllers
             try
             {
                 var res = _routemanager.InvokeTrips();
-                return Json(_responseProvider.GenerateResponse(new List<string> {res}, "InvokeTrips"));
+                //return Json(_responseProvider.GenerateResponse(new List<string> {res}, "InvokeTrips"));
             }
             catch (Exception e)
             {
@@ -364,6 +368,39 @@ namespace CoreApi.Controllers
                     _logmanager.Log(Tag, "InvokeTrips", e.Message);
                 }
             }
+            try
+            {
+                var res=_routemanager.SendDriverNotifs();
+                //return Json(_responseProvider.GenerateResponse(new List<string> { res }, "InvokeTrips"));
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException != null)
+                {
+                    _logmanager.Log(Tag, "SendDriverNotifs", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logmanager.Log(Tag, "SendDriverNotifs", e.Message);
+                }
+            }
+            try
+            {
+                var res = _routemanager.SetUserNotifications();
+                //return Json(_responseProvider.GenerateResponse(new List<string> { res }, "InvokeTrips"));
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException != null)
+                {
+                    _logmanager.Log(Tag, "SetUserNotifications", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logmanager.Log(Tag, "SetUserNotifications", e.Message);
+                }
+            }
+
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
 
@@ -443,6 +480,56 @@ namespace CoreApi.Controllers
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
 
+        [HttpPost]
+        [Route("GetSuggestedRoutes")]
+        [AllowAnonymous]
+        public IHttpActionResult GetSuggestedRoutes()
+        {
+            try
+            {
+                var res = _routemanager.GetSuggestedRoutes();
+                return Json(_responseProvider.GenerateRouteResponse(res));
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException != null)
+                {
+                    _logmanager.Log(Tag, "GetSuggestedRoutes", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logmanager.Log(Tag, "GetSuggestedRoutes", e.Message);
+                }
+                
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpPost]
+        [Route("AcceptSuggestRoute")]
+        public IHttpActionResult AcceptSuggestRoute(FilterModel model)
+        {
+            try
+            {
+                int ff;
+                int.TryParse(User.Identity.GetUserId(), out ff);
+                var res = _routemanager.AcceptSuggestRoute(ff,model);
+                return Json(_responseProvider.GenerateRouteResponse(res, "AcceptSuggestRoute"));
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException != null)
+                {
+                    _logmanager.Log(Tag, "AcceptSuggestRoute", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logmanager.Log(Tag, "AcceptSuggestRoute", e.Message);
+                }
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
         [HttpGet]
         [Route("DriverIosVersion")]
         [AllowAnonymous]
@@ -466,6 +553,109 @@ namespace CoreApi.Controllers
                 {
                     _logmanager.Log(Tag, "DriverIosVersion", e.Message);
                 }
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpPost]
+        [Route("PresentView")]
+        public IHttpActionResult PresentView()
+        {
+            try
+            {
+                int ff;
+                if (User != null && int.TryParse(User.Identity.GetUserId(), out ff))
+                {
+                    PresentViewModel v = new PresentViewModel();
+                    var ui=_userManager.GetUser(ff);
+                    /*v.PresentUrl = "http://mibarim.ir/Driver/DriverRate?useruid="+ui.UserUId;
+                    v.WebViewPageUrl = "http://mibarim.ir/Driver/DriverRatePage?useruid=" + ui.UserUId;*/
+                    v.PresentUrl = null;
+                    v.WebViewPageUrl = null;
+                    return Json(_responseProvider.GenerateResponse(v, "PresentView"));
+                }
+                else
+                {
+                    return
+                        ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Unauthorized,
+                            "You are unauthorized to see Info!"));
+                }
+                
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException != null)
+                {
+                    _logmanager.Log(Tag, "PresentView", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logmanager.Log(Tag, "PresentView", e.Message);
+                }
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpGet]
+        [Route("MakeStationRoutePlus")]
+        [AllowAnonymous]
+        public IHttpActionResult MakeStationRoutePlus(string ccd)
+        {
+            try
+            {
+                if (ccd=="123")
+                {
+                    var res = _routemanager.MakeStationRoutePlus();
+                    return Json(_responseProvider.GenerateOKResponse());
+                }
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException != null)
+                {
+                    _logmanager.Log(Tag, "MakeStationRoutePlus", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logmanager.Log(Tag, "MakeStationRoutePlus", e.Message);
+                }
+
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpGet]
+        [Route("GasScores")]
+        [AllowAnonymous]
+        public IHttpActionResult GasScores([FromUri]string userUId)
+        {
+            try
+            {
+                var uid=new Guid(userUId);
+                    var res = _drivermanager.GetGasScores(uid);
+                    return Json(_responseProvider.GenerateRouteResponse(res, "GasScores"));
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "GasScores", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpGet]
+        [Route("GasRanks")]
+        [AllowAnonymous]
+        public IHttpActionResult GasRanks([FromUri]string userUId)
+        {
+            try
+            {
+                var uid = new Guid(userUId);
+                var res = _drivermanager.GasRanks(uid);
+                return Json(_responseProvider.GenerateRouteResponse(res));
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "GasRanks", e.Message);
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }

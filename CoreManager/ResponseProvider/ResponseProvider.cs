@@ -95,6 +95,16 @@ namespace CoreManager.ResponseProvider
             var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "RouteResponse", Messages = list.Select(x => Json.Encode(x)).ToList(), Warnings = _warnings, Infos = _infos };
             return responseModel;
         }
+        public ResponseModel GenerateRouteResponse(List<FilterTimeModel> list)
+        {
+            var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "FilterTimeModel", Messages = list.Select(x => Json.Encode(x)).ToList(), Errors = _errors, Infos = _infos };
+            return responseModel;
+        }
+        public ResponseModel GenerateRouteResponse(List<NotifModel> list)
+        {
+            var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "NotifModel", Messages = list.Select(x => Json.Encode(x)).ToList(), Warnings = _warnings, Infos = _infos };
+            return responseModel;
+        }
         public ResponseModel GenerateRouteResponse(List<StationRouteModel> list)
         {
             var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "RouteResponse", Messages = list.Select(x => Json.Encode(x)).ToList(), Warnings = _warnings, Infos = _infos };
@@ -130,6 +140,14 @@ namespace CoreManager.ResponseProvider
 
         }
 
+        public ResponseModel GenerateRouteResponse(List<GasRank> list)
+        {
+            //Working solution
+            var serializer = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue, RecursionLimit = 100 };
+            var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "PassRouteModel", Messages = list.Select(x => serializer.Serialize(x)).ToList(), Warnings = _warnings, Infos = _infos };
+            return responseModel;
+        }
+
         public ResponseModel GenerateRouteResponse(List<BriefRouteModel> list)
         {
             var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "SuggestRoute", Messages = list.Select(x => Json.Encode(x)).ToList() };
@@ -162,6 +180,12 @@ namespace CoreManager.ResponseProvider
         public ResponseModel GenerateRouteResponse(List<SuggestBriefRouteModel> list)
         {
             var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "SuggestBriefRouteModel", Messages = list.Select(x => Json.Encode(x)).ToList() };
+            return responseModel;
+        }
+
+        public ResponseModel GenerateRouteResponse(List<FilterModel> list)
+        {
+            var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "FilterModel", Messages = list.Select(x => Json.Encode(x)).ToList() };
             return responseModel;
         }
 
@@ -257,6 +281,12 @@ namespace CoreManager.ResponseProvider
         public ResponseModel GenerateRouteResponse(List<LocalRouteModel> list)
         {
             var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "UserContacts", Messages = list.Select(x => Json.Encode(x)).ToList() };
+            return responseModel;
+        }
+
+        public ResponseModel GenerateRouteResponse(List<SuggestModel> list)
+        {
+            var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "SuggestModel", Messages = list.Select(x => Json.Encode(x)).ToList() };
             return responseModel;
         }
     }

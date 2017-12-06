@@ -114,6 +114,23 @@ namespace CoreApi.Controllers
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
 
+        [HttpPost]
+        [Authorize]
+        [Route("GetAllSubStations")]
+        public IHttpActionResult GetAllSubStations()
+        {
+            try
+            {
+                var res = _routemanager.GetAllSubStations();
+                return Json(_responseProvider.GenerateRouteResponse(res));
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "GetSubStations", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
 
         [HttpPost]
         [Authorize(Roles = "AdminUser")]

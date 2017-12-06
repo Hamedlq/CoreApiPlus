@@ -37,7 +37,6 @@ namespace CoreDA
         public virtual DbSet<EventLog> EventLogs { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<LicenseInfo> LicenseInfoes { get; set; }
-        public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<RecommendPath> RecommendPaths { get; set; }
         public virtual DbSet<RecommendRoute> RecommendRoutes { get; set; }
         public virtual DbSet<RouteGroup> RouteGroups { get; set; }
@@ -97,15 +96,23 @@ namespace CoreDA
         public virtual DbSet<Image> Images { get; set; }
         public virtual DbSet<ImageReject> ImageRejects { get; set; }
         public virtual DbSet<vwImageReject> vwImageRejects { get; set; }
-        public virtual DbSet<vwDriverTrip> vwDriverTrips { get; set; }
         public virtual DbSet<vwDriverRoute> vwDriverRoutes { get; set; }
         public virtual DbSet<Discount> Discounts { get; set; }
         public virtual DbSet<vwDiscountUser> vwDiscountUsers { get; set; }
-        public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<vwMainStation> vwMainStations { get; set; }
         public virtual DbSet<Rating> Ratings { get; set; }
         public virtual DbSet<vwRating> vwRatings { get; set; }
         public virtual DbSet<EventAttendee> EventAttendees { get; set; }
+        public virtual DbSet<vwStation> vwStations { get; set; }
+        public virtual DbSet<AppsToken> AppsTokens { get; set; }
+        public virtual DbSet<vwDriverTrip> vwDriverTrips { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<StationRoutePlu> StationRoutePlus { get; set; }
+        public virtual DbSet<TmLocation> TmLocations { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
+        public virtual DbSet<Filter> Filters { get; set; }
+        public virtual DbSet<vwFilter> vwFilters { get; set; }
+        public virtual DbSet<vwFilterPlu> vwFilterPlus { get; set; }
     
         public virtual ObjectResult<GetLocalRoutes_Result> GetLocalRoutes(Nullable<decimal> lat, Nullable<decimal> lng, Nullable<int> routeDistance, Nullable<int> pointDistance)
         {
@@ -148,6 +155,59 @@ namespace CoreDA
         public virtual ObjectResult<Nullable<int>> GetNotificationUsers()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("GetNotificationUsers");
+        }
+    
+        public virtual ObjectResult<GetLastEnter_Result> GetLastEnter(Nullable<System.DateTime> from)
+        {
+            var fromParameter = from.HasValue ?
+                new ObjectParameter("from", from) :
+                new ObjectParameter("from", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLastEnter_Result>("GetLastEnter", fromParameter);
+        }
+    
+        public virtual ObjectResult<GetDriverRanks_Result> GetDriverRanks(Nullable<System.DateTime> from)
+        {
+            var fromParameter = from.HasValue ?
+                new ObjectParameter("from", from) :
+                new ObjectParameter("from", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDriverRanks_Result>("GetDriverRanks", fromParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<long>> GetDriverRate(Nullable<System.DateTime> from, Nullable<int> userId)
+        {
+            var fromParameter = from.HasValue ?
+                new ObjectParameter("from", from) :
+                new ObjectParameter("from", typeof(System.DateTime));
+    
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("userId", userId) :
+                new ObjectParameter("userId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<long>>("GetDriverRate", fromParameter, userIdParameter);
+        }
+    
+        public virtual ObjectResult<GetAggregatedFilters_Result> GetAggregatedFilters(Nullable<System.DateTime> from)
+        {
+            var fromParameter = from.HasValue ?
+                new ObjectParameter("from", from) :
+                new ObjectParameter("from", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAggregatedFilters_Result>("GetAggregatedFilters", fromParameter);
+        }
+    
+        public virtual ObjectResult<GetAggregatedTimes_Result> GetAggregatedTimes(Nullable<System.DateTime> from, Nullable<long> stationRouteId)
+        {
+            var fromParameter = from.HasValue ?
+                new ObjectParameter("from", from) :
+                new ObjectParameter("from", typeof(System.DateTime));
+    
+            var stationRouteIdParameter = stationRouteId.HasValue ?
+                new ObjectParameter("stationRouteId", stationRouteId) :
+                new ObjectParameter("stationRouteId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAggregatedTimes_Result>("GetAggregatedTimes", fromParameter, stationRouteIdParameter);
         }
     }
 }

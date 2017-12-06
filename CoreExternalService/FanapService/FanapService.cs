@@ -32,8 +32,10 @@ namespace CoreExternalService
             //redirect_Uri = "http://fanap.mibarimapp.com/testapp/fanap/loginreturn";
             pay_redirect_Uri = "http://ifanap.mibarim.ir/fanap/pay/?payreqId=";
             client_secret = "2cdcc4a9";
-            platform_address="http://sandbox.fanapium.com:8080";
-            credit_address= "http://sandbox.fanapium.com:1031";
+            //platform_address="http://sandbox.fanapium.com:8080";
+            platform_address= "https://bus.fanapium.com/srv/core";
+            //credit_address= "http://sandbox.fanapium.com:1031";
+            credit_address= "https://gw.fanapium.com";
             //pay_invoice= "http://sandbox.fanapium.com:1031/v1/pbc/payinvoice/?invoiceId=";
             token = "f5b0c0049cfd49e78216a2230c63eeb1";
         }
@@ -137,17 +139,21 @@ namespace CoreExternalService
             return userInfoResponse.result;
         }
 
-        public FanapBusiness getBusiness(string fanapUserAccessToken)
+        public FanapBusiness getBusiness()
         {
             var registerUrl = platform_address + "/nzh/biz/";
             var client = new RestClient(registerUrl);
-            var restRequest = new RestRequest("getBusiness/", Method.GET);
-            restRequest.AddHeader("_token_", fanapUserAccessToken);
+            var restRequest = new RestRequest("getBusiness/", Method.POST);
+            restRequest.AddHeader("_token_", token);
             restRequest.AddHeader("_token_issuer_", "1");
             IRestResponse response = client.Execute(restRequest);
             JavaScriptSerializer js = new JavaScriptSerializer();
-            var userInfoResponse = js.Deserialize<FanapBusiness>(response.Content);
-            return userInfoResponse;
+            var res = js.Deserialize<FanapBusiness>(response.Content);
+            if (res.hasError)
+            {
+                throw new Exception(res.message);
+            }
+            return res;
         }
 
         public string GetOneTimeToken()
@@ -183,6 +189,10 @@ namespace CoreExternalService
             IRestResponse response = client.Execute(restRequest);
             JavaScriptSerializer js = new JavaScriptSerializer();
             var res= js.Deserialize<FanapInvoiceResult>(response.Content);
+            if (res.hasError)
+            {
+                throw new Exception(res.message);
+            }
             return res.result.id.ToString();
         }
 
@@ -211,6 +221,24 @@ namespace CoreExternalService
             restRequest.AddHeader("_token_issuer_", "1");
             IRestResponse response = client.Execute(restRequest);
             return true;
+        }
+
+        public void FollowBusiness(string accessToken, int bizId)
+        {
+            var url = platform_address + "/nzh/";
+            var client = new RestClient(url);
+            var restRequest = new RestRequest("follow/", Method.POST);
+            restRequest.AddHeader("_token_", accessToken);
+            restRequest.AddHeader("_token_issuer_", "1");
+            restRequest.AddParameter("businessId", bizId);
+            restRequest.AddParameter("follow", true);
+            IRestResponse response = client.Execute(restRequest);
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            var res = js.Deserialize<FanapOttResult>(response.Content);
+            if (res.hasError)
+            {
+                throw new Exception("FollowBusiness " + res.result);
+            }
         }
     }
 }

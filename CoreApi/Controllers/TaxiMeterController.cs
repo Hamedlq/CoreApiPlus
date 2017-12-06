@@ -15,6 +15,7 @@ using CoreManager.Resources;
 using CoreManager.ResponseProvider;
 using CoreManager.RouteGroupManager;
 using CoreManager.RouteManager;
+using CoreManager.TaxiMeterManager;
 using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -26,7 +27,7 @@ namespace CoreApi.Controllers
     {
         private static string Tag = "TaxiMeterController";
         private IRouteManager _routemanager;
-        private IRouteGroupManager _routeGroupManager;
+        private ITaxiMeterManager _taxiMeterManager;
         private ILogProvider _logmanager;
         private IResponseProvider _responseProvider;
 
@@ -36,12 +37,12 @@ namespace CoreApi.Controllers
         }
         public TaxiMeterController(IRouteManager routeManager, 
             ILogProvider logManager,
-            IRouteGroupManager routeGroupManager,
+            ITaxiMeterManager taxiMeterManager,
             IResponseProvider responseProvider)
         {
             _routemanager = routeManager;
             _logmanager = logManager;
-            _routeGroupManager = routeGroupManager;
+            _taxiMeterManager = taxiMeterManager;
             _responseProvider = responseProvider;
         }
 
@@ -59,6 +60,59 @@ namespace CoreApi.Controllers
             catch (Exception e)
             {
                 _logmanager.Log(Tag, "GetPathPrice", e.Message);
+            }
+            return null;
+        }
+
+        [HttpPost]
+        [Route("GetTokens")]
+        [AllowAnonymous]
+        public IHttpActionResult GetTokens(TmTokensModel model)
+        {
+            try
+            {
+                //model=new TmTokensModel();
+                var tokens = _taxiMeterManager.GetTokens(model);
+                ResponseModel responseModel = _responseProvider.GenerateResponse(tokens, "Tokens");
+                return Json(responseModel);
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "GetTokens", e.Message);
+            }
+            return null;
+        }
+
+        [HttpGet]
+        [Route("GetTap30Token")]
+        [AllowAnonymous]
+        public IHttpActionResult GetTap30Token(string code)
+        {
+            try
+            {
+                var token =_taxiMeterManager.GetTap30Token(code);
+                return Json(token);
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "GetTap30Token", e.Message);
+            }
+            return null;
+        }
+
+        [HttpPost]
+        [Route("GetGoogleApi")]
+        [AllowAnonymous]
+        public IHttpActionResult GetGoogleApi(Gtoken model)
+        {
+            try
+            {
+                var token = _taxiMeterManager.GetGoogleApi(model.Token);
+                return Json(_responseProvider.GenerateRouteResponse(token, "GoogleApi"));
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "GetGoogleApi", e.Message);
             }
             return null;
         }

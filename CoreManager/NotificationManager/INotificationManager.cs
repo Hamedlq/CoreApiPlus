@@ -20,7 +20,10 @@ namespace CoreManager.NotificationManager
         void SendNewEvent();
         void SendInviteGiftNotif(int userId);
         void SendNotifToUser(NotifModel notif, int userId);
+        void SendNotifToDriver(NotifModel notif, int userId);
         void SendGroupNotif(NotifModel notif, List<int> userIds);
         void SendNotifToAdmins(NotifModel notifModel);
+
+        List<NotifModel> GetUserNotification(int userId, NotificationType notificationType);
     }
 }

@@ -18,6 +18,12 @@ namespace CoreManager.Models
         public DateTime? TimeEnd { set; get; }
         public string Latitude { set; get; }
         public string Longitude { set; get; }
+        public bool Hasreturn { set; get; }
+        public string Routeselect { set; get; }
+        public string Entry { set; get; }
+        public string Introduce { set; get; }
+        public string Enterprise { set; get; }
+
     }
 
 

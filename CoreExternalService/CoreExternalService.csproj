@@ -67,6 +67,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Models\TaxiMeterPriceResponse.cs" />
+    <Compile Include="Models\TaxiMeterAuthResponse.cs" />
+    <Compile Include="TaxiMeterService\TaxiMeterService.cs" />
+    <Compile Include="TaxiMeterService\ITaxiMeterService.cs" />
     <Compile Include="FanapService\IFanapService.cs" />
     <Compile Include="FanapService\FanapService.cs" />
     <Compile Include="KavenegarService\IKavenegarService.cs" />
@@ -111,7 +115,9 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="Service References\SMSirSentAndReceivedMessages\CoreExternalService.SMSirSentAndReceivedMessages.AllMessage.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>

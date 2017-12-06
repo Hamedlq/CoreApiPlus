@@ -19,6 +19,7 @@ using System.Web;
 using System.Web.Http;
 using CoreApi.Providers;
 using CoreManager.LogProvider;
+using CoreManager.NotificationManager;
 using CoreManager.Resources;
 using CoreManager.ResponseProvider;
 using CoreManager.UserManager;
@@ -32,6 +33,7 @@ namespace CoreApi.Controllers
         private IUserManager _userManager;
         private ILogProvider _logManager;
         private IResponseProvider _responseProvider;
+        private INotificationManager _notificationManager;
         private static string Tag = "UserController";
         private string _appVersion = "1";
 
@@ -42,11 +44,12 @@ namespace CoreApi.Controllers
             AccessTokenFormat = accessTokenFormat;
         }
 
-        public UserController(IUserManager userManager, ILogProvider logManager, IResponseProvider responseProvider)
+        public UserController(IUserManager userManager, ILogProvider logManager, IResponseProvider responseProvider, INotificationManager notificationManager)
         {
             _userManager = userManager;
             _logManager = logManager;
             _responseProvider = responseProvider;
+            _notificationManager = notificationManager;
         }
 
         public UserController()
@@ -1362,6 +1365,60 @@ namespace CoreApi.Controllers
                 return GetErrorResult(result);
             }
             return Json(_responseProvider.GenerateResponse(new {Password = "", Confirmed = false, IsUserRegistered = false}, "password"));
+        }
+
+        [HttpPost]
+        [Route("GetUserNotification")]
+        [AllowAnonymous]
+        public IHttpActionResult GetUserNotification(NotifReqModel model)
+        {
+            try
+            {
+                ApplicationUser user;
+                user = AppUserManager.FindByName(model.Mobile);
+                if (user == null)
+                {
+                    return Json(_responseProvider.GenerateBadRequestResponse());
+                }
+                var res = _notificationManager.GetUserNotification(user.Id,(NotificationType)model.NotifType);
+                return Json(_responseProvider.GenerateRouteResponse(res));
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException != null)
+                {
+                    _logManager.Log(Tag, "GetUserNotification", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logManager.Log(Tag, "GetUserNotification", e.Message);
+                }
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpPost]
+        [Route("RequestInvoiceByForm")]
+        [AllowAnonymous]
+        public IHttpActionResult RequestInvoiceByForm(InvoiceModel model)
+        {
+            try
+            {
+                ApplicationUser user;
+                user = AppUserManager.FindByName(model.Mobile);
+                if (user == null)
+                {
+                    user=new ApplicationUser();
+                    user.Id = 0;
+                }
+                var res = _userManager.RequestInvoiceByForm(user.Id,model);
+                return Json(res);
+            }
+            catch (Exception e)
+            {
+                _logManager.Log(Tag, "RequestInvoiceByForm", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
 
         [HttpPost]

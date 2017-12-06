@@ -54,6 +54,9 @@
     <Compile Include="AboutUser.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="AppsToken.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="AspNetUser.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
@@ -127,7 +130,22 @@
     <Compile Include="Fanap.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Filter.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="GenerateSimilarRoutes_Result.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetAggregatedFilters_Result.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetAggregatedTimes_Result.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetDriverRanks_Result.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetLastEnter_Result.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
     <Compile Include="GetLocalRoutes_Result.cs">
@@ -200,6 +218,12 @@
     <Compile Include="StationRoute.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="StationRoutePlu.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TmLocation.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Tran.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
@@ -254,6 +278,12 @@
     <Compile Include="vwDriverTrip.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="vwFilter.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="vwFilterPlu.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="vwGroup.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
@@ -288,6 +318,9 @@
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
     <Compile Include="vwRRTiming.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="vwStation.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
     <Compile Include="vwStationRoute.cs">

@@ -56,6 +56,7 @@ namespace CoreManager.RouteManager
         //UserRouteModel GetTripProfile(int RouteRequestId, int userId);
 
         List<PassRouteModel> GetPassengerRoutes(int userId, PassFilterModel model);
+        PassRouteModel GetPassengerTrip(int userId, long FilterId);
         PaymentDetailModel RequestBooking(int userId, long modelTripId, long modelChargeAmount);
         PaymentDetailModel RequestPayBooking(int userId, long modelTripId, long modelChargeAmount);
         List<StationRouteModel> GetStationRoutes();
@@ -89,5 +90,17 @@ namespace CoreManager.RouteManager
         PaymentDetailModel RequestInvoice(int userId, long chargeAmount);
         bool InsertEmployeeModel(EmployeeRequestModels model);
         bool InsertEventAttendeeModel(EventAttendeeModel model);
+        string SendDriverNotifs();
+        List<SubStationModel> GetAllSubStations();
+        FilterModel SetFilter(int userId, FilterModel model);
+        List<FilterModel> GetUserFilters(int userId);
+        List<FilterTimeModel> GetFilterTimes(int userId, FilterModel model);
+        bool DeleteFilter(int userId, FilterModel model);
+        List<SuggestModel> GetSuggestedRoutes();
+        bool MakeStationRoutePlus();
+        bool CancelFilter(int userId, FilterModel model);
+        TripTimeModel AcceptSuggestRoute(int userId, FilterModel model);
+        string SetUserNotifications();
+        
     }
 }

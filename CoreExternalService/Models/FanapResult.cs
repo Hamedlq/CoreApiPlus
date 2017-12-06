@@ -17,10 +17,13 @@ namespace CoreExternalService.Models
         public int errorCode { get; set; }
         public int count { get; set; }
         public string ott { get; set; }
+        public bool result { get; set; }
     }
 
     public class FanapInvoiceResult
     {
+        public bool hasError { get; set; }
+        public string message { get; set; }
         public FanapInvoice result { get; set; }
     }
 
@@ -34,6 +37,8 @@ namespace CoreExternalService.Models
 
     public class FanapPaymentResult
     {
+        public bool hasError { get; set; }
+        public string message { get; set; }
         public List<FanapPayment> result { get; set; }
     }
 

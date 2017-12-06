@@ -9,6 +9,6 @@ namespace CoreManager.Models
 {
     public class PassFilterModel
     {
-        public long FilterId { set; get; }
+        public long FilteringId { set; get; }
     }
 }

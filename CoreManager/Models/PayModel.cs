@@ -13,5 +13,6 @@ namespace CoreManager.Models
         public long SeatPrice { set; get; }
         public long Credit { set; get; }
         public long ChargeAmount { set; get; }
+
     }
 }

@@ -27,5 +27,6 @@ namespace CoreDA
         public Nullable<long> DistanceMax { get; set; }
         public Nullable<long> DurationMax { get; set; }
         public Nullable<bool> IsDeleted { get; set; }
+        public Nullable<short> RouteType { get; set; }
     }
 }

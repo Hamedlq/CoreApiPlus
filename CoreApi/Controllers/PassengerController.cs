@@ -13,6 +13,7 @@ using System.Web.Script.Serialization;
 using CoreManager.LogProvider;
 using CoreManager.Models;
 using CoreManager.Models.RouteModels;
+using CoreManager.NotificationManager;
 using CoreManager.Resources;
 using CoreManager.ResponseProvider;
 using CoreManager.RouteGroupManager;
@@ -33,6 +34,7 @@ namespace CoreApi.Controllers
         private ILogProvider _logmanager;
         private IResponseProvider _responseProvider;
         private IUserManager _userManager;
+        private INotificationManager _notificationManager;
 
         public PassengerController()
         {
@@ -41,6 +43,7 @@ namespace CoreApi.Controllers
         public PassengerController(IRouteManager routeManager,
             ILogProvider logManager,
             IRouteGroupManager routeGroupManager,
+            INotificationManager notificationManager,
             IUserManager userManager,
             IResponseProvider responseProvider)
         {
@@ -49,6 +52,7 @@ namespace CoreApi.Controllers
             _routeGroupManager = routeGroupManager;
             _responseProvider = responseProvider;
             _userManager = userManager;
+            _notificationManager = notificationManager;
         }
 
 
@@ -73,7 +77,47 @@ namespace CoreApi.Controllers
             }
             catch (Exception e)
             {
-                _logmanager.Log(Tag, "GetPassengerRoutes", e.Message);
+                if (e.InnerException != null)
+                {
+                    _logmanager.Log(Tag, "GetPassengerRoutes", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logmanager.Log(Tag, "GetPassengerRoutes", e.Message);
+                }
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpPost]
+        [Route("GetPassengerTrip")]
+        public IHttpActionResult GetPassengerTrip(PassFilterModel model)
+        {
+            try
+            {
+                int ff;
+                if (User != null && int.TryParse(User.Identity.GetUserId(), out ff))
+                {
+                    var res = _routemanager.GetPassengerTrip(ff, model.FilteringId);
+                    return Json(_responseProvider.GenerateRouteResponse(res, "PassengerTrip"));
+                }
+                else
+                {
+                    return
+                        ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Unauthorized,
+                            "You are unauthorized to see Info!"));
+                }
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException != null)
+                {
+                    _logmanager.Log(Tag, "GetPassengerTrip", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logmanager.Log(Tag, "GetPassengerTrip", e.Message);
+                }
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
@@ -215,6 +259,109 @@ namespace CoreApi.Controllers
         }
 
         [HttpPost]
+        [Route("SetFilter")]
+        [Authorize]
+        public IHttpActionResult SetFilter(FilterModel model)
+        {
+            try
+            {
+                int ff;
+                int.TryParse(User.Identity.GetUserId(), out ff);
+                var res = _routemanager.SetFilter(ff, model);
+                return Json(_responseProvider.GenerateRouteResponse(res, "SetFilter"));
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException != null)
+                {
+                    _logmanager.Log(Tag, "SetFilter", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logmanager.Log(Tag, "SetFilter", e.Message);
+                }
+                //_logmanager.Log(Tag, "SetFilter", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpPost]
+        [Route("GetFilters")]
+        [Authorize]
+        public IHttpActionResult GetFilters()
+        {
+            try
+            {
+                int ff;
+                int.TryParse(User.Identity.GetUserId(), out ff);
+                var res = _routemanager.GetUserFilters(ff);
+                return Json(_responseProvider.GenerateRouteResponse(res));
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "GetFilters", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpPost]
+        [Route("DeleteFilter")]
+        [Authorize]
+        public IHttpActionResult DeleteFilter(FilterModel model)
+        {
+            try
+            {
+                int ff;
+                int.TryParse(User.Identity.GetUserId(), out ff);
+                var res = _routemanager.DeleteFilter(ff, model);
+                return Json(_responseProvider.GenerateRouteResponse(res, "DeleteFilter"));
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "DeleteFilter", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpPost]
+        [Route("CancelFilter")]
+        [Authorize]
+        public IHttpActionResult CancelFilter(FilterModel model)
+        {
+            try
+            {
+                int ff;
+                int.TryParse(User.Identity.GetUserId(), out ff);
+                var res = _routemanager.CancelFilter(ff, model);
+                return Json(_responseProvider.GenerateRouteResponse(res, "CancelFilter"));
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "CancelFilter", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpPost]
+        [Route("GetTimes")]
+        [Authorize]
+        public IHttpActionResult GetTimes(FilterModel model)
+        {
+            try
+            {
+                int ff;
+                int.TryParse(User.Identity.GetUserId(), out ff);
+                var res = _routemanager.GetFilterTimes(ff,model);
+                return Json(_responseProvider.GenerateRouteResponse(res));
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "GetTimes", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpPost]
         [Route("GetPassengerInvite")]
         public IHttpActionResult GetPassengerInvite()
         {
@@ -226,7 +373,7 @@ namespace CoreApi.Controllers
             }
             catch (Exception e)
             {
-                _logmanager.Log(Tag, "GetInvite", e.Message);
+                _logmanager.Log(Tag, "GetPassengerInvite", e.Message);
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
@@ -377,6 +524,7 @@ namespace CoreApi.Controllers
             {
                 if (model.TripId == 90356)
                 {
+
                     //gotobank
                     var res = _routemanager.RequestInvoice(12325, model.ChargeAmount);
                     return Json(res);
@@ -388,6 +536,7 @@ namespace CoreApi.Controllers
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
+
 
 
         /*[HttpGet]

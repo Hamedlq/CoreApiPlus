@@ -234,9 +234,23 @@ namespace CoreManager.NotificationManager
                         .OrderByDescending(x => x.GtokenCreateTime).ToList();
                 if (gtoken.Count > 0)
                 {
-                    _gService.SendNotification(gtoken.FirstOrDefault().GtokenKey, notif.EncodedTitle, notif.EncodedBody, notif.Action, notif.Tab.ToString(),notif.RequestCode,notif.NotificationId,notif.Url);
+                    _gService.SendNotification(gtoken.FirstOrDefault().GtokenKey, notif.EncodedTitle, notif.EncodedBody, notif.Action, notif.Tab.ToString(),notif.RequestCode,(int)notif.NotificationId,notif.Url);
                 }
                 
+            }
+        }
+        public void SendNotifToDriver(NotifModel notif, int userId)
+        {
+            using (var dataModel = new MibarimEntities())
+            {
+                var gtoken =
+                    dataModel.GoogleTokens.Where(x => x.GtokenUserId == userId && x.GtokenRole==(int)UserRoles.MobileDriver)
+                        .OrderByDescending(x => x.GtokenCreateTime).ToList();
+                if (gtoken.Count > 0)
+                {
+                    _gService.SendNotification(gtoken.FirstOrDefault().GtokenKey, notif.EncodedTitle, notif.EncodedBody, notif.Action, notif.Tab.ToString(), notif.RequestCode, (int)notif.NotificationId, notif.Url);
+                }
+
             }
         }
         public void SendGroupNotif(NotifModel notif, List<int> userIds)
@@ -261,14 +275,36 @@ namespace CoreManager.NotificationManager
             using (var dataModel = new MibarimEntities())
             {
                 var gtoken =
-                    dataModel.GoogleTokens.Where(x => x.GtokenUserId == 27 || x.GtokenUserId == 1 || x.GtokenUserId == 181)
+                    dataModel.GoogleTokens.Where(x => x.GtokenUserId == 27 || x.GtokenUserId == 1 || x.GtokenUserId == 181|| x.GtokenUserId == 12325)
                         .OrderByDescending(x => x.GtokenCreateTime).ToList();
                 if (gtoken.Count > 0)
                 {
-                    _gService.SendNotification(gtoken.FirstOrDefault().GtokenKey, notif.EncodedTitle, notif.EncodedBody, notif.Action, notif.Tab.ToString(), notif.RequestCode, notif.NotificationId, notif.Url);
+                    _gService.SendNotification(gtoken.FirstOrDefault().GtokenKey, notif.EncodedTitle, notif.EncodedBody, notif.Action, notif.Tab.ToString(), notif.RequestCode, (int)notif.NotificationId, notif.Url);
                 }
 
             }
         }
+
+        public List<NotifModel> GetUserNotification(int userId, NotificationType notificationType)
+        {
+            var res=new List<NotifModel>();
+            using (var dataModel = new MibarimEntities())
+            {
+                var notifs =
+                    dataModel.Notifications.Where(x => x.NotifUserId == userId && x.NotifExpireTime > DateTime.Now && !x.IsNotificationSent && x.NotifType==(short)notificationType);
+                foreach (var notification in notifs)
+                {
+                    var notifModel=new NotifModel();
+                    notifModel.Body = notification.NotifBody;
+                    notifModel.Title = notification.NotifTitle;
+                    notifModel.NotificationId = notification.NotificationId;
+                    //notification.IsNotificationSent = true;
+                    res.Add(notifModel);
+                }
+                //dataModel.SaveChanges();
+            }
+            return res;
+        }
+
     }
 }

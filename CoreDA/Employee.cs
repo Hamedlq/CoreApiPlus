@@ -24,5 +24,10 @@ namespace CoreDA
         public Nullable<decimal> Latitude { get; set; }
         public Nullable<decimal> Longitude { get; set; }
         public System.Data.Entity.Spatial.DbGeography Geo { get; set; }
+        public Nullable<bool> HasReturn { get; set; }
+        public string Routeselect { get; set; }
+        public string Entry { get; set; }
+        public string Introduce { get; set; }
+        public string Enterprise { get; set; }
     }
 }

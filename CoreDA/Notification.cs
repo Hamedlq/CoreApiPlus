@@ -16,7 +16,12 @@ namespace CoreDA
     {
         public long NotificationId { get; set; }
         public int NotifUserId { get; set; }
-        public long NotifCommentId { get; set; }
+        public System.DateTime NotifCreateTime { get; set; }
+        public System.DateTime NotifExpireTime { get; set; }
+        public Nullable<long> FilterId { get; set; }
+        public string NotifTitle { get; set; }
+        public string NotifBody { get; set; }
+        public short NotifType { get; set; }
         public bool IsNotificationSent { get; set; }
         public bool IsNotificationSeen { get; set; }
     }

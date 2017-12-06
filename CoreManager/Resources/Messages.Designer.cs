@@ -61,6 +61,15 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to سفر را قبول کنید.
+        /// </summary>
+        public static string AcceptRide {
+            get {
+                return ResourceManager.GetString("AcceptRide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to راننده حالت سفر را فعال کرد. شما هم برای تایید سفر دکمه حالت سفر را روشن کنید..
         /// </summary>
         public static string ActivateRideState {
@@ -349,6 +358,15 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to همراه شو.
+        /// </summary>
+        public static string GetAlong {
+            get {
+                return ResourceManager.GetString("GetAlong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to شارژ هدیه حساب {0} به مبلغ {1} ریال.
         /// </summary>
         public static string GiftPayDesc {
@@ -612,7 +630,7 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to مانده کافی نمی باشد.
+        ///   Looks up a localized string similar to مانده کافی نمی‌باشد.
         /// </summary>
         public static string NotRemain {
             get {
@@ -873,6 +891,24 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to مسیرتان را فعال کنید.
+        /// </summary>
+        public static string SetRoute {
+            get {
+                return ResourceManager.GetString("SetRoute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to لطفا زمان حرکت فردا را در برنامه ثبت کنید.
+        /// </summary>
+        public static string SetTime {
+            get {
+                return ResourceManager.GetString("SetTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to من {0}، {1} از {2} به {3} میرم. اگه کسی همین ساعت این مسیر رو میره می تونیم قرار  بذاریم و با هم بریم..
         /// </summary>
         public static string ShareBody {
@@ -882,11 +918,29 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to در مسیر {0} به {1} ساعت {2}:{3} سفری ثبت شده است. در صورت تمایل سفر را قبول کنید.
+        /// </summary>
+        public static string SimilarDriverRoute {
+            get {
+                return ResourceManager.GetString("SimilarDriverRoute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to مسیر جدید تایید شد و {0} هم مسیر دارید.
         /// </summary>
         public static string similarFound {
             get {
                 return ResourceManager.GetString("similarFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در مسیر {0} به {1} ساعت {2}:{3} سفری ثبت شده است. در صورت تمایل سفر را رزرو کنید.
+        /// </summary>
+        public static string SimilarRoute {
+            get {
+                return ResourceManager.GetString("SimilarRoute", resourceCulture);
             }
         }
         
@@ -981,7 +1035,7 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to سفری برای مسیر تعریف شده است.
+        ///   Looks up a localized string similar to لطفا ابتدا سفر را غیرفعال کنید.
         /// </summary>
         public static string TripExists {
             get {

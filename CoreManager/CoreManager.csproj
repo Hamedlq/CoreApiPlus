@@ -109,7 +109,15 @@
     <Compile Include="Models\ClusterModel.cs" />
     <Compile Include="Models\ClusterListModel.cs" />
     <Compile Include="Models\ActiveTripModel.cs" />
+    <Compile Include="Models\InvoiceModel.cs" />
+    <Compile Include="Models\NotifReqModel.cs" />
+    <Compile Include="Models\SuggestModel.cs" />
+    <Compile Include="Models\FilterTimeModel.cs" />
+    <Compile Include="Models\FilterModel.cs" />
     <Compile Include="Models\EventAttendeeModel.cs" />
+    <Compile Include="Models\GasRank.cs" />
+    <Compile Include="Models\GasScores.cs" />
+    <Compile Include="Models\PresentViewModel.cs" />
     <Compile Include="Models\IosVersionModel.cs" />
     <Compile Include="Models\ImageFile.cs" />
     <Compile Include="Models\PasargadPayModel.cs" />
@@ -119,6 +127,7 @@
     <Compile Include="Models\PassengerModels\DriverTripModel.cs" />
     <Compile Include="Models\RouteModels\EmployeeRequestModels.cs" />
     <Compile Include="Models\RouteModels\SubStationModel.cs" />
+    <Compile Include="Models\TmTokensModel.cs" />
     <Compile Include="Models\StationModel.cs" />
     <Compile Include="Models\TripTimeModel.cs" />
     <Compile Include="Models\ContactScoreModel.cs" />
@@ -188,6 +197,10 @@
     <Compile Include="AdminManager\AdminMapper.cs" />
     <Compile Include="DiscountManager\IDiscountManager.cs" />
     <Compile Include="DiscountManager\DiscountManager.cs" />
+    <Compile Include="DriverManager\IDriverManager.cs" />
+    <Compile Include="DriverManager\DriverManager.cs" />
+    <Compile Include="TaxiMeterManager\ITaxiMeterManager.cs" />
+    <Compile Include="TaxiMeterManager\TaxiMeterManager.cs" />
     <Compile Include="TransactionManager\ITransactionManager.cs" />
     <Compile Include="TransactionManager\TransactionManager.cs" />
     <Compile Include="ResponseProvider\IResponseProvider.cs" />

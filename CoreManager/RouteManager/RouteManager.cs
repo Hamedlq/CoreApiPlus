@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity;
 using System.Data.Entity.Core.Metadata.Edm;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Spatial;
 using System.Device.Location;
 using System.Diagnostics;
@@ -1263,12 +1265,19 @@ namespace CoreManager.RouteManager
             {
                 res.SharedServicePrice = RemoveDecimalToman((((distance - 500)/100)*253) + 5566 + extraPrice).ToString();
             }
-            else if (distance > 7000)
+            else if (distance <= 20000)
             {
-                var first7000 = (65* 253) + 5566;
+                var first7000 = (65 * 253) + 5566;
                 res.SharedServicePrice =
-                    RemoveDecimalToman((((distance - 7000)/100)*202) + first7000 + extraPrice).ToString();
+                    RemoveDecimalToman((((distance - 7000) / 100) * 202) + first7000 + extraPrice).ToString();
             }
+            else if (distance > 20000)
+            {
+                var first20000 = (125 * 202) + (65 * 253) + 5566;
+                res.SharedServicePrice  =
+                    RemoveDecimalToman((((distance - 20000) / 100) * 150) + first20000 + extraPrice).ToString();
+            }
+
             /* if (distance > 50000)
             {
                 var first50000 = (430 * 184) + (65 * 230) + 5060;
@@ -1290,7 +1299,7 @@ namespace CoreManager.RouteManager
             }
             else if (distance > 2000)
             {
-                var first2000 = (20* 3059);
+                var first2000 = (20*3059);
                 res.PrivateServicePrice =
                     RemoveDecimalToman((((distance - 2000)/100)*1017) + first2000 + extraPrice).ToString();
             }
@@ -1299,6 +1308,17 @@ namespace CoreManager.RouteManager
                 var first2000 = (20 * 2781);
                 res.PrivateServicePrice = RemoveDecimalToman(((((distance - 2000) / 100) * 925) + first2000 + extraPrice) * 1.3).ToString();
             }*/
+            using (var dataModel = new MibarimEntities())
+            {
+                var tm=new TmLocation();
+                tm.CreateTime=DateTime.Now;
+                tm.TmSrcLat = decimal.Parse(model.SrcLat);
+                tm.TmSrcLng = decimal.Parse(model.SrcLng);
+                tm.TmDstLat = decimal.Parse(model.DstLat);
+                tm.TmDstLng = decimal.Parse(model.DstLng);
+                dataModel.TmLocations.Add(tm);
+                dataModel.SaveChanges();
+            }
             return res;
         }
 
@@ -2362,13 +2382,29 @@ namespace CoreManager.RouteManager
             using (var dataModel = new MibarimEntities())
             {
                 DateTime triptime = DateTime.Now.AddMinutes(-15);
-                var dataList =
-                    dataModel.vwDriverTrips.Where(
+                List<vwDriverTrip> dataList;
+                if (model == null || model.FilteringId == 0)
+                {
+                    dataList= dataModel.vwDriverTrips.Where(
                             x =>
                                 x.TStartTime > triptime &&
-                                (x.TState == (int) TripState.Scheduled || x.TState == (int) TripState.InTripTime ||
-                                 x.TState == (int) TripState.InPreTripTime || x.TState == (int) TripState.InRiding))
-                        .OrderBy(x => x.TStartTime);
+                                (x.TState == (int)TripState.Scheduled || x.TState == (int)TripState.InTripTime ||
+                                 x.TState == (int)TripState.InPreTripTime || x.TState == (int)TripState.InRiding))
+                        .OrderBy(x => x.TStartTime).ToList();
+                }
+                else
+                {
+                    var filter = dataModel.Filters.FirstOrDefault(x=>x.FilterId==model.FilteringId);
+                    dataList = dataModel.vwDriverTrips.Where(
+                            x =>
+                                x.TStartTime > triptime &&
+                                (x.TState == (int)TripState.Scheduled || x.TState == (int)TripState.InTripTime ||
+                                 x.TState == (int)TripState.InPreTripTime || x.TState == (int)TripState.InRiding)
+                                 && x.SrcMStationId== filter.SrcMStationId
+                                 && x.DstMStationId==filter.DstMStationId)
+                        .OrderBy(x => x.TStartTime).ToList();
+                }
+                
                 var tripIds = dataList.Select(y => y.TripId);
                 var bookedTrip =
                     dataModel.BookRequests.Where(x => tripIds.Contains(x.TripId) && x.UserId == userId);
@@ -2442,6 +2478,92 @@ namespace CoreManager.RouteManager
                 }
             }
             return res;
+        }
+
+        public PassRouteModel GetPassengerTrip(int userId, long filterId)
+        {
+            var passRouteModel = new PassRouteModel();
+            
+            using (var dataModel = new MibarimEntities())
+            {
+                //DateTime triptime = DateTime.Now.AddMinutes(-15);
+                
+                var filter = dataModel.vwFilterPlus.FirstOrDefault(x => x.FilterId == filterId);
+                if (filter ==null)
+                {
+                    //error
+                    return passRouteModel;
+                }
+                /*var time = ((DateTime)filter.LastTimeSet);
+                var matchTrips = dataModel.vwDriverTrips.Where(
+                            x =>
+                               DbFunctions.TruncateTime(x.TStartTime) == time.Date &&
+                                x.TStartTime.Hour == time.Hour &&
+                                x.TStartTime.Minute == time.Minute 
+                                 && x.StationRouteId == filter.StationRouteId).ToList();*/
+                var price = GetTimePrice((DateTime)filter.LastTimeSet, filter);
+                if (filter.TripId!=null && filter.TripId > 0)
+                {
+                    var trips = dataModel.Filters.Where(x=>x.TripId==filter.TripId).ToList();
+                    var theTrip = dataModel.vwDriverTrips.FirstOrDefault(x=>x.TripId==filter.TripId);
+                    passRouteModel.IsBooked = true;
+                    passRouteModel.EmptySeats = 0;
+                    passRouteModel.MobileNo = theTrip.UserName;
+                    passRouteModel.CarPlate = theTrip.CarPlateNo;
+                    passRouteModel.TripId = theTrip.TripId;
+                    passRouteModel.TripState = theTrip.TState;
+                    passRouteModel.Name = theTrip.Name;
+                    passRouteModel.SrcLatitude = theTrip.SrcStLat.ToString();
+                    passRouteModel.SrcLongitude = theTrip.SrcStlng.ToString();
+                    passRouteModel.DstLatitude = theTrip.DstMainStLat.ToString();
+                    passRouteModel.DstLongitude = theTrip.DstMainStLng.ToString();
+                    passRouteModel.Family = theTrip.Family;
+                    passRouteModel.TimingString = theTrip.TStartTime.ToString("HH:mm");
+                    passRouteModel.Price = RemoveCeilingDecimal(price / (trips.Count)); 
+                    passRouteModel.PricingString =
+                        RouteMapper.PersianNumber(RemoveCeilingDecimal(price / (trips.Count)).ToString("N0", new NumberFormatInfo()
+                        {
+                            NumberGroupSizes = new[] { 3 },
+                            NumberGroupSeparator = ","
+                        }));
+                    passRouteModel.SrcAddress = theTrip.SrcMainStName + "، " + theTrip.SrcStAdd;
+                    passRouteModel.SrcMainAddress = theTrip.SrcMainStName;
+                    passRouteModel.SrcLink = "https://www.google.com/maps/place/" + theTrip.SrcStLat + "," +
+                                             theTrip.SrcStlng;
+                    passRouteModel.DstAddress = theTrip.DstMainStName;
+                    passRouteModel.DstLink = "https://www.google.com/maps/place/" + theTrip.DstMainStLat + "," +
+                                             theTrip.DstMainStLng;
+                    passRouteModel.UserImageId = theTrip.UserImageId;
+                    passRouteModel.IsVerified = theTrip.VerifiedLevel != null &&
+                                                theTrip.VerifiedLevel == (int)VerifiedLevel.Verified;
+                    passRouteModel.CarSeats = trips.Count;
+                    passRouteModel.CarString = theTrip.CarType + " " + theTrip.CarColor;
+                }
+                else
+                {
+                    passRouteModel.IsBooked = false;
+                    passRouteModel.SrcLatitude = filter.SrcStLat.ToString();
+                    passRouteModel.SrcLongitude = filter.SrcStLng.ToString();
+                    passRouteModel.DstLatitude = filter.DstStLat.ToString();
+                    passRouteModel.DstLongitude = filter.DstStLng.ToString();
+                    passRouteModel.TimingString = ((DateTime)filter.LastTimeSet).ToString("HH:mm");
+                    passRouteModel.Price = RemoveCeilingDecimal(price);
+                    passRouteModel.PricingString =
+                        RouteMapper.PersianNumber(RemoveCeilingDecimal(price).ToString("N0", new NumberFormatInfo()
+                        {
+                            NumberGroupSizes = new[] { 3 },
+                            NumberGroupSeparator = ","
+                        }));
+                    passRouteModel.SrcAddress = filter.SrcStName;
+                    passRouteModel.SrcLink = "https://www.google.com/maps/place/" + filter.SrcStLat + "," +
+                                             filter.SrcStLng;
+                    passRouteModel.DstAddress = filter.DstStName;
+                    passRouteModel.DstLink = "https://www.google.com/maps/place/" + filter.DstStLat + "," +
+                                             filter.DstStLng;
+
+                }
+            }
+            return passRouteModel;
         }
 
         public PaymentDetailModel RequestBooking(int userId, long modelTripId, long modelChargeAmount)
@@ -2605,7 +2727,7 @@ namespace CoreManager.RouteManager
                         x => x.SrcMStationId == srcStation.MainStationId && x.DstMStationId == dstStId);
                 if (route != null)
                 {
-                    if (
+                    /*if (
                         dataModel.DriverRoutes.Any(
                             x => x.UserId == userId && x.StationRouteId == route.StationRouteId && !x.DrIsDeleted))
                     {
@@ -2615,7 +2737,7 @@ namespace CoreManager.RouteManager
                             Message = getResource.getMessage("RouteExist")
                         });
                         return 0;
-                    }
+                    }*/
                     var driverRoute = new DriverRoute();
                     driverRoute.UserId = userId;
                     driverRoute.DrIsDeleted = false;
@@ -2702,7 +2824,7 @@ namespace CoreManager.RouteManager
                     res.Add(driverRouteModel);
                 }
             }
-            return res;
+            return res.OrderByDescending(x => x.TripId).ThenByDescending(y => y.DriverRouteId).ToList();
         }
 
         public TripTimeModel SetDriverTrip(int userId, DriverRouteModel model)
@@ -2747,6 +2869,23 @@ namespace CoreManager.RouteManager
                     trip.TState = (int) TripState.Scheduled;
                     dataModel.Trips.Add(trip);
                     dataModel.SaveChanges();
+                    var stId = dataModel.DriverRoutes.FirstOrDefault(x => x.DriverRouteId == model.DriverRouteId);
+                    FindMatchFilters(trip.TStartTime, stId.StationRouteId, trip.TripId);
+                    /*var time = trip.TStartTime;
+                    var matchTrips = dataModel.vwDriverTrips.Where(
+                                x =>
+                                   DbFunctions.TruncateTime(x.TStartTime) == time.Date &&
+                                    x.TStartTime.Hour == time.Hour &&
+                                    x.TStartTime.Minute == time.Minute
+                                     && x.StationRouteId == stId.StationRouteId).ToList();
+                    if (matchTrips.Count > 0)
+                    {
+                        foreach (var matchTrip in matchTrips)
+                        {
+                            matchTrip.TripId = trip.TripId;
+                        }
+                        dataModel.SaveChanges();
+                    }*/
                 }
             }
             res.IsSubmited = true;
@@ -2770,33 +2909,33 @@ namespace CoreManager.RouteManager
                             x.TState == (int) TripState.DriverRiding ||
                             x.TState == (int) TripState.InPreTripTime).OrderByDescending(x => x.TStartTime);
 /*                foreach (var preTrip in activeTrips.Where(x => x.TState == (int) TripState.Scheduled))
-                                                                                                                                                                                {
-                                                                                                                                                                                    if (preTrip.TStartTime.AddMinutes(-30) == DateTime.Now)
-                                                                                                                                                                                    {
-                                                                                                                                                                                        var driveRoute =
-                                                                                                                                                                                            dataModel.DriverRoutes.FirstOrDefault(x => x.DriverRouteId == preTrip.DriverRouteId);
-                                                                                                                                                                                        var route =
-                                                                                                                                                                                            dataModel.vwStationRoutes.FirstOrDefault(x => x.StationRouteId == driveRoute.StationRouteId);
-                                                                                                                                                                                                                                                                                                                
-                                                                                                                                                                                        var user = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == driveRoute.UserId);
-                                                                                                                                                                                        var mobileBrief = user.UserName.Substring(1);
-                                                                                                                                                                                        NotifModel notifModel = new NotifModel();
-                                                                                                                                                                                        notifModel.Title = getResource.getMessage("SeatReserved");
-                                                                                                                                                                                        notifModel.Body = string.Format(getResource.getMessage("SeatReservedFor"),
-                                                                                                                                                                                            route.SrcMainStName,
-                                                                                                                                                                                            route.DstMainStName, preTrip.TStartTime.ToString("HH:mm"));
-                                                                                                                                                                                        notifModel.RequestCode = (int)preTrip.TripId;
-                                                                                                                                                                                        notifModel.NotificationId = (int)preTrip.TripId;
-                                                                                                                                                                                        //send driver notif
-                                                                                                                                                                                        _notifManager.SendNotifToUser(notifModel, (int)driveRoute.UserId);
-                                                                                                                                                                                        _notifManager.SendNotifToAdmins(notifModel);
-                                                                                                                                                                                        //send driver sms
-                                                                                                                                                                                        string smsBody = string.Format(getResource.getMessage("SeatReservedFor"), route.SrcMainStName,
-                                                                                                                                                                                            route.DstMainStName, preTrip.TStartTime.ToString("HH:mm"));
-                                                                                                                                                                                        var smsService = new SmsService();
-                                                                                                                                                                                        smsService.SendSmsMessages(mobileBrief, smsBody);
-                                                                                                                                                                                    }
-                                                                                                                                                                                }*/
+                                                    {
+                                                        if (preTrip.TStartTime.AddMinutes(-30) == DateTime.Now)
+                                                        {
+                                                            var driveRoute =
+                                                                dataModel.DriverRoutes.FirstOrDefault(x => x.DriverRouteId == preTrip.DriverRouteId);
+                                                            var route =
+                                                                dataModel.vwStationRoutes.FirstOrDefault(x => x.StationRouteId == driveRoute.StationRouteId);
+                                                                                                                                                                                                                                                                                                                                                
+                                                            var user = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == driveRoute.UserId);
+                                                            var mobileBrief = user.UserName.Substring(1);
+                                                            NotifModel notifModel = new NotifModel();
+                                                            notifModel.Title = getResource.getMessage("SeatReserved");
+                                                            notifModel.Body = string.Format(getResource.getMessage("SeatReservedFor"),
+                                                                route.SrcMainStName,
+                                                                route.DstMainStName, preTrip.TStartTime.ToString("HH:mm"));
+                                                            notifModel.RequestCode = (int)preTrip.TripId;
+                                                            notifModel.NotificationId = (int)preTrip.TripId;
+                                                            //send driver notif
+                                                            _notifManager.SendNotifToUser(notifModel, (int)driveRoute.UserId);
+                                                            _notifManager.SendNotifToAdmins(notifModel);
+                                                            //send driver sms
+                                                            string smsBody = string.Format(getResource.getMessage("SeatReservedFor"), route.SrcMainStName,
+                                                                route.DstMainStName, preTrip.TStartTime.ToString("HH:mm"));
+                                                            var smsService = new SmsService();
+                                                            smsService.SendSmsMessages(mobileBrief, smsBody);
+                                                        }
+                                                    }*/
                 foreach (var preTrip in activeTrips.Where(x => x.TState == (int) TripState.Scheduled))
                 {
                     if (preTrip.TStartTime.AddMinutes(-30) < DateTime.Now)
@@ -2849,6 +2988,11 @@ namespace CoreManager.RouteManager
                     {
                         Intrip = true;
                         doingTrip.TState = (int) TripState.DriverNotCome;
+                        var tripfilters = dataModel.Filters.Where(x => x.TripId == doingTrip.TripId);
+                        foreach (var tripfilter in tripfilters)
+                        {
+                            tripfilter.IsActive = false;
+                        }
                     }
                 }
                 if (Intrip)
@@ -2866,18 +3010,29 @@ namespace CoreManager.RouteManager
                         posttrip = true;
                         doingTrip.TState = (int) TripState.FinishedByTime;
                         TransferMoney(doingTrip);
-                        //MakeRating(doingTrip);
+                        MakeRating(doingTrip);
                     }
                 }
                 if (posttrip)
                 {
                     dataModel.SaveChanges();
                 }
-                var kavehSmsService = new KavenegarService();
+
+                /*var kavehSmsService = new KavenegarService();
                 kavehSmsService.GetLastMessage();
                 var smsService = new SmsService();
-                smsService.GetReceivedSmsMessages();
+                smsService.GetReceivedSmsMessages();*/
+                //yesterday = DateTime.Now.AddDays(-1);
+
+                //var googleToken =
+                //        dataModel.vwDriverGtokens.Where(
+                //            x =>
+                //                x.TState == (int)TripState.Scheduled || x.TState == (int)TripState.InTripTime ||
+                //                x.TState == (int)TripState.InRiding || x.TState == (int)TripState.InDriving ||
+                //                x.TState == (int)TripState.DriverRiding ||
+                //                x.TState == (int)TripState.InPreTripTime).OrderByDescending(x => x.TStartTime);
             }
+
             return "Done";
         }
 
@@ -2891,16 +3046,24 @@ namespace CoreManager.RouteManager
                 userIds.AddRange(booked.Select(x => (long) x.UserId));
                 userIds.Add(tripDrive.UserId);
                 var cou = userIds.Count;
-                for (int i = 0; i < cou; i++)
+                for (int i = 1; i <= cou; i++)
                 {
-                    for (int j = 0; j < i - 1; j++)
+                    for (int j = 0; j <= i - 1; j++)
                     {
+                        if (i-1 != j) { 
                         var rating = new Rating();
                         rating.TripId = preTrip.TripId;
                         rating.RateCreateTime = DateTime.Now;
-                        rating.RaterUserId = userIds[i];
+                        rating.RaterUserId = userIds[i-1];
                         rating.FellowUserId = userIds[j];
                         dataModel.Ratings.Add(rating);
+                        var backrating = new Rating();
+                        backrating.TripId = preTrip.TripId;
+                        backrating.RateCreateTime = DateTime.Now;
+                        backrating.RaterUserId = userIds[j];
+                        backrating.FellowUserId = userIds[i-1];
+                        dataModel.Ratings.Add(backrating);
+                        }
                     }
                 }
                 dataModel.SaveChanges();
@@ -2968,7 +3131,8 @@ namespace CoreManager.RouteManager
                                 case (int) DiscountTypes.PercentDiscount:
                                     du.DuState = (int) DiscountStates.Used;
                                     dataModel.SaveChanges();
-                                    var tripprice = Convert.ToInt32(tripDrive.DriverPrice*(discount.DiscountPercent*0.01));
+                                    var tripprice =
+                                        Convert.ToInt32(tripDrive.DriverPrice*(discount.DiscountPercent*0.01));
                                     _transactionManager.GiftChargeAccount((int) bookRequest.UserId,
                                         tripprice);
                                     _transactionManager.PayMoney((int) bookRequest.UserId, (int) tripDrive.UserId,
@@ -3119,6 +3283,28 @@ namespace CoreManager.RouteManager
                         var trip = dataModel.Trips.FirstOrDefault(x => x.TripId == driveTrip.TripId);
                         trip.TState = (int) TripState.CanceledByUser;
                         dataModel.SaveChanges();
+                        //cancel all filterTrips
+                        var filters=dataModel.Filters.Where(x => x.TripId == trip.TripId).ToList();
+                        if (filters.Count > 0)
+                        {
+                            if (trip.TStartTime < DateTime.Now.AddMinutes(-30))
+                            {
+                                foreach (var filter in filters)
+                                {
+                                    filter.TripId = null;
+                                }
+                                dataModel.SaveChanges();
+                            }
+                            else
+                            {
+                                _responseProvider.SetBusinessMessage(new MessageResponse()
+                                {
+                                    Type = ResponseTypes.Error,
+                                    Message = getResource.getMessage("TripAlreadyReserved")
+                                });
+                                return false;
+                            }
+                        }
                     }
                     else
                     {
@@ -3359,7 +3545,9 @@ namespace CoreManager.RouteManager
                             dataModel.SaveChanges();
                             var du =
                                 dataModel.DiscountUsers.FirstOrDefault(
-                                    x => x.DuId == discount.DuId && x.UserId == userId && x.DuState == (int) DiscountStates.Submitted);
+                                    x =>
+                                        x.DuId == discount.DuId && x.UserId == userId &&
+                                        x.DuState == (int) DiscountStates.Submitted);
                             du.DuState = (int) DiscountStates.Used;
                             dataModel.SaveChanges();
                             /*_transactionManager.GiftChargeAccount(userId, (int) tripDrive.DriverPrice);
@@ -3377,7 +3565,9 @@ namespace CoreManager.RouteManager
                             dataModel.SaveChanges();
                             var dud =
                                 dataModel.DiscountUsers.FirstOrDefault(
-                                    x => x.DuId == discount.DuId && x.UserId == userId && x.DuState == (int) DiscountStates.Submitted);
+                                    x =>
+                                        x.DuId == discount.DuId && x.UserId == userId &&
+                                        x.DuState == (int) DiscountStates.Submitted);
                             dud.DuState = (int) DiscountStates.Used;
                             dataModel.SaveChanges();
                             break;
@@ -3440,77 +3630,78 @@ namespace CoreManager.RouteManager
         public bool ReserveSeat(long payReqId)
         {
             using (var dataModel = new MibarimEntities())
-            {   
+            {
                 var bookreq = dataModel.BookRequests.FirstOrDefault(x => x.PayReqId == payReqId);
-                if (bookreq != null) { 
-                var trip = dataModel.vwDriverTrips.FirstOrDefault(x => x.TripId == bookreq.TripId);
-                if ((bool) bookreq.IsBooked)
+                if (bookreq != null)
                 {
-                    return false;
-                }
-                var payreq = dataModel.PayReqs.FirstOrDefault(x => x.PayReqId == payReqId);
-                var payValue = Convert.ToInt32(payreq.PayReqValue);
-                var discount =
-                    dataModel.vwDiscountUsers.FirstOrDefault(
-                        x =>
-                            x.UserId == payreq.PayReqUserId && x.DiscountEndTime > DateTime.Now &&
-                            (x.DuEndTime > DateTime.Now || x.DuEndTime == null) &&
-                            x.DuState == (int) DiscountStates.Submitted);
-                if (discount != null && discount.DiscountType == (int) DiscountTypes.PercentDiscount)
-                {
-                    payValue = Convert.ToInt32(payValue + (trip.PassPrice*(discount.DiscountPercent*0.01)));
-                    var du =
-                        dataModel.DiscountUsers.FirstOrDefault(
-                            x => x.UserId == payreq.PayReqUserId && x.DuState == (int) DiscountStates.Submitted);
-                    du.DuState = (int) DiscountStates.Used;
-                    bookreq.DuId = discount.DuId;
-                    dataModel.SaveChanges();
-                }
-                if (payValue >= trip.PassPrice)
-                {
-                    bookreq.IsBooked = true;
-                    dataModel.SaveChanges();
-                }
-                _transactionManager.ChargeAccount(payreq.PayReqUserId, (int) payreq.PayReqValue);
-                /*var payRoute =
-                    dataModel.vwPayRoutes.FirstOrDefault(
-                        x => x.PayReqId == payReqId && x.DrIsDeleted == false);
-                var route =
-                    dataModel.vwStationRoutes.FirstOrDefault(x => x.StationRouteId == payRoute.StationRouteId);
-                if (route.DriverPrice > route.PassPrice)
-                {
-                    _transactionManager.GiftChargeAccount(payreq.PayReqUserId,
-                        (int) (route.DriverPrice - route.PassPrice));
-                }
-                _transactionManager.PayMoney((int) bookreq.UserId, (int) payRoute.UserId, (int) route.DriverPrice);
-                NotifModel notifModel = new NotifModel();
-                notifModel.Title = getResource.getMessage("SeatReserved");
-                notifModel.Body = string.Format(getResource.getMessage("SeatReservedFor"), route.SrcMainStName,
-                    route.DstMainStName, payRoute.TStartTime.ToString("HH:mm"));
-                notifModel.RequestCode = (int) payRoute.PayReqId;
-                notifModel.NotificationId = (int) payRoute.PayReqId;
-                //send passenger notif
-                _notifManager.SendNotifToUser(notifModel, payRoute.PayReqUserId);
-                //send driver notif
-                _notifManager.SendNotifToUser(notifModel, (int) payRoute.UserId);
-                _notifManager.SendNotifToAdmins(notifModel);
-                //send passenger sms
-                var user = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == payRoute.PayReqUserId);
-                var mobileBrief = user.UserName.Substring(1);
-                string smsBody = string.Format(getResource.getMessage("SeatReservedFor"), route.SrcMainStName,
-                    route.DstMainStName, payRoute.TStartTime.ToString("HH:mm"));
-                var smsService = new SmsService();
-                smsService.SendSmsMessages(mobileBrief, smsBody);
-                //send driver sms
-                var driver = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == payRoute.UserId);
-                var drivermobileBrief = driver.UserName.Substring(1);
-                string smsBodydriver = string.Format(getResource.getMessage("SeatReservedFor"),
-                    route.SrcMainStName, route.DstMainStName, payRoute.TStartTime.ToString("HH:mm"));
-                smsService.SendSmsMessages(drivermobileBrief, smsBodydriver);
-                smsService.SendSmsMessages("9358695785", smsBody);
-                smsService.SendSmsMessages("9354205407", smsBody);
-                dataModel.SaveChanges();*/
-                return true;
+                    var trip = dataModel.vwDriverTrips.FirstOrDefault(x => x.TripId == bookreq.TripId);
+                    if ((bool) bookreq.IsBooked)
+                    {
+                        return false;
+                    }
+                    var payreq = dataModel.PayReqs.FirstOrDefault(x => x.PayReqId == payReqId);
+                    var payValue = Convert.ToInt32(payreq.PayReqValue);
+                    var discount =
+                        dataModel.vwDiscountUsers.FirstOrDefault(
+                            x =>
+                                x.UserId == payreq.PayReqUserId && x.DiscountEndTime > DateTime.Now &&
+                                (x.DuEndTime > DateTime.Now || x.DuEndTime == null) &&
+                                x.DuState == (int) DiscountStates.Submitted);
+                    if (discount != null && discount.DiscountType == (int) DiscountTypes.PercentDiscount)
+                    {
+                        payValue = Convert.ToInt32(payValue + (trip.PassPrice*(discount.DiscountPercent*0.01)));
+                        var du =
+                            dataModel.DiscountUsers.FirstOrDefault(
+                                x => x.UserId == payreq.PayReqUserId && x.DuState == (int) DiscountStates.Submitted);
+                        du.DuState = (int) DiscountStates.Used;
+                        bookreq.DuId = discount.DuId;
+                        dataModel.SaveChanges();
+                    }
+                    if (payValue >= trip.PassPrice)
+                    {
+                        bookreq.IsBooked = true;
+                        dataModel.SaveChanges();
+                    }
+                    _transactionManager.ChargeAccount(payreq.PayReqUserId, (int) payreq.PayReqValue);
+                    /*var payRoute =
+                        dataModel.vwPayRoutes.FirstOrDefault(
+                            x => x.PayReqId == payReqId && x.DrIsDeleted == false);
+                    var route =
+                        dataModel.vwStationRoutes.FirstOrDefault(x => x.StationRouteId == payRoute.StationRouteId);
+                    if (route.DriverPrice > route.PassPrice)
+                    {
+                        _transactionManager.GiftChargeAccount(payreq.PayReqUserId,
+                            (int) (route.DriverPrice - route.PassPrice));
+                    }
+                    _transactionManager.PayMoney((int) bookreq.UserId, (int) payRoute.UserId, (int) route.DriverPrice);
+                    NotifModel notifModel = new NotifModel();
+                    notifModel.Title = getResource.getMessage("SeatReserved");
+                    notifModel.Body = string.Format(getResource.getMessage("SeatReservedFor"), route.SrcMainStName,
+                        route.DstMainStName, payRoute.TStartTime.ToString("HH:mm"));
+                    notifModel.RequestCode = (int) payRoute.PayReqId;
+                    notifModel.NotificationId = (int) payRoute.PayReqId;
+                    //send passenger notif
+                    _notifManager.SendNotifToUser(notifModel, payRoute.PayReqUserId);
+                    //send driver notif
+                    _notifManager.SendNotifToUser(notifModel, (int) payRoute.UserId);
+                    _notifManager.SendNotifToAdmins(notifModel);
+                    //send passenger sms
+                    var user = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == payRoute.PayReqUserId);
+                    var mobileBrief = user.UserName.Substring(1);
+                    string smsBody = string.Format(getResource.getMessage("SeatReservedFor"), route.SrcMainStName,
+                        route.DstMainStName, payRoute.TStartTime.ToString("HH:mm"));
+                    var smsService = new SmsService();
+                    smsService.SendSmsMessages(mobileBrief, smsBody);
+                    //send driver sms
+                    var driver = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == payRoute.UserId);
+                    var drivermobileBrief = driver.UserName.Substring(1);
+                    string smsBodydriver = string.Format(getResource.getMessage("SeatReservedFor"),
+                        route.SrcMainStName, route.DstMainStName, payRoute.TStartTime.ToString("HH:mm"));
+                    smsService.SendSmsMessages(drivermobileBrief, smsBodydriver);
+                    smsService.SendSmsMessages("9358695785", smsBody);
+                    smsService.SendSmsMessages("9354205407", smsBody);
+                    dataModel.SaveChanges();*/
+                    return true;
                 }
                 return false;
             }
@@ -3649,6 +3840,7 @@ namespace CoreManager.RouteManager
             }
             return stlist;
         }
+
         public List<StationModel> GetAdminMainStations()
         {
             var stlist = new List<StationModel>();
@@ -3672,7 +3864,9 @@ namespace CoreManager.RouteManager
         {
             using (var dataModel = new MibarimEntities())
             {
-                var station = dataModel.vwStationRoutes.FirstOrDefault(x => x.SrcMStationId == srcStId && x.DstMStationId == dstStId);
+                var station =
+                    dataModel.vwStationRoutes.FirstOrDefault(
+                        x => x.SrcMStationId == srcStId && x.DstMStationId == dstStId);
                 var stationRouteModel = new StationRouteModel();
                 stationRouteModel.StRouteId = station.StationRouteId;
                 stationRouteModel.SrcStAdd = station.SrcMainStName;
@@ -3683,11 +3877,12 @@ namespace CoreManager.RouteManager
                 stationRouteModel.DstStLat = station.DstMainStLat.ToString();
                 stationRouteModel.DstStLng = station.DstMainStLng.ToString();
                 stationRouteModel.DstStId = station.DstMStationId;
-                stationRouteModel.StRoutePrice = RouteMapper.PersianNumber(((int)station.DriverPrice).ToString("N0", new NumberFormatInfo()
-                {
-                    NumberGroupSizes = new[] { 3 },
-                    NumberGroupSeparator = ","
-                }));
+                stationRouteModel.StRoutePrice =
+                    RouteMapper.PersianNumber(((int) station.DriverPrice).ToString("N0", new NumberFormatInfo()
+                    {
+                        NumberGroupSizes = new[] {3},
+                        NumberGroupSeparator = ","
+                    }));
                 return stationRouteModel;
             }
         }
@@ -3704,7 +3899,7 @@ namespace CoreManager.RouteManager
                     st.StAdd = station.StAdd;
                     st.StLat = station.StLat.ToString();
                     st.StLng = station.StLng.ToString();
-                    st.StationId= station.StationId;
+                    st.StationId = station.StationId;
                     stlist.Add(st);
                 }
             }
@@ -3737,7 +3932,7 @@ namespace CoreManager.RouteManager
                                     x =>
                                         x.SrcMStationId == srcmainStation.MainStationId &&
                                         x.DstMStationId == dstMainStation.MainStationId);
-                            if (routeStation == null || routeStation.DriverPrice==0)
+                            if (routeStation == null || routeStation.DriverPrice == 0)
                             {
                                 model = new SrcDstModel();
                                 model.SrcLat = srcmainStation.MainStLat.ToString();
@@ -3754,7 +3949,7 @@ namespace CoreManager.RouteManager
                                     min = mid = max = distance;
                                     foreach (var route in privateGRoute.Routes)
                                     {
-                                        if (route.Legs.Count>0 && route.Legs.FirstOrDefault().Distance.Value > min &&
+                                        if (route.Legs.Count > 0 && route.Legs.FirstOrDefault().Distance.Value > min &&
                                             route.Legs.FirstOrDefault().Distance.Value < max)
                                         {
                                             mid = route.Legs.FirstOrDefault().Distance.Value;
@@ -3794,13 +3989,13 @@ namespace CoreManager.RouteManager
                                     }
                                     else if (distance <= 20000)
                                     {
-                                        var first7000 = (65* 253) + 5566;
+                                        var first7000 = (65*253) + 5566;
                                         res =
                                             RemoveDecimalToman((((distance - 7000)/100)*202) + first7000 + extraPrice);
                                     }
                                     else if (distance > 20000)
                                     {
-                                        var first20000 = (125*202) + (65* 253) + 5566;
+                                        var first20000 = (125*202) + (65*253) + 5566;
                                         res =
                                             RemoveDecimalToman((((distance - 20000)/100)*150) + first20000 + extraPrice);
                                     }
@@ -3808,12 +4003,12 @@ namespace CoreManager.RouteManager
                                     var stationRoute = new StationRoute();
                                     if (routeStation == null)
                                     {
-                                    var laststr =
-                                        dataModel.StationRoutes.OrderByDescending(x => x.StationRouteId)
-                                            .FirstOrDefault();
+                                        var laststr =
+                                            dataModel.StationRoutes.OrderByDescending(x => x.StationRouteId)
+                                                .FirstOrDefault();
 
 
-                                    stationRoute.StationRouteId = laststr == null ? 1 : laststr.StationRouteId + 1;
+                                        stationRoute.StationRouteId = laststr == null ? 1 : laststr.StationRouteId + 1;
                                     }
                                     else
                                     {
@@ -3835,7 +4030,7 @@ namespace CoreManager.RouteManager
                                         dataModel.StationRoutes.Add(stationRoute);
                                     }
                                     dataModel.SaveChanges();
-                                    Thread.Sleep(5000);
+                                    Thread.Sleep(10000);
                                 }
                             }
                         }
@@ -3850,17 +4045,19 @@ namespace CoreManager.RouteManager
             var payreq = new PaymentDetailModel();
             using (var dataModel = new MibarimEntities())
             {
-                    var pr = new PayReq();
-                    pr.PayReqCreateTime = DateTime.Now;
-                    pr.PayReqUserId = userId;
-                    pr.PayReqValue = chargeAmount;
-                    dataModel.PayReqs.Add(pr);
-                    dataModel.SaveChanges();
-                    payreq.BankLink = "http://mibarimapp.com/coreapi/PasargadPay?reqid=" + pr.PayReqId;
-                    payreq.State = 100;
+                var pr = new PayReq();
+                pr.PayReqCreateTime = DateTime.Now;
+                pr.PayReqUserId = userId;
+                pr.PayReqValue = chargeAmount;
+                dataModel.PayReqs.Add(pr);
+                dataModel.SaveChanges();
+                payreq.BankLink = "http://mibarimapp.com/coreapi/PasargadPay?reqid=" + pr.PayReqId;
+                payreq.State = 100;
             }
             return payreq;
         }
+
+        
 
         public bool InsertEmployeeModel(EmployeeRequestModels model)
         {
@@ -3869,13 +4066,21 @@ namespace CoreManager.RouteManager
             {
                 em.Name = model.Name;
                 em.Family = model.Family;
-                em.Email= model.Email;
-                em.Mobile= model.Mobile;
-                em.TimeStart= model.TimeStart;
-                em.TimeEnd= model.TimeEnd;
-                em.Geo= RouteMapper.CreatePoint(model.Latitude, model.Longitude);
-                em.Latitude= decimal.Parse(model.Latitude);
-                em.Longitude= decimal.Parse(model.Longitude);
+                em.Email = model.Email;
+                em.Mobile = model.Mobile;
+                em.TimeStart = model.TimeStart;
+                em.TimeEnd = model.TimeEnd;
+                em.HasReturn = model.Hasreturn;
+                em.Routeselect = model.Routeselect;
+                em.Entry = model.Entry;
+                em.Enterprise = model.Enterprise;
+                em.Introduce = model.Introduce;
+                if (model.Latitude != null)
+                {
+                    em.Geo = RouteMapper.CreatePoint(model.Latitude, model.Longitude);
+                    em.Latitude = decimal.Parse(model.Latitude);
+                    em.Longitude = decimal.Parse(model.Longitude);
+                }
                 dataModel.Employees.Add(em);
                 dataModel.SaveChanges();
             }
@@ -3900,6 +4105,752 @@ namespace CoreManager.RouteManager
             return true;
         }
 
+        public string SendDriverNotifs()
+        {
+            string notifstring = "";
+            using (var dataModel = new MibarimEntities())
+            {
+                var days16ago = DateTime.Now.AddDays(-16);
+                var days8ago = DateTime.Now.AddDays(-8);
+                var days4ago = DateTime.Now.AddDays(-4);
+                var days2ago = DateTime.Now.AddDays(-2);
+                var yesterday = DateTime.Now.AddDays(-1);
+                var drivers = dataModel.GetLastEnter(days16ago).ToList();
+                foreach (var lastResult in drivers)
+                {
+                    if ((lastResult.TCreateTime.Date == days16ago.Date && lastResult.TCreateTime.Hour == days16ago.Hour &&
+                         lastResult.TCreateTime.Minute == days16ago.Minute) ||
+                        (lastResult.TCreateTime.Date == days8ago.Date &&
+                         lastResult.TCreateTime.Hour == days8ago.Hour &&
+                         lastResult.TCreateTime.Minute == days8ago.Minute) ||
+                        (lastResult.TCreateTime.Date == days4ago.Date &&
+                         lastResult.TCreateTime.Hour == days4ago.Hour &&
+                         lastResult.TCreateTime.Minute == days4ago.Minute) ||
+                        (lastResult.TCreateTime.Date == days2ago.Date &&
+                         lastResult.TCreateTime.Hour == days2ago.Hour &&
+                         lastResult.TCreateTime.Minute == days2ago.Minute) ||
+                        (lastResult.TCreateTime.Date == yesterday.Date &&
+                         lastResult.TCreateTime.Hour == yesterday.Hour &&
+                         lastResult.TCreateTime.Minute == yesterday.Minute))
+                    {
+                        var notif = new NotifModel();
+                        notif.Title = getResource.getMessage("SetRoute");
+                        notif.Body = getResource.getMessage("SetTime");
+                        notif.Tab = (int) MainTabs.Message;
+                        notif.RequestCode = (int) NotificationType.SetRouteReminder;
+                        notif.NotificationId = (int) NotificationType.SetRouteReminder;
+                        _notifManager.SendNotifToDriver(notif, (int) lastResult.UserId);
+                        //_notifManager.SendNotifToAdmins(notif);
+                        notifstring = getResource.getString("SetTime");
+                    }
+                }
+            }
+            return notifstring;
+        }
+
+        public List<SubStationModel> GetAllSubStations()
+        {
+            var stlist = new List<SubStationModel>();
+            using (var dataModel = new MibarimEntities())
+            {
+                var ms = dataModel.vwStations;
+                foreach (var station in ms)
+                {
+                    var st = new SubStationModel();
+                    st.StAdd = station.MainStName + " " + station.StAdd;
+                    st.StLat = station.StLat.ToString();
+                    st.StLng = station.StLng.ToString();
+                    st.StationId = station.StationId;
+                    stlist.Add(st);
+                }
+            }
+            return stlist;
+        }
+
+        public FilterModel SetFilter(int userId, FilterModel model)
+        {
+            var filterModel = new FilterModel();
+            using (var dataModel = new MibarimEntities())
+            {
+
+                if (model.FilterId == 0)
+                {
+                var st =
+                    dataModel.StationRoutes.FirstOrDefault(
+                        x => x.SrcMStationId == model.SrcStationId && x.DstMStationId == model.DstStationId);
+                if (st != null)
+                {
+                
+                var filter= new Filter();
+                filter.SrcMStationId = model.SrcStationId;
+                filter.DstMStationId = model.DstStationId;
+                filter.StationRouteId = st.StationRouteId;
+                filter.IsDelete = false;
+                filter.CreateTime=DateTime.Now;
+                filter.LastTimeSet=DateTime.Now;
+                filter.FilterUserId = userId;
+                filter.IsActive = false;
+                dataModel.Filters.Add(filter);
+                dataModel.SaveChanges();
+                filterModel.FilterId = filter.FilterId;
+                    //SendPairNotif(userId, st.StationRouteId);
+                }
+                else
+                {
+                    var r = new MessageResponse()
+                    {
+                        Type = ResponseTypes.Error,
+                        Message = getResource.getMessage("NotFound")
+                    };
+                    _responseProvider.SetBusinessMessage(r);
+                }
+                }
+                else
+                {
+                    var filter = dataModel.Filters.FirstOrDefault(x => x.FilterId == model.FilterId && x.FilterUserId==userId);
+                    if (filter != null)
+                    {
+                        filter.LastTimeSet = GetNextDateTime(model.TimeHour, model.TimeMinute);
+                        filter.IsActive = true;
+                        dataModel.SaveChanges();
+                        FindMatchTrips((DateTime)filter.LastTimeSet,filter.StationRouteId,filter.FilterId);
+                    }
+                    else
+                    {
+                        var r = new MessageResponse()
+                        {
+                            Type = ResponseTypes.Error,
+                            Message = getResource.getMessage("NotFound")
+                        };
+                        _responseProvider.SetBusinessMessage(r);
+                    }
+                    
+                }
+            }
+            return filterModel;
+        }
+
+        private int FindMatchTrips(DateTime filterLastTimeSet, long filterStationRouteId, long filterFilterId)
+        {
+            using (var dataModel = new MibarimEntities())
+            {
+                var matchTrips = dataModel.vwDriverTrips.Where(
+                                x =>
+                                   DbFunctions.TruncateTime(x.TStartTime) == filterLastTimeSet.Date &&
+                                    x.TStartTime.Hour == filterLastTimeSet.Hour &&
+                                    x.TStartTime.Minute == filterLastTimeSet.Minute
+                                     && x.StationRouteId == filterStationRouteId && x.TState==(int)TripState.Scheduled).ToList();
+                if (matchTrips.Count > 0)
+                {
+                    var filter = dataModel.Filters.FirstOrDefault(x => x.FilterId == filterFilterId);
+                    filter.TripId = matchTrips.FirstOrDefault().TripId;
+                    dataModel.SaveChanges();
+                    /*var matchFilters = dataModel.Filters.Where(
+                                x =>
+                                   DbFunctions.TruncateTime(x.LastTimeSet) == filterLastTimeSet.Date &&
+                                    ((DateTime)x.LastTimeSet).Hour == filterLastTimeSet.Hour &&
+                                    ((DateTime)x.LastTimeSet).Minute == filterLastTimeSet.Minute
+                                     && x.StationRouteId == filterStationRouteId && x.IsActive && !x.IsDelete).ToList();
+                    if (matchFilters.Count > 0)
+                    {
+                        foreach (var matchFilter in matchFilters)
+                        {
+                            matchFilter.TripId = tripTripId;
+                        }
+                        dataModel.SaveChanges();
+                    }*/
+
+
+                }
+                return matchTrips.Count;
+            }
+        }
+
+        public List<FilterModel> GetUserFilters(int userId)
+        {
+            var filterModelList = new List<FilterModel>();
+            using (var dataModel = new MibarimEntities())
+            {
+                var filters = dataModel.vwFilters.Where(x => x.FilterUserId == userId && !x.IsDelete);
+                foreach (var filter in filters)
+                {
+                    var filterModel=new FilterModel();
+                    filterModel.FilterId = filter.FilterId;
+                    filterModel.SrcStationId = filter.SrcMStationId;
+                    filterModel.SrcStation = filter.SrcStName;
+                    filterModel.SrcStLat = filter.SrcStLat.ToString();
+                    filterModel.SrcStLng = filter.SrcStLng.ToString();
+                    filterModel.DstStationId = filter.DstMStationId;
+                    filterModel.DstStation = filter.DstStName;
+                    filterModel.DstStLat = filter.DstStLat.ToString();
+                    filterModel.DstStLng = filter.DstStLng.ToString();
+                    if (filter.IsActive)
+                    {
+                        filterModel.Time = (DateTime) filter.LastTimeSet;
+                        filterModel.TimeHour= ((DateTime)filter.LastTimeSet).Hour;
+                        filterModel.TimeMinute= ((DateTime)filter.LastTimeSet).Minute;
+                        filterModel.IsActive = true;
+                    }
+                    else
+                    {
+                        filterModel.Time = null;
+                        filterModel.IsActive = false;
+                    }
+                    filterModel.IsMatched = filter.TripId != null;
+                    filterModelList.Add(filterModel);
+                }
+            }
+            return filterModelList;
+        }
+
+        public List<FilterTimeModel> GetFilterTimes(int userId, FilterModel model)
+        {
+            var res=new List<FilterTimeModel>();
+            using (var dataModel = new MibarimEntities())
+            {
+                var filter = dataModel.vwFilterPlus.FirstOrDefault(x => x.FilterId == model.FilterId && !x.IsDelete);
+                //var stationplus = dataModel.StationRoutePlus.FirstOrDefault(x => x.StationRouteId == filter.StationRouteId);
+                var times = dataModel.GetAggregatedTimes(DateTime.Now, filter.StationRouteId).ToList();
+                var trips = dataModel.vwDriverTrips.Where(x => x.StationRouteId == filter.StationRouteId && x.TState==(int)TripState.Scheduled).ToList();
+                if (times.Count > 0 || trips.Count > 0)
+                {
+                    foreach (var ti in times)
+                    {
+                        var price = GetTimePrice((DateTime) ti.AggregatedTime, filter);
+                        price = RemoveCeilingDecimal(price/(ti.co.Value + 1));
+                        var aggregatedTimes = new FilterTimeModel()
+                        {
+                            PairPassengers = ti.co.Value,
+                            TimeString = ((DateTime) ti.AggregatedTime).ToString("HH:mm"),
+                            PriceString = RouteMapper.PersianNumber(((long)price).ToString("N0", new NumberFormatInfo()
+                            {
+                                NumberGroupSizes = new[] {3},
+                                NumberGroupSeparator = ","
+                            })),
+                            Price = price,
+                            Time = (DateTime) ti.AggregatedTime,
+                            TimeHour = ((DateTime) ti.AggregatedTime).Hour,
+                            TimeMinute = ((DateTime) ti.AggregatedTime).Minute,
+                            IsManual = false
+                        };
+                        res.Add(aggregatedTimes);
+                    }
+                    foreach (var trip in trips)
+                    {
+                        var filterCount = dataModel.vwFilters.Count(x => x.TripId == trip.TripId);
+                        var price = trip.PassPrice;
+                        //price = RemoveCeilingDecimal(price / (filterCount + 1));
+                        var aggregatedTimes = new FilterTimeModel()
+                        {
+                            PairPassengers = filterCount,
+                            TimeString = trip.TStartTime.ToString("HH:mm"),
+                            PriceString = RouteMapper.PersianNumber(((long)price).ToString("N0", new NumberFormatInfo()
+                            {
+                                NumberGroupSizes = new[] { 3 },
+                                NumberGroupSeparator = ","
+                            })),
+                            Price = price,
+                            Time = trip.TStartTime,
+                            TimeHour = trip.TStartTime.Hour,
+                            TimeMinute = trip.TStartTime.Minute,
+                            IsManual = false
+                        };
+                        res.Add(aggregatedTimes);
+                    }
+                }
+                else
+                {
+                    var price = GetTimePrice(GetNextDateTime(7,30), filter);
+                    if (price != null && (price != 0)) { 
+                    var rr = new FilterTimeModel()
+                    {
+                        PairPassengers = 1,
+                        TimeString = "7:30",
+                        PriceString = RouteMapper.PersianNumber(((long)price/2).ToString("N0", new NumberFormatInfo()
+                        {
+                            NumberGroupSizes = new[] { 3 },
+                            NumberGroupSeparator = ","
+                        })),
+                        Price = price / 2,
+                        Time = DateTime.Now,
+                        TimeHour = 7,
+                        TimeMinute = 30,
+                        IsManual = false
+                    };
+                    res.Add(rr);
+                    }
+                    var price2 = GetTimePrice(GetNextDateTime(17, 30), filter);
+                    if (price2 != null && (price2 != 0))
+                    {
+                        var rr2 = new FilterTimeModel()
+                        {
+                            PairPassengers = 1,
+                            TimeString = "17:30",
+                            PriceString =
+                                RouteMapper.PersianNumber(((long) price2/2).ToString("N0", new NumberFormatInfo()
+                                {
+                                    NumberGroupSizes = new[] {3},
+                                    NumberGroupSeparator = ","
+                                })),
+                            Price = price2/2,
+                            Time = DateTime.Now,
+                            TimeHour = 17,
+                            TimeMinute = 30,
+                            IsManual = false
+                        };
+                        res.Add(rr2);
+                    }
+                }
+                var maxPrice = RouteMapper.MaxPrice(filter)/10;
+                if ((maxPrice != 0)) { 
+                    var rr3 = new FilterTimeModel()
+                {
+                    PairPassengers = 0,
+                    PriceString = RouteMapper.PersianNumber((maxPrice).ToString("N0", new NumberFormatInfo()
+                    {
+                        NumberGroupSizes = new[] { 3 },
+                        NumberGroupSeparator = ","
+                    })),
+                    Price = maxPrice,
+                    IsManual = true
+                };
+                res.Add(rr3);
+                }
+                /*
+                    var price=stationplus.Seven/SameFilters.Count;
+                    var rr=new FilterTimeModel()
+                    {
+                        PairPassengers = SameFilters.Count,TimeString = "7:30",PriceString = RouteMapper.PersianNumber((stationplus.Seven).ToString("N0", new NumberFormatInfo()
+                        {
+                            NumberGroupSizes = new[] { 3 },
+                            NumberGroupSeparator = ","
+                        })),Price = 2000,Time = DateTime.Now,TimeHour = DateTime.Now.Hour, TimeMinute = DateTime.Now.Minute, IsManual=false
+                    };
+                    res.Add(rr);
+                var rr2 = new FilterTimeModel()
+                    {
+                        PairPassengers = 2,
+                        TimeString = DateTime.Now.AddMinutes(30).ToString("HH:mm"),
+                        PriceString = RouteMapper.PersianNumber((3000).ToString("N0", new NumberFormatInfo()
+                        {
+                            NumberGroupSizes = new[] { 3 },
+                            NumberGroupSeparator = ","
+                        })),
+                        Price = 3000,TimeHour = DateTime.Now.AddMinutes(30).Hour, TimeMinute = DateTime.Now.AddMinutes(30).Minute, Time = DateTime.Now.AddMinutes(30),
+                        IsManual = false
+                    };
+                    res.Add(rr2);
+                    var rr3 = new FilterTimeModel()
+                    {
+                        PairPassengers = 1,
+                        PriceString = RouteMapper.PersianNumber((6000).ToString("N0", new NumberFormatInfo()
+                        {
+                            NumberGroupSizes = new[] { 3 },
+                            NumberGroupSeparator = ","
+                        })),
+                        Price = 6000, IsManual = true
+                    };
+                    res.Add(rr3);*/
+            }
+            return res;
+        }
+
+        public bool DeleteFilter(int userId, FilterModel model)
+        {
+            using (var dataModel = new MibarimEntities())
+            {
+                var filter = dataModel.Filters.FirstOrDefault(x => x.FilterId == model.FilterId);
+                if (filter != null)
+                {
+                    if (filter.TripId != null)
+                    {
+                        if (filter.LastTimeSet < DateTime.Now.AddMinutes(-30))
+                        {
+                            filter.IsDelete = true;
+                            dataModel.SaveChanges();
+                            return true;
+                        }
+                        else
+                        {
+                            _responseProvider.SetBusinessMessage(new MessageResponse()
+                            {
+                                Type = ResponseTypes.Error,
+                                Message = getResource.getMessage("TripAlreadyReserved")
+                            });
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        public List<SuggestModel> GetSuggestedRoutes()
+        {
+            var res=new List<SuggestModel>();
+            using (var dataModel = new MibarimEntities())
+            {
+                var f = dataModel.vwFilters.FirstOrDefault();
+                var aggfilters = dataModel.GetAggregatedFilters(DateTime.Now).ToList();
+                var filterIds = aggfilters.Select(y => y.FilterId);
+                var stationIds=aggfilters.Select(y => y.StationRouteId);
+                var vwfilter = dataModel.vwFilters.Where(x => filterIds.Contains(x.FilterId)).ToList();
+                //var vwfilter = dataModel.vwFilterPlus.Where(x => filterIds.Contains(x.FilterId)).ToList();
+                var stPrices = dataModel.StationRoutes.Where(x => stationIds.Contains(x.StationRouteId));
+                foreach (var aggf in aggfilters)
+                {
+                    var ff = vwfilter.FirstOrDefault(x => x.FilterId == aggf.FilterId);
+                    var stprice = stPrices.FirstOrDefault(x => x.StationRouteId == aggf.StationRouteId);
+                    var sug = new SuggestModel();
+                    sug.FilterId = aggf.FilterId;
+                    sug.SrcStationId = aggf.SrcMStationId;
+                    sug.SrcStLat = ff.SrcStLat.ToString();
+                    sug.SrcStLng = ff.SrcStLng.ToString();
+                    sug.SrcStation = ff.SrcStName;
+                    sug.PairPassengers = aggf.co.Value;
+                    var price = stprice.DriverPrice;
+                    //var price = GetTimePrice(aggf.LastTimeSet, ff);
+                    //price = (int) (price/aggf.co);
+                    if (price != null)
+                    {
+                        sug.Price = (long) (price* aggf.co);
+                        sug.PriceString = ((long)(price * aggf.co)).ToString("N0", new NumberFormatInfo(){NumberGroupSizes = new[] { 3 },NumberGroupSeparator = ","});
+                    }
+                    sug.DstStationId = ff.DstMStationId;
+                    sug.DstStation = ff.DstStName;
+                    sug.DstStLat = ff.DstStLat.ToString();
+                    sug.DstStLng = ff.DstStLng.ToString();
+                    sug.Time = aggf.LastTimeSet;
+                    sug.TimeHour = ((DateTime)aggf.LastTimeSet).Hour;
+                    sug.TimeMinute = ((DateTime)aggf.LastTimeSet).Minute;
+                    sug.PairPassengers = (int)aggf.co;
+                    res.Add(sug);
+                }
+            }
+            return res;
+        }
+
+        private long? GetTimePrice(DateTime? aggfLastTimeSet, vwFilterPlu ff)
+        {
+            if (aggfLastTimeSet.HasValue)
+            {
+                switch (aggfLastTimeSet.Value.Hour)
+                {
+                    case 5:
+                        return ff.Five/10;
+                    case 6:
+                        return ff.Six / 10;
+                    case 7:
+                        return ff.Seven / 10;
+                    case 8:
+                        return ff.Eight / 10;
+                    case 9:
+                        return ff.Nine / 10;
+                    case 10:
+                        return ff.Ten / 10;
+                    case 11:
+                        return ff.Eleven / 10;
+                    case 12:
+                        return ff.Twelve / 10;
+                    case 13:
+                        return ff.Thirteen / 10;
+                    case 14:
+                        return ff.Fourteen / 10;
+                    case 15:
+                        return ff.Fifteen / 10;
+                    case 16:
+                        return ff.Sixteen / 10;
+                    case 17:
+                        return ff.Seventeen / 10;
+                    case 18:
+                        return ff.Eighteen / 10;
+                    case 19:
+                        return ff.Nineteen / 10;
+                    case 20:
+                        return ff.Twenty / 10;
+                    case 21:
+                        return ff.TwentyOne / 10;
+                    case 22:
+                        return ff.TwentyTwo / 10;
+                    case 23:
+                        return ff.TwentyThree / 10;
+                }
+            }
+            return 0;
+        }
+
+        public bool CancelFilter(int userId, FilterModel model)
+        {
+            using (var dataModel = new MibarimEntities())
+            {
+                var filter = dataModel.Filters.FirstOrDefault(x => x.FilterId == model.FilterId);
+                if (filter != null)
+                {
+                    if (filter.TripId != null)
+                    {
+                        if (filter.LastTimeSet < DateTime.Now.AddMinutes(-30))
+                        {
+                            filter.IsActive = false;
+                            dataModel.SaveChanges();
+                            return true;
+                        }
+                        else
+                        {
+                            _responseProvider.SetBusinessMessage(new MessageResponse()
+                            {
+                                Type = ResponseTypes.Error,
+                                Message = getResource.getMessage("TripAlreadyReserved")
+                            });
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        filter.IsActive = false;
+                        dataModel.SaveChanges();
+                        return true;
+                    }
+                    
+                }
+            }
+            return true;
+        }
+
+        public TripTimeModel AcceptSuggestRoute(int userId, FilterModel model)
+        {
+            var res =new  TripTimeModel();
+            using (var dataModel = new MibarimEntities())
+            {
+                var filter = dataModel.Filters.FirstOrDefault(x => x.FilterId == model.FilterId);
+                var srcStation = dataModel.Stations.FirstOrDefault(x => x.MainStationId == filter.SrcMStationId);
+                if (filter != null)
+                {
+                    var usr = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == userId);
+                    if (usr.VerifiedLevel != null && usr.VerifiedLevel >= (int)VerifiedLevel.Blocked)
+                    {
+                        _responseProvider.SetBusinessMessage(new MessageResponse()
+                        {
+                            Type = ResponseTypes.Error,
+                            Message = getResource.getMessage("BlockedUser")
+                        });
+                        res.IsSubmited = false;
+                        return res;
+                    }
+                    var route =
+                        dataModel.StationRoutes.FirstOrDefault(
+                            x => x.StationRouteId == filter.StationRouteId);
+                        var driverRoute = new DriverRoute();
+                        driverRoute.UserId = userId;
+                        driverRoute.DrIsDeleted = false;
+                        driverRoute.DrCreateTime = DateTime.Now;
+                        var car = dataModel.vwCarInfoes.FirstOrDefault(x => x.UserId == userId);
+                        if (car != null)
+                        {
+                            driverRoute.CarinfoId = car.CarInfoId;
+                        }
+                        driverRoute.DrSrcStationId = srcStation.StationId; //subStation.StationId;
+                        driverRoute.StationRouteId = route.StationRouteId;
+                        dataModel.DriverRoutes.Add(driverRoute);
+                        dataModel.SaveChanges();
+
+                    
+                    var trip = new Trip();
+                    trip.TStartTime = GetNextDateTime(((DateTime)filter.LastTimeSet).Hour, ((DateTime)filter.LastTimeSet).Minute);
+                    res.RemainHour = (int)(trip.TStartTime - DateTime.Now).TotalHours;
+                    var remainMin = (int)(trip.TStartTime - DateTime.Now).TotalMinutes;
+                    res.RemainMin = (remainMin % 60);
+                    trip.DriverRouteId = driverRoute.DriverRouteId;
+                    trip.TCreateTime = DateTime.Now;
+                    trip.TEmptySeat = model.CarSeats;
+                    trip.TState = (int)TripState.Scheduled;
+                    dataModel.Trips.Add(trip);
+                    dataModel.SaveChanges();
+                    //var stId = dataModel.DriverRoutes.FirstOrDefault(x => x.DriverRouteId == filter.StationRouteId);
+                    FindMatchFilters(trip.TStartTime, filter.StationRouteId, trip.TripId);
+                    //var time = trip.TStartTime;
+                    //var time = ((DateTime)filter.LastTimeSet);
+                    
+                }
+            }
+            res.IsSubmited = true;
+            return res;
+        }
+
+        private int FindMatchFilters(DateTime time, long filterStationRouteId, long tripTripId)
+        {
+            using (var dataModel = new MibarimEntities())
+            {
+                var matchFilters = dataModel.Filters.Where(
+                                x =>
+                                   DbFunctions.TruncateTime(x.LastTimeSet) == time.Date &&
+                                    ((DateTime)x.LastTimeSet).Hour == time.Hour &&
+                                    ((DateTime)x.LastTimeSet).Minute == time.Minute
+                                     && x.StationRouteId == filterStationRouteId && x.IsActive && !x.IsDelete).ToList();
+                if (matchFilters.Count > 0)
+                {
+                    foreach (var matchFilter in matchFilters)
+                    {
+                        matchFilter.TripId = tripTripId;
+                    }
+                    dataModel.SaveChanges();
+                }
+                return matchFilters.Count;
+            }
+            
+        }
+
+        public string SetUserNotifications()
+        {
+            using (var dataModel = new MibarimEntities())
+            {
+                var minbefore = DateTime.Now.AddHours(1);
+                var activefilters =
+                    dataModel.vwFilters.Where(x => x.IsActive && ((DateTime) x.LastTimeSet).Hour == minbefore.Hour
+                    && ((DateTime)x.LastTimeSet).Minute == minbefore.Minute);
+                foreach (var activefilter in activefilters)
+                {
+                    var usersWithFilter = dataModel.Filters.Where(y => y.StationRouteId == activefilter.StationRouteId);
+                    foreach (var filter in usersWithFilter)
+                    {
+                        var notif=new Notification();
+                        notif.FilterId = filter.FilterId;
+                        notif.NotifCreateTime=DateTime.Now;
+                        notif.NotifExpireTime = (DateTime) activefilter.LastTimeSet;
+                        notif.IsNotificationSent = false;
+                        notif.IsNotificationSeen = false;
+                        notif.NotifBody = string.Format(getResource.getMessage("SimilarRoute"), activefilter.SrcStName, activefilter.DstStName,
+                            ((DateTime)activefilter.LastTimeSet).Hour,((DateTime)activefilter.LastTimeSet).Minute);
+                        notif.NotifTitle= string.Format(getResource.getMessage("GetAlong"));
+                        notif.NotifUserId =(int) filter.FilterUserId;
+                        notif.NotifType = (short) NotificationType.NotifForFilter;
+                        dataModel.Notifications.Add(notif);
+                    }
+                    var driversWithFilter =
+                        dataModel.DriverRoutes.Where(x => x.StationRouteId == activefilter.StationRouteId);
+                    foreach (var driverFilter in driversWithFilter)
+                    {
+                        var notif = new Notification();
+                        notif.NotifCreateTime = DateTime.Now;
+                        notif.NotifExpireTime = (DateTime)activefilter.LastTimeSet;
+                        notif.IsNotificationSent = false;
+                        notif.IsNotificationSeen = false;
+                        notif.NotifBody = string.Format(getResource.getMessage("SimilarDriverRoute"), activefilter.SrcStName, activefilter.DstStName,
+                            ((DateTime)activefilter.LastTimeSet).Hour, ((DateTime)activefilter.LastTimeSet).Minute);
+                        notif.NotifTitle = string.Format(getResource.getMessage("AcceptRide"));
+                        notif.NotifUserId = (int)driverFilter.UserId;
+                        notif.NotifType = (short)NotificationType.NotifForDriver;
+                        dataModel.Notifications.Add(notif);
+                    }
+                    dataModel.SaveChanges();
+                }
+            }
+            return "ok";
+        }
+
+
+        public bool MakeStationRoutePlus()
+        {
+            var tmService=new TaxiMeterService();
+
+            using (var dataModel = new MibarimEntities())
+            {
+                var lastsnapToken =
+                        dataModel.AppsTokens.OrderByDescending(x => x.TokenCreateTime)
+                            .FirstOrDefault(x => x.TokenApp == (short)TokenApp.SnapApp);
+                if (lastsnapToken.TokenState == (short)TokenStatus.Valid)
+                {
+                
+                var stationRoutes = dataModel.vwStationRoutes.ToList();
+                foreach (var vwStationRoute in stationRoutes)
+                {
+                        var sm=new StationRoutePlu();
+                    var oldsm =
+                        dataModel.StationRoutePlus.FirstOrDefault(x => x.StationRouteId == vwStationRoute.StationRouteId);
+                    if (oldsm !=null)
+                    {
+                        if (!RouteMapper.IsHourNull(oldsm, DateTime.Now.Hour))
+                        {
+                                continue;
+                        }
+                        sm = oldsm;
+                    }
+                        var price = tmService.GetSnappPrice(lastsnapToken.Token, vwStationRoute.SrcMainStLat.ToString(), vwStationRoute.SrcMainStLng.ToString(), vwStationRoute.DstMainStLat.ToString(), vwStationRoute.DstMainStLng.ToString());
+                        sm.StationRouteId = vwStationRoute.StationRouteId;
+                    switch (DateTime.Now.Hour)
+                    {
+                            case 5:
+                            sm.Five = price;
+                                break;
+                            case 6:
+                            sm.Six = price;
+                                break;
+                            case 7:
+                                sm.Seven = price;
+                                break;
+                            case 8:
+                                sm.Eight = price;
+                                break;
+                            case 9:
+                                sm.Nine = price;
+                                break;
+                            case 10:
+                                sm.Ten = price;
+                                break;
+                            case 11:
+                                sm.Eleven = price;
+                                break;
+                            case 12:
+                                sm.Twelve = price;
+                                break;
+                            case 13:
+                                sm.Thirteen = price;
+                                break;
+                            case 14:
+                                sm.Fourteen = price;
+                                break;
+                            case 15:
+                                sm.Fifteen = price;
+                                break;
+                            case 16:
+                                sm.Sixteen = price;
+                                break;
+                            case 17:
+                                sm.Seventeen = price;
+                                break;
+                            case 18:
+                                sm.Eighteen = price;
+                                break;
+                            case 19:
+                                sm.Nineteen = price;
+                                break;
+                            case 20:
+                                sm.Twenty = price;
+                                break;
+                            case 21:
+                                sm.TwentyOne = price;
+                                break;
+                            case 22:
+                                sm.TwentyTwo = price;
+                                break;
+                            case 23:
+                                sm.TwentyThree = price;
+                                break;
+                        }
+                        if (oldsm ==null)
+                    {
+                            dataModel.StationRoutePlus.Add(sm);
+                        }
+                        //break;
+                        dataModel.SaveChanges();
+                        //Thread.Sleep(10000);
+                    }
+                    
+                }
+            }
+            return true;
+        }
+
+        
 
         /*public PasargadPayModel PayPasargad(int userId, long tripId, long chargeAmount)
         {
@@ -3985,7 +4936,7 @@ namespace CoreManager.RouteManager
                     GeoCoordinate(centralLatitude*180/Math.PI, centralLongitude*180/Math.PI);
         }
 
-        private DateTime GetNextDateTime(int hour, int min)
+        /*private DateTime GetNextDateTime(int hour, int min)
         {
             DateTime current = DateTime.Now;
             DateTime nextDatetime = DateTime.Now;
@@ -3995,12 +4946,27 @@ namespace CoreManager.RouteManager
                 nextDatetime = new DateTime(current.Year, current.Month, current.AddDays(1).Day, hour, min, 0);
             }
 /*int minuteUntilNext = (min - current.Minute + 60)%60;
-                                                                                                                                                                                                                                                                                                                                                    int hoursUntilNext = (hour - current.Hour + 24)%24;
-                                                                                                                                                                                                                                                                                                                                                    if (min + current.Minute > 60)
-                                                                                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                                                                                        hoursUntilNext--;
-                                                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                                                    DateTime nextDatetime = current.AddHours(hoursUntilNext).AddMinutes(minuteUntilNext);*/
+int hoursUntilNext = (hour - current.Hour + 24)%24;
+if (min + current.Minute > 60)
+{
+hoursUntilNext--;
+}
+DateTime nextDatetime = current.AddHours(hoursUntilNext).AddMinutes(minuteUntilNext);#1#
+            return nextDatetime;
+        }*/
+        private DateTime GetNextDateTime(int hour, int min)
+        {
+            DateTime current = DateTime.Now;
+            DateTime nextDatetime = DateTime.Now;
+            nextDatetime = new DateTime(current.Year, current.Month, current.Day, hour, min, 0);
+            if (nextDatetime < current)
+            {
+                nextDatetime = new DateTime(current.Year, current.Month, current.AddDays(1).Day, hour, min, 0);
+            }
+            if (nextDatetime < current)
+            {
+                nextDatetime = new DateTime(current.Year, current.AddMonths(1).Month, current.AddDays(1).Day, hour, min, 0);
+            }
             return nextDatetime;
         }
 
@@ -4035,6 +5001,15 @@ namespace CoreManager.RouteManager
             if (priceValue != null)
             {
                 return Math.Round((priceValue.Value)/1000, 0)*1000;
+            }
+            return 0;
+        }
+
+        private long RemoveCeilingDecimal(double? priceValue)
+        {
+            if (priceValue != null)
+            {
+                return (long) (Math.Ceiling((priceValue.Value) / 1000)* 1000);
             }
             return 0;
         }
@@ -4202,7 +5177,7 @@ namespace CoreManager.RouteManager
                 }
 
 /*var excludedSuggestions = _routeGroupManager.GetExcludeRouteRequestIds(routeRequestId).ToList();
-                                                                                                                                                                                                                                                                                                                                                                vwRouteSuggests = vwRouteSuggests.Where(y => !excludedSuggestions.Contains(y.RouteRequestId)).ToList();*/
+                                                                                                                                                                                                                                                                                                                                                                                                vwRouteSuggests = vwRouteSuggests.Where(y => !excludedSuggestions.Contains(y.RouteRequestId)).ToList();*/
                 if (vwRouteSuggests.Count > 0)
                 {
                     var timings =
@@ -4298,7 +5273,7 @@ namespace CoreManager.RouteManager
                 }
                 var vwRouteSuggestsGroup = vwRouteSuggests.GroupBy(x => x.UserId);
 /*var excludedSuggestions = _routeGroupManager.GetExcludeRouteRequestIds(routeRequestId).ToList();
-                                                                                                                                                                                                                                                                                                                                                                vwRouteSuggests = vwRouteSuggests.Where(y => !excludedSuggestions.Contains(y.RouteRequestId)).ToList();*/
+                                                                                                                                                                                                                                                                                                                                                                                                vwRouteSuggests = vwRouteSuggests.Where(y => !excludedSuggestions.Contains(y.RouteRequestId)).ToList();*/
                 if (vwRouteSuggests.Count > 0)
                 {
                     foreach (var everyvwRouteSuggest in vwRouteSuggestsGroup)

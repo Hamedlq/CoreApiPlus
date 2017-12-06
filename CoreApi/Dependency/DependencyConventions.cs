@@ -6,6 +6,7 @@ using Castle.Windsor;
 using System.Web.Http.Controllers;
 using CoreManager.AdminManager;
 using CoreManager.DiscountManager;
+using CoreManager.DriverManager;
 using CoreManager.FanapManager;
 using CoreManager.GroupManager;
 using CoreManager.LogProvider;
@@ -15,6 +16,7 @@ using CoreManager.PricingManager;
 using CoreManager.ResponseProvider;
 using CoreManager.RouteGroupManager;
 using CoreManager.RouteManager;
+using CoreManager.TaxiMeterManager;
 using CoreManager.TimingService;
 using CoreManager.TransactionManager;
 using CoreManager.UserManager;
@@ -44,6 +46,10 @@ namespace CoreApi.Dependency
                         Component.For<IDiscountManager, DiscountManager>().ImplementedBy<DiscountManager>(),
 
                         Component.For<IFanapManager, FanapManager>().ImplementedBy<FanapManager>(),
+
+                        Component.For<IDriverManager, DriverManager>().ImplementedBy<DriverManager>(),
+
+                        Component.For<ITaxiMeterManager, TaxiMeterManager>().ImplementedBy<TaxiMeterManager>(),
 
                         //Component.For<IResponseProvider>().ImplementedBy<ResponseProvider>(),
 

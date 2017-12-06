@@ -818,5 +818,134 @@ namespace CoreManager.RouteManager
             return input;
         }
 
+
+        public static bool IsHourNull(StationRoutePlu sm, int nowHour)
+        {
+            switch (nowHour)
+            {
+                case 5:
+                    return sm.Five==null;
+                case 6:
+                    return sm.Six == null;
+                case 7:
+                    return sm.Seven == null;
+                case 8:
+                    return sm.Eight == null;
+                case 9:
+                    return sm.Nine == null;
+                case 10:
+                    return sm.Ten == null;
+                case 11:
+                    return sm.Eleven == null;
+                case 12:
+                    return sm.Twelve == null;
+                case 13:
+                    return sm.Thirteen == null;
+                case 14:
+                    return sm.Fourteen == null;
+                case 15:
+                    return sm.Fifteen == null;
+                case 16:
+                    return sm.Sixteen == null;
+                case 17:
+                    return sm.Seventeen == null;
+                case 18:
+                    return sm.Eighteen == null;
+                case 19:
+                    return sm.Nineteen == null;
+                case 20:
+                    return sm.Twenty == null;
+                case 21:
+                    return sm.TwentyOne == null;
+                case 22:
+                    return sm.TwentyTwo == null;
+                case 23:
+                    return sm.TwentyThree == null;
+            }
+            return false;
+        }
+
+        public static long MaxPrice(vwFilterPlu filter)
+        {
+            long max = 0;
+            if (filter.Five > max)
+            {
+                max = (long) filter.Five;
+            }
+            if (filter.Six > max)
+            {
+                max = (long)filter.Six;
+            }
+            if (filter.Seven> max)
+            {
+                max = (long)filter.Seven;
+            }
+            if (filter.Eight > max)
+            {
+                max = (long)filter.Eight;
+            }
+            if (filter.Nine > max)
+            {
+                max = (long)filter.Nine;
+            }
+            if (filter.Ten> max)
+            {
+                max = (long)filter.Ten;
+            }
+            if (filter.Eleven > max)
+            {
+                max = (long)filter.Eleven;
+            }
+            if (filter.Twelve > max)
+            {
+                max = (long)filter.Twelve;
+            }
+            if (filter.Thirteen > max)
+            {
+                max = (long)filter.Thirteen;
+            }
+            if (filter.Fourteen > max)
+            {
+                max = (long)filter.Fourteen;
+            }
+            if (filter.Fifteen > max)
+            {
+                max = (long)filter.Fifteen;
+            }
+            if (filter.Sixteen > max)
+            {
+                max = (long)filter.Sixteen;
+            }
+            if (filter.Seventeen > max)
+            {
+                max = (long)filter.Seventeen;
+            }
+            if (filter.Eighteen > max)
+            {
+                max = (long)filter.Eighteen;
+            }
+            if (filter.Nineteen > max)
+            {
+                max = (long)filter.Nineteen;
+            }
+            if (filter.Twenty > max)
+            {
+                max = (long)filter.Twenty;
+            }
+            if (filter.TwentyOne > max)
+            {
+                max = (long)filter.TwentyOne;
+            }
+            if (filter.TwentyTwo > max)
+            {
+                max = (long)filter.TwentyTwo;
+            }
+            if (filter.TwentyThree > max)
+            {
+                max = (long)filter.TwentyThree;
+            }
+
+            return max;
+        }
     }
 }
