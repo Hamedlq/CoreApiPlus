@@ -227,6 +227,8 @@
     <Property Name="Entry" Type="nvarchar" MaxLength="56" />
     <Property Name="Introduce" Type="nvarchar" MaxLength="128" />
     <Property Name="Enterprise" Type="nvarchar" MaxLength="128" />
+    <Property Name="SrcStation" Type="nvarchar" MaxLength="128" />
+    <Property Name="DstStation" Type="nvarchar" MaxLength="128" />
   </EntityType>
   <EntityType Name="Event">
     <Key>
@@ -1155,6 +1157,48 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwFilter' does not have a primary
     <Property Name="IsDelete" Type="bit" Nullable="false" />
   </EntityType>
   <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwFilterBook' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwFilterBook">
+    <Key>
+      <PropertyRef Name="UserName" />
+      <PropertyRef Name="IsActive" />
+      <PropertyRef Name="IsCarpool" />
+      <PropertyRef Name="CreateTime" />
+      <PropertyRef Name="FilterId" />
+      <PropertyRef Name="RState" />
+      <PropertyRef Name="RStartTime" />
+      <PropertyRef Name="RCreateTime" />
+      <PropertyRef Name="FilterRequestId" />
+      <PropertyRef Name="IsDelete" />
+      <PropertyRef Name="StationRouteId" />
+      <PropertyRef Name="FilterUserId" />
+      <PropertyRef Name="DstMStationId" />
+      <PropertyRef Name="SrcMStationId" />
+    </Key>
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Family" Type="nvarchar(max)" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+    <Property Name="TripId" Type="bigint" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="IsCarpool" Type="bit" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="FilterId" Type="bigint" Nullable="false" />
+    <Property Name="RState" Type="smallint" Nullable="false" />
+    <Property Name="RStartTime" Type="datetime" Nullable="false" />
+    <Property Name="RCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="FilterRequestId" Type="bigint" Nullable="false" />
+    <Property Name="IsDelete" Type="bit" Nullable="false" />
+    <Property Name="StationRouteId" Type="bigint" Nullable="false" />
+    <Property Name="FilterUserId" Type="bigint" Nullable="false" />
+    <Property Name="Gender" Type="int" />
+    <Property Name="DstMStationId" Type="bigint" Nullable="false" />
+    <Property Name="SrcMStationId" Type="bigint" Nullable="false" />
+    <Property Name="PayReqId" Type="bigint" />
+    <Property Name="BookingType" Type="smallint" />
+    <Property Name="IsBooked" Type="bit" />
+    <Property Name="UserImageId" Type="uniqueidentifier" />
+  </EntityType>
+  <!--Errors Found During Generation:
 warning 6002: The table/view 'Mibarim_plus.dbo.vwFilterPlus' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
   <EntityType Name="vwFilterPlus">
     <Key>
@@ -1244,6 +1288,48 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwFilterRequest' does not have a 
     <Property Name="DstStLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
     <Property Name="DstStLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
     <Property Name="IsCarpool" Type="bit" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwFilterRequestTrip' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vwFilterRequestTrip">
+    <Key>
+      <PropertyRef Name="IsActive" />
+      <PropertyRef Name="IsCarpool" />
+      <PropertyRef Name="TripId" />
+      <PropertyRef Name="DriverRouteId" />
+      <PropertyRef Name="TStartTime" />
+      <PropertyRef Name="TCreateTime" />
+      <PropertyRef Name="TEmptySeat" />
+      <PropertyRef Name="TState" />
+      <PropertyRef Name="RState" />
+      <PropertyRef Name="RStartTime" />
+      <PropertyRef Name="RCreateTime" />
+      <PropertyRef Name="FilterId" />
+      <PropertyRef Name="FilterRequestId" />
+      <PropertyRef Name="FilterUserId" />
+      <PropertyRef Name="SrcMStationId" />
+      <PropertyRef Name="DstMStationId" />
+      <PropertyRef Name="StationRouteId" />
+      <PropertyRef Name="IsDelete" />
+    </Key>
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="IsCarpool" Type="bit" Nullable="false" />
+    <Property Name="TripId" Type="bigint" Nullable="false" />
+    <Property Name="DriverRouteId" Type="bigint" Nullable="false" />
+    <Property Name="TStartTime" Type="datetime" Nullable="false" />
+    <Property Name="TCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="TEmptySeat" Type="smallint" Nullable="false" />
+    <Property Name="TState" Type="smallint" Nullable="false" />
+    <Property Name="RState" Type="smallint" Nullable="false" />
+    <Property Name="RStartTime" Type="datetime" Nullable="false" />
+    <Property Name="RCreateTime" Type="datetime" Nullable="false" />
+    <Property Name="FilterId" Type="bigint" Nullable="false" />
+    <Property Name="FilterRequestId" Type="bigint" Nullable="false" />
+    <Property Name="FilterUserId" Type="bigint" Nullable="false" />
+    <Property Name="SrcMStationId" Type="bigint" Nullable="false" />
+    <Property Name="DstMStationId" Type="bigint" Nullable="false" />
+    <Property Name="StationRouteId" Type="bigint" Nullable="false" />
+    <Property Name="IsDelete" Type="bit" Nullable="false" />
   </EntityType>
   <!--Errors Found During Generation:
 warning 6002: The table/view 'Mibarim_plus.dbo.vwGroup' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1725,6 +1811,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Function Name="CopyStationRoutePlus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <Function Name="GenerateSimilarRoutes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="routeId" Type="int" Mode="In" />
     <Parameter Name="DistanceCoeffiecient" Type="int" Mode="In" />
@@ -2079,6 +2166,32 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vwFilter].[IsDelete] AS [IsDelete]
     FROM [dbo].[vwFilter] AS [vwFilter]</DefiningQuery>
     </EntitySet>
+    <EntitySet Name="vwFilterBook" EntityType="Self.vwFilterBook" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwFilterBook].[Name] AS [Name], 
+    [vwFilterBook].[Family] AS [Family], 
+    [vwFilterBook].[UserName] AS [UserName], 
+    [vwFilterBook].[TripId] AS [TripId], 
+    [vwFilterBook].[IsActive] AS [IsActive], 
+    [vwFilterBook].[IsCarpool] AS [IsCarpool], 
+    [vwFilterBook].[CreateTime] AS [CreateTime], 
+    [vwFilterBook].[FilterId] AS [FilterId], 
+    [vwFilterBook].[RState] AS [RState], 
+    [vwFilterBook].[RStartTime] AS [RStartTime], 
+    [vwFilterBook].[RCreateTime] AS [RCreateTime], 
+    [vwFilterBook].[FilterRequestId] AS [FilterRequestId], 
+    [vwFilterBook].[IsDelete] AS [IsDelete], 
+    [vwFilterBook].[StationRouteId] AS [StationRouteId], 
+    [vwFilterBook].[FilterUserId] AS [FilterUserId], 
+    [vwFilterBook].[Gender] AS [Gender], 
+    [vwFilterBook].[DstMStationId] AS [DstMStationId], 
+    [vwFilterBook].[SrcMStationId] AS [SrcMStationId], 
+    [vwFilterBook].[PayReqId] AS [PayReqId], 
+    [vwFilterBook].[BookingType] AS [BookingType], 
+    [vwFilterBook].[IsBooked] AS [IsBooked], 
+    [vwFilterBook].[UserImageId] AS [UserImageId]
+    FROM [dbo].[vwFilterBook] AS [vwFilterBook]</DefiningQuery>
+    </EntitySet>
     <EntitySet Name="vwFilterPlus" EntityType="Self.vwFilterPlus" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
     [vwFilterPlus].[FilterId] AS [FilterId], 
@@ -2136,6 +2249,28 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vwFilterRequest].[DstStLng] AS [DstStLng], 
     [vwFilterRequest].[IsCarpool] AS [IsCarpool]
     FROM [dbo].[vwFilterRequest] AS [vwFilterRequest]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vwFilterRequestTrip" EntityType="Self.vwFilterRequestTrip" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vwFilterRequestTrip].[IsActive] AS [IsActive], 
+    [vwFilterRequestTrip].[IsCarpool] AS [IsCarpool], 
+    [vwFilterRequestTrip].[TripId] AS [TripId], 
+    [vwFilterRequestTrip].[DriverRouteId] AS [DriverRouteId], 
+    [vwFilterRequestTrip].[TStartTime] AS [TStartTime], 
+    [vwFilterRequestTrip].[TCreateTime] AS [TCreateTime], 
+    [vwFilterRequestTrip].[TEmptySeat] AS [TEmptySeat], 
+    [vwFilterRequestTrip].[TState] AS [TState], 
+    [vwFilterRequestTrip].[RState] AS [RState], 
+    [vwFilterRequestTrip].[RStartTime] AS [RStartTime], 
+    [vwFilterRequestTrip].[RCreateTime] AS [RCreateTime], 
+    [vwFilterRequestTrip].[FilterId] AS [FilterId], 
+    [vwFilterRequestTrip].[FilterRequestId] AS [FilterRequestId], 
+    [vwFilterRequestTrip].[FilterUserId] AS [FilterUserId], 
+    [vwFilterRequestTrip].[SrcMStationId] AS [SrcMStationId], 
+    [vwFilterRequestTrip].[DstMStationId] AS [DstMStationId], 
+    [vwFilterRequestTrip].[StationRouteId] AS [StationRouteId], 
+    [vwFilterRequestTrip].[IsDelete] AS [IsDelete]
+    FROM [dbo].[vwFilterRequestTrip] AS [vwFilterRequestTrip]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="vwGroup" EntityType="Self.vwGroup" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
