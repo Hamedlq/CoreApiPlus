@@ -105,14 +105,19 @@ namespace CoreDA
         public virtual DbSet<EventAttendee> EventAttendees { get; set; }
         public virtual DbSet<vwStation> vwStations { get; set; }
         public virtual DbSet<AppsToken> AppsTokens { get; set; }
-        public virtual DbSet<vwDriverTrip> vwDriverTrips { get; set; }
-        public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<StationRoutePlu> StationRoutePlus { get; set; }
         public virtual DbSet<TmLocation> TmLocations { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<Filter> Filters { get; set; }
+        public virtual DbSet<vwDriverTrip> vwDriverTrips { get; set; }
         public virtual DbSet<vwFilter> vwFilters { get; set; }
         public virtual DbSet<vwFilterPlu> vwFilterPlus { get; set; }
+        public virtual DbSet<FilterRequest> FilterRequests { get; set; }
+        public virtual DbSet<vwFilterRequest> vwFilterRequests { get; set; }
+        public virtual DbSet<vwActiveTrip> vwActiveTrips { get; set; }
+        public virtual DbSet<vwFilterBook> vwFilterBooks { get; set; }
+        public virtual DbSet<vwFilterRequestTrip> vwFilterRequestTrips { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
     
         public virtual ObjectResult<GetLocalRoutes_Result> GetLocalRoutes(Nullable<decimal> lat, Nullable<decimal> lng, Nullable<int> routeDistance, Nullable<int> pointDistance)
         {
@@ -208,6 +213,11 @@ namespace CoreDA
                 new ObjectParameter("stationRouteId", typeof(long));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAggregatedTimes_Result>("GetAggregatedTimes", fromParameter, stationRouteIdParameter);
+        }
+    
+        public virtual int CopyStationRoutePlus()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CopyStationRoutePlus");
         }
     }
 }

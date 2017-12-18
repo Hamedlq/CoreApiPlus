@@ -288,6 +288,58 @@ namespace CoreApi.Controllers
         }
 
         [HttpPost]
+        [Route("GetPassengersInfo")]
+        public IHttpActionResult GetPassengersInfo(DriverRouteModel model)
+        {
+            try
+            {
+                int ff;
+                if (User != null && int.TryParse(User.Identity.GetUserId(), out ff))
+                {
+                    var res = _routemanager.GetPassengersInfo(ff,model);
+                    return Json(_responseProvider.GenerateRouteResponse(res));
+                }
+                else
+                {
+                    return
+                        ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Unauthorized,
+                            "You are unauthorized to see Info!"));
+                }
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "GetPassengersInfo", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+        [HttpPost]
+        [Route("GetDriverNewRoutes")]
+        [Authorize]
+        public IHttpActionResult GetDriverNewRoutes()
+        {
+            try
+            {
+                int ff;
+                if (User != null && int.TryParse(User.Identity.GetUserId(), out ff))
+                {
+                    var res = _routemanager.GetDriverNewRoutes(ff);
+                    return Json(_responseProvider.GenerateRouteResponse(res));
+                }
+                else
+                {
+                    return
+                        ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Unauthorized,
+                            "You are unauthorized to see Info!"));
+                }
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "GetDriverRoutes", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpPost]
         [Route("SetTrip")]
         [Authorize]
         public IHttpActionResult SetTrip(DriverRouteModel model)
@@ -370,6 +422,22 @@ namespace CoreApi.Controllers
             }
             try
             {
+                var res = _routemanager.InvokeFilters();
+                //return Json(_responseProvider.GenerateResponse(new List<string> {res}, "InvokeTrips"));
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException != null)
+                {
+                    _logmanager.Log(Tag, "InvokeFilters", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logmanager.Log(Tag, "InvokeFilters", e.Message);
+                }
+            }
+            try
+            {
                 var res=_routemanager.SendDriverNotifs();
                 //return Json(_responseProvider.GenerateResponse(new List<string> { res }, "InvokeTrips"));
             }
@@ -398,6 +466,22 @@ namespace CoreApi.Controllers
                 else
                 {
                     _logmanager.Log(Tag, "SetUserNotifications", e.Message);
+                }
+            }
+            try
+            {
+                var res = _routemanager.SendNewBookedMessages(); 
+                return Json(_responseProvider.GenerateResponse(new List<string> { res }, "InvokeTrips"));
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException != null)
+                {
+                    _logmanager.Log(Tag, "SendNewBookedMessages", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logmanager.Log(Tag, "SendNewBookedMessages", e.Message);
                 }
             }
 
@@ -513,7 +597,7 @@ namespace CoreApi.Controllers
             {
                 int ff;
                 int.TryParse(User.Identity.GetUserId(), out ff);
-                var res = _routemanager.AcceptSuggestRoute(ff,model);
+                var res = _routemanager.AcceptSuggestRoute(ff,model,false);
                 return Json(_responseProvider.GenerateRouteResponse(res, "AcceptSuggestRoute"));
             }
             catch (Exception e)
@@ -525,6 +609,32 @@ namespace CoreApi.Controllers
                 else
                 {
                     _logmanager.Log(Tag, "AcceptSuggestRoute", e.Message);
+                }
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
+        [HttpPost]
+        [Route("AcceptSuggestRouteByAdmin")]
+        [Authorize(Roles = "AdminUser")]
+        public IHttpActionResult AcceptSuggestRouteByAdmin(FilterModel model)
+        {
+            try
+            {
+                int ff;
+                int.TryParse(User.Identity.GetUserId(), out ff);
+                var res = _routemanager.AcceptSuggestRoute(ff, model,true);
+                return Json(_responseProvider.GenerateRouteResponse(res, "AcceptSuggestRouteByAdmin"));
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException != null)
+                {
+                    _logmanager.Log(Tag, "AcceptSuggestRouteByAdmin", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logmanager.Log(Tag, "AcceptSuggestRouteByAdmin", e.Message);
                 }
             }
             return Json(_responseProvider.GenerateUnknownErrorResponse());

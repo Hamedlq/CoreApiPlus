@@ -35,4 +35,45 @@ namespace CoreExternalService.Models
     {
         public string token { set; get; }
     }
+
+    public class Tap30PriceResponse
+    {
+        public string result { set; get; }
+        public Tap30PriceDataResponse data { set; get; }
+
+    }
+    public class Tap30PriceDataResponse
+    {
+        public List<Tap30PriceInfos> priceInfos { set; get; }
+    }
+
+    public class Tap30PriceInfos
+    {
+        public string price { set; get; }
+    }
+
+    public class AlopeykResponse
+    {
+        public string status { set; get; }
+        public string message { set; get; }
+        public AlopeykObject @object { set; get; }
+    }
+
+    public class AlopeykObject
+    {
+        public string id { set; get; }
+        public string token { set; get; }
+    }
+
+    public class AlopeykTokenResponse
+    {
+        public string status { set; get; }
+        public AlopeykObjectResponse @object { set; get; }
+
+    }
+
+public class AlopeykObjectResponse
+{
+    public string csrf_token { set; get; }
+    }
 }

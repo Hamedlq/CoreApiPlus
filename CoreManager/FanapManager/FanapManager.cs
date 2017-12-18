@@ -104,7 +104,7 @@ namespace CoreManager.FanapManager
             var pr = new PayReq();
             using (var dataModel = new MibarimEntities())
             {
-                var trip = dataModel.vwDriverTrips.FirstOrDefault(x => x.TripId == tripId);
+                var trip = dataModel.vwDriverTrips.FirstOrDefault(x => x.TripId == tripId && !x.DrIsDeleted);
                 if (trip != null)
                 {
                     pr.PayReqCreateTime = DateTime.Now;

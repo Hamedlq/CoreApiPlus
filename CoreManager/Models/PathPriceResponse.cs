@@ -17,6 +17,7 @@ namespace CoreManager.Models
         public PathPoint PathRoute { set; get; }
         public string SharedServicePrice { set; get; }
         public string PrivateServicePrice { set; get; }
+        public string Tap30PathPrice { set; get; }
 
     }
 }

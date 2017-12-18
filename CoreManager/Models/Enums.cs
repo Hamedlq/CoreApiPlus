@@ -173,30 +173,12 @@ namespace CoreManager.Models
         FinishedByTrip = 60,
         Canceled = 65,
     }
-    public enum DriverAppStates
-    {
-        TripActive = 101,
-        TripInActive=102,
-        TripMatched = 103,
-    }
 
-    public enum FilterState
+    public enum FilterRequestState
     {
         Scheduled = 1,
         CanceledByUser = 5,
-        InPreTripTime = 10,
-        InTripTime = 15,
-        InRiding = 20,
-        PassengerCall = 25,
-        DriverRiding = 27,
-        DriverNotCome = 30,
-        PassengerNotCome = 35,
-        InDriving = 40,
-        InRanking = 45,
-        Finished = 50,
-        FinishedByTime = 55,
-        FinishedByTrip = 60,
-        Canceled = 65,
+        CanceledByTime=10,
     }
 
     /*public enum TripState
@@ -327,5 +309,13 @@ namespace CoreManager.Models
         Tap30App = 2,
         CarpinoApp = 3,
         CarpinoRefreshApp = 4,
+        AlopeykApp = 5,
+        MaximApp = 6,
     }
+    public enum PayingMethod
+    {
+        InCash = 1,
+        OnLinePayed = 2
+    }
+    
 }

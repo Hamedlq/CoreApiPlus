@@ -25,6 +25,8 @@ namespace CoreExternalService
         private string _carpino_base_url;
         private string _carpino_username;
         private string _carpino_password;
+        private string _alopeyk_base_url;
+        private string _alopeyk_phone_number;
 
         public TaxiMeterService()
         {
@@ -37,6 +39,8 @@ namespace CoreExternalService
             _carpino_base_url = "https://api.carpino.io/";
             _carpino_username = ConfigurationManager.AppSettings["CarpinoUserName"];
             _carpino_password = ConfigurationManager.AppSettings["CarpinoPassword"];
+            _alopeyk_base_url = "https://api.alopeyk.com/";
+            _alopeyk_phone_number= ConfigurationManager.AppSettings["AloPeykUserName"];
         }
 
         public string GetSnapToken()
@@ -129,6 +133,32 @@ namespace CoreExternalService
             return res.data.token;
         }
 
+        public string SendAloPeykSms()
+        {
+            var alopeykUrl = _alopeyk_base_url + "/api/v2/";
+            var client = new RestClient(alopeykUrl);
+            var restRequest = new RestRequest("login/", Method.POST);
+            restRequest.AddJsonBody(new
+            {
+                phone = _alopeyk_phone_number,
+                type= "CUSTOMER",
+                model= "SM-N900",
+                uuid= "264c1d5f9c0b10e7",
+                platform= "android",
+                version= "5.0",
+                manufacturer= "samsung",
+                isVirtual= "123456",
+                serial= "264c1d5f9c0b10e7",
+                app_version= "2.4.1",
+                push_token= "ad084f19-591d-4e97-8447-b657a79ac91f",
+                with= new[] {"customer"},
+            });
+            IRestResponse response = client.Execute(restRequest);
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            var res = js.Deserialize<AlopeykResponse>(response.Content);
+            return res.@object.token;
+        }
+
         public long GetSnappPrice(string authToken,string srcLat, string srcLng,string dstLat,string dstLng)
         {
             Uri snappUri = new Uri(_snapp_api_url + "v2/passenger");
@@ -159,6 +189,53 @@ namespace CoreExternalService
             long ret;
             long.TryParse(res.data.final,out ret);
             return ret;
+        }
+
+        public string GetTap30Price(string modelSrcLat, string modelSrcLng, string modelDstLat, string modelDstLng, string tap30Token)
+        {
+            var srcLat = Double.Parse(modelSrcLat);
+            var srcLng = Double.Parse(modelSrcLng);
+            var dstLat = Double.Parse(modelDstLat);
+            var dstLng = Double.Parse(modelDstLng);
+            var tap30Url = _tap30_base_url + "/v2/ride/";
+            var client = new RestClient(tap30Url);
+            var restRequest = new RestRequest("preview", Method.POST);
+            restRequest.AddHeader("X-Authorization", tap30Token);
+            restRequest.AddJsonBody(new
+            {
+                destinations = new[] {new 
+                {
+                    latitude = srcLat,
+                    longitude = srcLng
+                }},
+                origin = new
+                {
+                    latitude = dstLat,
+                    longitude = dstLng
+                },
+                hasReturn = false
+            });
+            IRestResponse response = client.Execute(restRequest);
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            var res = js.Deserialize<Tap30PriceResponse>(response.Content);
+            return res.data.priceInfos[0].price;
+        }
+
+
+        public string GetAloPeykToken(string theCode, string token)
+        {
+            var baseUrl = _alopeyk_base_url + "api/v2/";
+            var client = new RestClient(baseUrl);
+            var restRequest = new RestRequest("verify/", Method.POST);
+            restRequest.AddJsonBody(new
+            {
+                code= theCode,
+                token= token
+            });
+            IRestResponse response = client.Execute(restRequest);
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            var res = js.Deserialize<AlopeykTokenResponse>(response.Content);
+            return res.@object.csrf_token;
         }
     }
 }

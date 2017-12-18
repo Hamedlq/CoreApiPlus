@@ -238,6 +238,46 @@ namespace CoreApi.Controllers
             return Json(_responseProvider.GenerateUnknownErrorResponse());
         }
 
+        [HttpPost]
+        [Route("PayTrip")]
+        public IHttpActionResult PayTrip(PayModel model)
+        {
+            try
+            {
+                int ff;
+                if (User != null && int.TryParse(User.Identity.GetUserId(), out ff))
+                {
+                    if (_routemanager.IsPayValid(ff, model))
+                    {
+//                        if (model.ChargeAmount > 0)
+//                        {
+                            //gotobank
+                            var res = _routemanager.RequestPay(ff, model.TripId, model.ChargeAmount);
+                            return Json(res);
+                            /*var res = _routemanager.RequestBooking(ff, model.TripId, model.ChargeAmount);
+                            return Json(res);*/
+                        /*}
+                        else
+                        {
+                            var res1 = _routemanager.BookSeat(ff, model);
+                            return Json(res1);
+                        }*/
+                    }
+                }
+                else
+                {
+                    return
+                        ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.Unauthorized,
+                            "You are unauthorized to see Info!"));
+                }
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "PayTrip", e.Message);
+            }
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+        }
+
 
         [HttpPost]
         [Route("SetPassLocation")]
@@ -506,7 +546,7 @@ namespace CoreApi.Controllers
             try
             {
                 var res = _userManager.GetPassengers();
-                return Json(_responseProvider.GenerateRouteResponse(res, "ActiveTrips"));
+                return Json(_responseProvider.GenerateRouteResponse(res));
             }
             catch (Exception e)
             {

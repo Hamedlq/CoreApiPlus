@@ -823,7 +823,7 @@ namespace CoreManager.UserManager
             var piList = new List<PersoanlInfoModel>();
             using (var dataModel = new MibarimEntities())
             {
-                var unorderedImages = dataModel.Images.OrderByDescending(x => x.ImageCreateTime).Take(30).Select(x=>x.ImageUserId);
+                var unorderedImages = dataModel.Images.Where(x=>x.ImageType !=(int)ImageType.UserPic).OrderByDescending(x => x.ImageCreateTime).Take(30).Select(x=>x.ImageUserId);
                 var vwusers = dataModel.vwUserInfoes.Where(x => unorderedImages.Contains(x.UserId));
                 foreach (var vwUserInfo in vwusers)
                 {
@@ -2208,16 +2208,16 @@ namespace CoreManager.UserManager
             {
                 var time = DateTime.Now.AddHours(-1);
                 var models =
-                    dataModel.vwBookedTrips.Where(x => x.TStartTime > time).OrderByDescending(x => x.BrCreateTime);
+                    dataModel.vwActiveTrips.Where(x => x.IsActive && x.TripId!=null && x.RStartTime > time).OrderByDescending(x => x.TripId);
                 foreach (var vwBookedTrip in models)
                 {
                     var rm = new ActiveTripModel();
-                    rm.TripOrigin = vwBookedTrip.srcName;
-                    rm.TripDest = vwBookedTrip.dstName;
+                    rm.TripOrigin = vwBookedTrip.SrcStName;
+                    rm.TripDest = vwBookedTrip.DstStName;
                     rm.DriverName = vwBookedTrip.DriverName;
                     rm.DriverFamily = vwBookedTrip.DriverFamily;
                     rm.DriverMobile = vwBookedTrip.DriverMobile;
-                    rm.PassName = vwBookedTrip.Passname;
+                    rm.PassName = vwBookedTrip.PassName;
                     rm.PassFamily = vwBookedTrip.PassFamily;
                     rm.PassMobile = vwBookedTrip.PassMobile;
 

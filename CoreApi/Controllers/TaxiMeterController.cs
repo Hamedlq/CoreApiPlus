@@ -65,6 +65,23 @@ namespace CoreApi.Controllers
         }
 
         [HttpPost]
+        [Route("GetTap30Price")]
+        [AllowAnonymous]
+        public IHttpActionResult GetTap30Price(SrcDstModel model)
+        {
+            try
+            {
+                var token = _taxiMeterManager.GetTap30Price(model);
+                return Json(token);
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "GetTap30Price", e.Message);
+            }
+            return null;
+        }
+
+        [HttpPost]
         [Route("GetTokens")]
         [AllowAnonymous]
         public IHttpActionResult GetTokens(TmTokensModel model)
@@ -99,6 +116,24 @@ namespace CoreApi.Controllers
             }
             return null;
         }
+
+        [HttpGet]
+        [Route("GetAlopeykToken")]
+        [AllowAnonymous]
+        public IHttpActionResult GetAlopeykToken(string code)
+        {
+            try
+            {
+                var token = _taxiMeterManager.GetAlopeykToken(code);
+                return Json(token);
+            }
+            catch (Exception e)
+            {
+                _logmanager.Log(Tag, "GetTap30Token", e.Message);
+            }
+            return null;
+        }
+
 
         [HttpPost]
         [Route("GetGoogleApi")]

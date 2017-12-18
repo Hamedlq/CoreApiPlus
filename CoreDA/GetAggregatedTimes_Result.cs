@@ -18,8 +18,8 @@ namespace CoreDA
         public long FilterUserId { get; set; }
         public long SrcMStationId { get; set; }
         public long DstMStationId { get; set; }
-        public Nullable<System.DateTime> LastTimeSet { get; set; }
         public bool IsDelete { get; set; }
+        public System.DateTime RStartTime { get; set; }
         public Nullable<System.DateTime> AggregatedTime { get; set; }
         public Nullable<int> co { get; set; }
     }

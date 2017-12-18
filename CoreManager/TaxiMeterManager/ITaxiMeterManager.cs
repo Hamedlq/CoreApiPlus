@@ -11,6 +11,8 @@ namespace CoreManager.TaxiMeterManager
     {
         TmTokensModel GetTokens(TmTokensModel model);
         string GetTap30Token(string code);
+        string GetAlopeykToken(string code);
+        PathPriceResponse GetTap30Price(SrcDstModel code);
         Gtoken GetGoogleApi(string googleApi);
     }
 }

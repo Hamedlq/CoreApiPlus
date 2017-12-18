@@ -805,16 +805,33 @@ namespace CoreApi.Controllers
         [Route("GetImageById")]
         public IHttpActionResult GetImageById(ImageRequest model)
         {
-            if (model != null && User != null)
+
+            try
             {
-                var res = _userManager.GetImageById(model);
-                if (res.ImageFile != null)
+                if (model != null && User != null)
                 {
-                    return
-                        Json(new {res.ImageId, res.ImageType, Base64ImageFile = Convert.ToBase64String(res.ImageFile)});
+                    var res = _userManager.GetImageById(model);
+                    if (res.ImageFile != null)
+                    {
+                        return
+                            Json(new { res.ImageId, res.ImageType, Base64ImageFile = Convert.ToBase64String(res.ImageFile) });
+                    }
+                }
+                return Json(_responseProvider.GenerateBadRequestResponse());
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException != null)
+                {
+                    _logManager.Log(Tag, "GetImageById", e.Message + "-" + e.InnerException.Message);
+                }
+                else
+                {
+                    _logManager.Log(Tag, "GetImageById", e.Message);
                 }
             }
-            return Json(_responseProvider.GenerateBadRequestResponse());
+            return Json(_responseProvider.GenerateUnknownErrorResponse());
+
         }
 
 /*[HttpPost]

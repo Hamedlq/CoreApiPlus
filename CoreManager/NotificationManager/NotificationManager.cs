@@ -290,18 +290,19 @@ namespace CoreManager.NotificationManager
             var res=new List<NotifModel>();
             using (var dataModel = new MibarimEntities())
             {
+                var now = DateTime.Now;
                 var notifs =
-                    dataModel.Notifications.Where(x => x.NotifUserId == userId && x.NotifExpireTime > DateTime.Now && !x.IsNotificationSent && x.NotifType==(short)notificationType);
+                    dataModel.Notifications.Where(x => x.NotifUserId == userId && x.NotifExpireTime > now && !x.IsNotificationSent && x.NotifType==(short)notificationType);
                 foreach (var notification in notifs)
                 {
                     var notifModel=new NotifModel();
                     notifModel.Body = notification.NotifBody;
                     notifModel.Title = notification.NotifTitle;
                     notifModel.NotificationId = notification.NotificationId;
-                    //notification.IsNotificationSent = true;
+                    notification.IsNotificationSent = true;
                     res.Add(notifModel);
                 }
-                //dataModel.SaveChanges();
+                dataModel.SaveChanges();
             }
             return res;
         }

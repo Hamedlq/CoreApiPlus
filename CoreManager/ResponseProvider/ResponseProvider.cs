@@ -105,6 +105,13 @@ namespace CoreManager.ResponseProvider
             var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "NotifModel", Messages = list.Select(x => Json.Encode(x)).ToList(), Warnings = _warnings, Infos = _infos };
             return responseModel;
         }
+
+        public ResponseModel GenerateRouteResponse(List<ActiveTripModel> list)
+        {
+            var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "ActiveTrips", Messages = list.Select(x => Json.Encode(x)).ToList(), Warnings = _warnings, Infos = _infos };
+            return responseModel;
+        }
+
         public ResponseModel GenerateRouteResponse(List<StationRouteModel> list)
         {
             var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "RouteResponse", Messages = list.Select(x => Json.Encode(x)).ToList(), Warnings = _warnings, Infos = _infos };
@@ -136,6 +143,14 @@ namespace CoreManager.ResponseProvider
             //Working solution
             var serializer = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue, RecursionLimit = 100 };
             var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "PassRouteModel", Messages = list.Select(x => serializer.Serialize(x)).ToList(), Warnings = _warnings, Infos = _infos };
+            return responseModel;
+
+        }
+        public ResponseModel GenerateRouteResponse(List<ContactPassengersModel> list)
+        {
+            //Working solution
+            var serializer = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue, RecursionLimit = 100 };
+            var responseModel = new ResponseModel() { Status = HttpStatusCode.OK.ToString(), StatusCode = HttpStatusCode.OK, Count = list.Count, Type = "ContactPassengersModel", Messages = list.Select(x => serializer.Serialize(x)).ToList(), Warnings = _warnings, Infos = _infos };
             return responseModel;
 
         }

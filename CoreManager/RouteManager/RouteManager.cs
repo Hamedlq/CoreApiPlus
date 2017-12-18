@@ -2387,7 +2387,7 @@ namespace CoreManager.RouteManager
                 {
                     dataList= dataModel.vwDriverTrips.Where(
                             x =>
-                                x.TStartTime > triptime &&
+                                x.TStartTime > triptime && !x.DrIsDeleted &&
                                 (x.TState == (int)TripState.Scheduled || x.TState == (int)TripState.InTripTime ||
                                  x.TState == (int)TripState.InPreTripTime || x.TState == (int)TripState.InRiding))
                         .OrderBy(x => x.TStartTime).ToList();
@@ -2397,7 +2397,7 @@ namespace CoreManager.RouteManager
                     var filter = dataModel.Filters.FirstOrDefault(x=>x.FilterId==model.FilteringId);
                     dataList = dataModel.vwDriverTrips.Where(
                             x =>
-                                x.TStartTime > triptime &&
+                                x.TStartTime > triptime && !x.DrIsDeleted &&
                                 (x.TState == (int)TripState.Scheduled || x.TState == (int)TripState.InTripTime ||
                                  x.TState == (int)TripState.InPreTripTime || x.TState == (int)TripState.InRiding)
                                  && x.SrcMStationId== filter.SrcMStationId
@@ -2409,6 +2409,7 @@ namespace CoreManager.RouteManager
                 var bookedTrip =
                     dataModel.BookRequests.Where(x => tripIds.Contains(x.TripId) && x.UserId == userId);
                 var tripUserlists = dataModel.BookRequests.Where(x => tripIds.Contains(x.TripId));
+                //var filterRequests= dataModel.FilterRequests.Where(x => tripIds.Contains(x.TripId));
                 var bookeds = bookedTrip.Where(x => x.IsBooked == true).Select(y => y.TripId);
 
                 var dataList2 = dataList.Where(x => bookeds.Contains(x.TripId)).ToList();
@@ -2487,9 +2488,11 @@ namespace CoreManager.RouteManager
             using (var dataModel = new MibarimEntities())
             {
                 //DateTime triptime = DateTime.Now.AddMinutes(-15);
-                
-                var filter = dataModel.vwFilterPlus.FirstOrDefault(x => x.FilterId == filterId);
-                if (filter ==null)
+                //long? price = 0;
+                var filterplus = dataModel.vwFilterPlus.FirstOrDefault(x => x.FilterId == filterId);
+                var filter = dataModel.vwFilters.FirstOrDefault(x => x.FilterId == filterId);
+                var filterReq= dataModel.FilterRequests.FirstOrDefault(x => x.FilterId == filterId && x.IsActive);
+                if (filter ==null || filterReq==null)
                 {
                     //error
                     return passRouteModel;
@@ -2501,11 +2504,14 @@ namespace CoreManager.RouteManager
                                 x.TStartTime.Hour == time.Hour &&
                                 x.TStartTime.Minute == time.Minute 
                                  && x.StationRouteId == filter.StationRouteId).ToList();*/
-                var price = GetTimePrice((DateTime)filter.LastTimeSet, filter);
-                if (filter.TripId!=null && filter.TripId > 0)
+                
+                 var price = GetTimePrice((DateTime)filterReq.RStartTime, filterplus);
+                
+                
+                if ((filterReq.TripId!=null && filterReq.TripId > 0))
                 {
-                    var trips = dataModel.Filters.Where(x=>x.TripId==filter.TripId).ToList();
-                    var theTrip = dataModel.vwDriverTrips.FirstOrDefault(x=>x.TripId==filter.TripId);
+                    var trips = dataModel.vwFilterRequests.Where(x=>x.TripId== filterReq.TripId).ToList();
+                    var theTrip = dataModel.vwDriverTrips.FirstOrDefault(x=>x.TripId== filterReq.TripId && !x.DrIsDeleted );
                     passRouteModel.IsBooked = true;
                     passRouteModel.EmptySeats = 0;
                     passRouteModel.MobileNo = theTrip.UserName;
@@ -2519,6 +2525,17 @@ namespace CoreManager.RouteManager
                     passRouteModel.DstLongitude = theTrip.DstMainStLng.ToString();
                     passRouteModel.Family = theTrip.Family;
                     passRouteModel.TimingString = theTrip.TStartTime.ToString("HH:mm");
+                    if (filterReq.IsCarpool)
+                    {
+                        passRouteModel.Price = (long) (theTrip.PassPrice);
+                        passRouteModel.PricingString =
+                            RouteMapper.PersianNumber(((long)theTrip.PassPrice).ToString("N0", new NumberFormatInfo()
+                            {
+                                NumberGroupSizes = new[] { 3 },
+                                NumberGroupSeparator = ","
+                            }));
+                    }
+                    else { 
                     passRouteModel.Price = RemoveCeilingDecimal(price / (trips.Count)); 
                     passRouteModel.PricingString =
                         RouteMapper.PersianNumber(RemoveCeilingDecimal(price / (trips.Count)).ToString("N0", new NumberFormatInfo()
@@ -2526,6 +2543,7 @@ namespace CoreManager.RouteManager
                             NumberGroupSizes = new[] { 3 },
                             NumberGroupSeparator = ","
                         }));
+                    }
                     passRouteModel.SrcAddress = theTrip.SrcMainStName + "، " + theTrip.SrcStAdd;
                     passRouteModel.SrcMainAddress = theTrip.SrcMainStName;
                     passRouteModel.SrcLink = "https://www.google.com/maps/place/" + theTrip.SrcStLat + "," +
@@ -2546,7 +2564,7 @@ namespace CoreManager.RouteManager
                     passRouteModel.SrcLongitude = filter.SrcStLng.ToString();
                     passRouteModel.DstLatitude = filter.DstStLat.ToString();
                     passRouteModel.DstLongitude = filter.DstStLng.ToString();
-                    passRouteModel.TimingString = ((DateTime)filter.LastTimeSet).ToString("HH:mm");
+                    passRouteModel.TimingString = ((DateTime)filterReq.RStartTime).ToString("HH:mm");
                     passRouteModel.Price = RemoveCeilingDecimal(price);
                     passRouteModel.PricingString =
                         RouteMapper.PersianNumber(RemoveCeilingDecimal(price).ToString("N0", new NumberFormatInfo()
@@ -2580,7 +2598,7 @@ namespace CoreManager.RouteManager
                 }
                 else
                 {
-                    var trip = dataModel.vwDriverTrips.FirstOrDefault(x => x.TripId == modelTripId);
+                    var trip = dataModel.vwDriverTrips.FirstOrDefault(x => x.TripId == modelTripId && !x.DrIsDeleted);
                     if (trip != null)
                     {
                         var user = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == userId);
@@ -2606,7 +2624,7 @@ namespace CoreManager.RouteManager
             var payreq = new PaymentDetailModel();
             using (var dataModel = new MibarimEntities())
             {
-                var trip = dataModel.vwDriverTrips.FirstOrDefault(x => x.TripId == modelTripId);
+                var trip = dataModel.vwDriverTrips.FirstOrDefault(x => x.TripId == modelTripId && !x.DrIsDeleted);
                 if (trip != null)
                 {
                     var pr = new PayReq();
@@ -2619,6 +2637,35 @@ namespace CoreManager.RouteManager
                     bookreq.TripId = modelTripId;
                     bookreq.BrCreateTime = DateTime.Now;
                     bookreq.BookingType = (int) BookingTypes.ByPasargad;
+                    bookreq.UserId = userId;
+                    bookreq.IsBooked = false;
+                    bookreq.PayReqId = pr.PayReqId;
+                    dataModel.BookRequests.Add(bookreq);
+                    dataModel.SaveChanges();
+                    payreq.BankLink = "http://mibarimapp.com/coreapi/PasargadPay?reqid=" + pr.PayReqId;
+                    payreq.State = 100;
+                }
+            }
+            return payreq;
+        }
+        public PaymentDetailModel RequestPay(int userId, long modelTripId, long modelChargeAmount)
+        {
+            var payreq = new PaymentDetailModel();
+            using (var dataModel = new MibarimEntities())
+            {
+                var trip = dataModel.vwDriverTrips.FirstOrDefault(x => x.TripId == modelTripId && !x.DrIsDeleted);
+                if (trip != null)
+                {
+                    var pr = new PayReq();
+                    pr.PayReqCreateTime = DateTime.Now;
+                    pr.PayReqUserId = userId;
+                    pr.PayReqValue = modelChargeAmount;
+                    dataModel.PayReqs.Add(pr);
+                    dataModel.SaveChanges();
+                    var bookreq = new BookRequest();
+                    bookreq.TripId = modelTripId;
+                    bookreq.BrCreateTime = DateTime.Now;
+                    bookreq.BookingType = (int)BookingTypes.ByPasargad;
                     bookreq.UserId = userId;
                     bookreq.IsBooked = false;
                     bookreq.PayReqId = pr.PayReqId;
@@ -2789,15 +2836,16 @@ namespace CoreManager.RouteManager
                             driverRouteModel.TripState = lastTrip.TState;
                             driverRouteModel.TripId = lastTrip.TripId;
                         }
-                        var tripUsers = dataModel.BookRequests.Where(x => x.TripId == lastTrip.TripId);
+                        /*var tripUsers = dataModel.BookRequests.Where(x => x.TripId == lastTrip.TripId);
                         foreach (var tripUser in tripUsers)
                         {
                             if ((bool) tripUser.IsBooked)
                             {
                                 filledSeats++;
                             }
-                        }
-                        driverRouteModel.FilledSeats = (short) filledSeats;
+                        }*/
+                        var tripFilters = dataModel.FilterRequests.Count(x => x.TripId == lastTrip.TripId);
+                        driverRouteModel.FilledSeats = (short)tripFilters;
                         driverRouteModel.CarSeats = lastTrip.TEmptySeat;
                     }
                     else
@@ -2820,6 +2868,67 @@ namespace CoreManager.RouteManager
                     driverRouteModel.DstLng = dr.DstMainStLng.ToString();
                     driverRouteModel.DriverRouteId = dr.DriverRouteId;
                     driverRouteModel.PricingString = dr.DriverPrice.ToString();
+                    driverRouteModel.CarString = dr.CarType + " " + dr.CarColor + " " + dr.CarPlateNo;
+                    res.Add(driverRouteModel);
+                }
+            }
+            return res.OrderByDescending(x => x.TripId).ThenByDescending(y => y.DriverRouteId).ToList();
+        }
+
+        public List<DriverRouteModel> GetDriverNewRoutes(int userId)
+        {
+            var res = new List<DriverRouteModel>();
+            using (var dataModel = new MibarimEntities())
+            {
+                var dataList = dataModel.vwDriverRoutes.Where(x => x.UserId == userId);
+                foreach (var dr in dataList)
+                {
+                    var driverRouteModel = new DriverRouteModel();
+                    var filledSeats = 0;
+                    var lastTrip =
+                        dataModel.Trips.Where(x => x.DriverRouteId == dr.DriverRouteId)
+                            .OrderByDescending(x => x.TCreateTime)
+                            .FirstOrDefault();
+                    if (lastTrip != null)
+                    {
+                        driverRouteModel.TimingString = lastTrip.TStartTime.ToString("HH:mm");
+                        driverRouteModel.TimingHour = lastTrip.TStartTime.Hour;
+                        driverRouteModel.TimingMin = lastTrip.TStartTime.Minute;
+                        driverRouteModel.HasTrip = false;
+                        if (lastTrip.TState == (int)TripState.InTripTime || lastTrip.TState == (int)TripState.InRiding ||
+                            lastTrip.TState == (int)TripState.InPreTripTime ||
+                            lastTrip.TState == (int)TripState.Scheduled)
+                        {
+                            driverRouteModel.HasTrip = true;
+                            driverRouteModel.TripState = lastTrip.TState;
+                            driverRouteModel.TripId = lastTrip.TripId;
+                        }
+                        filledSeats = dataModel.FilterRequests.Count(x => x.TripId == lastTrip.TripId && x.IsActive);
+                        
+                        driverRouteModel.FilledSeats = (short)filledSeats;
+                        driverRouteModel.CarSeats = lastTrip.TEmptySeat;
+                        driverRouteModel.PricingString = (dr.DriverPrice* filledSeats).ToString();
+                    }
+                    else
+                    {
+                        driverRouteModel.TimingString = "-:-";
+                        driverRouteModel.HasTrip = false;
+                        driverRouteModel.FilledSeats = 0;
+                        driverRouteModel.CarSeats = 0;
+                        driverRouteModel.PricingString = dr.DriverPrice.ToString();
+                    }
+                    driverRouteModel.DriverRouteId = dr.DriverRouteId;
+                    driverRouteModel.SrcMainAddress = dr.SrcMainStName;
+                    driverRouteModel.SrcAddress = dr.SrcStAdd;
+                    driverRouteModel.SrcLink = "https://www.google.com/maps/place/" + dr.SrcStLat + "," + dr.SrcStlng;
+                    driverRouteModel.SrcLat = dr.SrcStLat.ToString();
+                    driverRouteModel.SrcLng = dr.SrcStlng.ToString();
+                    driverRouteModel.DstAddress = dr.DstMainStName;
+                    driverRouteModel.DstLink = "https://www.google.com/maps/place/" + dr.DstMainStLat + "," +
+                                               dr.DstMainStLng;
+                    driverRouteModel.DstLat = dr.DstMainStLat.ToString();
+                    driverRouteModel.DstLng = dr.DstMainStLng.ToString();
+                    driverRouteModel.DriverRouteId = dr.DriverRouteId;
                     driverRouteModel.CarString = dr.CarType + " " + dr.CarColor + " " + dr.CarPlateNo;
                     res.Add(driverRouteModel);
                 }
@@ -2870,7 +2979,7 @@ namespace CoreManager.RouteManager
                     dataModel.Trips.Add(trip);
                     dataModel.SaveChanges();
                     var stId = dataModel.DriverRoutes.FirstOrDefault(x => x.DriverRouteId == model.DriverRouteId);
-                    FindMatchFilters(trip.TStartTime, stId.StationRouteId, trip.TripId);
+                    FindMatchFilters(trip.TStartTime, stId.StationRouteId, trip.TripId,false);
                     /*var time = trip.TStartTime;
                     var matchTrips = dataModel.vwDriverTrips.Where(
                                 x =>
@@ -2942,7 +3051,7 @@ namespace CoreManager.RouteManager
                     {
                         sched = true;
                         preTrip.TState = (int) TripState.InPreTripTime;
-                        SendBookedMessages(preTrip);
+                        
                     }
                 }
                 if (sched)
@@ -2955,26 +3064,6 @@ namespace CoreManager.RouteManager
                     {
                         pretrip = true;
                         activeTrip.TState = (int) TripState.InTripTime;
-                        /*var driveRoute =
-                            dataModel.DriverRoutes.FirstOrDefault(x => x.DriverRouteId == activeTrip.DriverRouteId);
-                        var todate = DateTime.Today;
-                        var drivertrips =
-                            dataModel.DriverRoutes.Where(x => x.UserId == driveRoute.UserId)
-                                .Select(x => x.DriverRouteId);
-                        var todaytrips =
-                            dataModel.vwDriverTrips.Count(
-                                x =>
-                                    drivertrips.Contains(x.DriverRouteId) &&
-                                    (x.TState == (int) TripState.DriverNotCome ||
-                                     x.TState == (int) TripState.FinishedByTime) && x.TStartTime >= todate);
-                        if (todaytrips < 1)
-                        {
-                            var usr = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == driveRoute.UserId);
-                            var msg = string.Format(getResource.getMessage("PayForSetTrip"), 3000,
-                                RouteMapper.GetUserNameFamilyString(usr));
-                            _transactionManager.ChargeAccount((int) driveRoute.UserId, 3000, msg,
-                                TransactionType.CreditChargeAccount);
-                        }*/
                     }
                 }
                 if (pretrip)
@@ -2984,15 +3073,15 @@ namespace CoreManager.RouteManager
                 //var doingTrips = dataModel.Trips.Where(x => x.TState == (int)TripState.InTripTime);
                 foreach (var doingTrip in activeTrips.Where(x => x.TState == (int) TripState.InTripTime))
                 {
-                    if (doingTrip.TStartTime.AddMinutes(15) < DateTime.Now)
+                    if (doingTrip.TStartTime.AddHours(1) < DateTime.Now)
                     {
                         Intrip = true;
                         doingTrip.TState = (int) TripState.DriverNotCome;
-                        var tripfilters = dataModel.Filters.Where(x => x.TripId == doingTrip.TripId);
+                        /*var tripfilters = dataModel.FilterRequests.Where(x => x.TripId == doingTrip.TripId);
                         foreach (var tripfilter in tripfilters)
                         {
                             tripfilter.IsActive = false;
-                        }
+                        }*/
                     }
                 }
                 if (Intrip)
@@ -3018,19 +3107,35 @@ namespace CoreManager.RouteManager
                     dataModel.SaveChanges();
                 }
 
-                /*var kavehSmsService = new KavenegarService();
-                kavehSmsService.GetLastMessage();
-                var smsService = new SmsService();
-                smsService.GetReceivedSmsMessages();*/
-                //yesterday = DateTime.Now.AddDays(-1);
+            }
 
-                //var googleToken =
-                //        dataModel.vwDriverGtokens.Where(
-                //            x =>
-                //                x.TState == (int)TripState.Scheduled || x.TState == (int)TripState.InTripTime ||
-                //                x.TState == (int)TripState.InRiding || x.TState == (int)TripState.InDriving ||
-                //                x.TState == (int)TripState.DriverRiding ||
-                //                x.TState == (int)TripState.InPreTripTime).OrderByDescending(x => x.TStartTime);
+            return "Done";
+        }
+        public string InvokeFilters()
+        {
+            bool sched = false;
+            bool pretrip = false;
+            bool Intrip = false;
+            bool posttrip = false;
+            using (var dataModel = new MibarimEntities())
+            {
+                var activeFilters =
+                    dataModel.FilterRequests.Where(
+                        x => x.IsActive);
+                foreach (var filterRequest in activeFilters.Where(x => x.RState == (int)FilterRequestState.Scheduled))
+                {
+                    if (filterRequest.RStartTime.AddMinutes(30) < DateTime.Now)
+                    {
+                        sched = true;
+                        filterRequest.RState = (int)FilterRequestState.CanceledByTime;
+                        filterRequest.IsActive = false;
+                    }
+                }
+                if (sched)
+                {
+                    dataModel.SaveChanges();
+                }
+                
             }
 
             return "Done";
@@ -3041,9 +3146,9 @@ namespace CoreManager.RouteManager
             using (var dataModel = new MibarimEntities())
             {
                 var tripDrive = dataModel.vwDriverTrips.FirstOrDefault(x => x.TripId == preTrip.TripId);
-                var booked = dataModel.BookRequests.Where(x => x.TripId == preTrip.TripId && (bool) x.IsBooked);
+                var booked = dataModel.vwFilterRequests.Where(x => x.TripId == preTrip.TripId && (bool) x.IsActive);
                 var userIds = new List<long>();
-                userIds.AddRange(booked.Select(x => (long) x.UserId));
+                userIds.AddRange(booked.Select(x => (long) x.FilterUserId));
                 userIds.Add(tripDrive.UserId);
                 var cou = userIds.Count;
                 for (int i = 1; i <= cou; i++)
@@ -3160,13 +3265,156 @@ namespace CoreManager.RouteManager
             }
         }
 
+        private void SendNewBookedMessages(long preTripId)
+        {
+            using (var dataModel = new MibarimEntities())
+            {
+                try
+                {
+                    var filterrequests = dataModel.vwFilterRequests.Where(x => x.TripId == preTripId).ToList();
+                    foreach (var filterrequest in filterrequests)
+                    {
+                        var tripDrive = dataModel.vwDriverTrips.FirstOrDefault(x => x.TripId == preTripId);
+
+                        var notif = new Notification();
+                        notif.FilterId = filterrequest.FilterId;
+                        notif.NotifCreateTime = DateTime.Now;
+                        notif.NotifExpireTime = (DateTime)filterrequest.RStartTime;
+                        notif.IsNotificationSent = false;
+                        notif.IsNotificationSeen = false;
+                        notif.NotifBody = string.Format(getResource.getMessage("SeatReservedFor"),
+                            tripDrive.SrcMainStName,
+                            tripDrive.DstMainStName, tripDrive.TStartTime.ToString("HH:mm"));
+                        notif.NotifTitle = getResource.getMessage("SeatReserved");
+                        notif.NotifUserId = (int)filterrequest.FilterUserId;
+                        notif.NotifType = (short)NotificationType.NotifForFilter;
+                        dataModel.Notifications.Add(notif);
+                        dataModel.SaveChanges();
+
+                        var notif1 = new Notification();
+                        notif1.FilterId = filterrequest.FilterId;
+                        notif1.NotifCreateTime = DateTime.Now;
+                        notif1.NotifExpireTime = (DateTime)filterrequest.RStartTime;
+                        notif1.IsNotificationSent = false;
+                        notif1.IsNotificationSeen = false;
+                        notif1.NotifBody = string.Format(getResource.getMessage("SeatReservedFor"),
+                            tripDrive.SrcMainStName,
+                            tripDrive.DstMainStName, tripDrive.TStartTime.ToString("HH:mm"));
+                        notif1.NotifTitle = getResource.getMessage("SeatReserved");
+                        notif1.NotifUserId = (int)tripDrive.UserId;
+                        notif1.NotifType = (short)NotificationType.NotifForFilter;
+                        dataModel.Notifications.Add(notif1);
+                        dataModel.SaveChanges();
+
+
+                        /*NotifModel notifModel = new NotifModel();
+                        notifModel.Title = getResource.getMessage("SeatReserved");
+                        notifModel.Body = string.Format(getResource.getMessage("SeatReservedFor"),
+                            tripDrive.SrcMainStName,
+                            tripDrive.DstMainStName, tripDrive.TStartTime.ToString("HH:mm"));
+                        notifModel.RequestCode = (int)tripDrive.TripId;
+                        notifModel.NotificationId = (int)tripDrive.TripId;*/
+                        //send passenger notif
+                        //_notifManager.SendNotifToUser(notifModel, (int)filterrequest.FilterUserId);
+                        //send driver notif
+                        /*_notifManager.SendNotifToUser(notifModel, (int)tripDrive.UserId);
+                        _notifManager.SendNotifToAdmins(notifModel);*/
+                        //send passenger sms
+                        //var user = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == (int)filterrequest.FilterUserId);
+                        //var mobileBrief = user.UserName.Substring(1);
+                        string smsBody = string.Format(getResource.getMessage("SeatReservedFor"),
+                            tripDrive.SrcMainStName,
+                            tripDrive.DstMainStName, tripDrive.TStartTime.ToString("HH:mm"));
+                        var smsService = new SmsService();
+                        /*smsService.SendSmsMessages(mobileBrief, smsBody);*/
+                        //send driver sms
+                        //var driver = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == tripDrive.UserId);
+                        /*var drivermobileBrief = driver.UserName.Substring(1);
+                        string smsBodydriver = string.Format(getResource.getMessage("SeatReservedFor"),
+                            tripDrive.SrcMainStName, tripDrive.DstMainStName, tripDrive.TStartTime.ToString("HH:mm"));*/
+                        //smsService.SendSmsMessages(drivermobileBrief, smsBodydriver);
+                        smsService.SendSmsMessages("9358695785", smsBody);
+                        smsService.SendSmsMessages("9100048210", smsBody);
+                        /*smsService.SendSmsMessages("9358695785", smsBody);
+                        smsService.SendSmsMessages("9354205407", smsBody);*/
+
+                    }
+                    
+                    
+                }
+                catch (Exception e)
+                {
+                    if (e.InnerException != null)
+                    {
+                        _logmanager.Log(Tag, "sendNewBookedMessages", e.Message + "-" + e.InnerException.Message);
+                    }
+                    else
+                    {
+                        _logmanager.Log(Tag, "sendNewBookedMessages", e.Message);
+                    }
+                }
+            }
+        }
+
+        private void SendCancelMessage(long filterUserId, long filterId,DateTime rStartTime,long tripId)
+        {
+            using (var dataModel = new MibarimEntities())
+            {
+                try
+                {
+                    var tripDrive = dataModel.vwDriverTrips.FirstOrDefault(x => x.TripId == tripId);
+                    var notif = new Notification();
+                    notif.FilterId = filterId;
+                    notif.NotifCreateTime = DateTime.Now;
+                    notif.NotifExpireTime = (DateTime) rStartTime;
+                    notif.IsNotificationSent = false;
+                    notif.IsNotificationSeen = false;
+                    notif.NotifBody = string.Format(getResource.getMessage("CancelReservedSeat"),
+                        tripDrive.SrcMainStName,
+                        tripDrive.DstMainStName, rStartTime.ToString("HH:mm"));
+                    notif.NotifTitle = getResource.getMessage("TripCancelled");
+                    notif.NotifUserId = (int)filterUserId;
+                    notif.NotifType = (short) NotificationType.NotifForFilter;
+                    dataModel.Notifications.Add(notif);
+                    dataModel.SaveChanges();
+                    string smsBody = string.Format(getResource.getMessage("CancelReservedSeat"),
+                        tripDrive.SrcMainStName,
+                        tripDrive.DstMainStName, rStartTime.ToString("HH:mm"));
+                    var smsService = new SmsService();
+                    /*smsService.SendSmsMessages(mobileBrief, smsBody);*/
+                    //send driver sms
+                    //var driver = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == tripDrive.UserId);
+                    /*var drivermobileBrief = driver.UserName.Substring(1);
+                    string smsBodydriver = string.Format(getResource.getMessage("SeatReservedFor"),
+                        tripDrive.SrcMainStName, tripDrive.DstMainStName, tripDrive.TStartTime.ToString("HH:mm"));*/
+                    //smsService.SendSmsMessages(drivermobileBrief, smsBodydriver);
+                    smsService.SendSmsMessages("9358695785", smsBody);
+                    smsService.SendSmsMessages("9100048210", smsBody);
+                    /*smsService.SendSmsMessages("9358695785", smsBody);
+                    smsService.SendSmsMessages("9354205407", smsBody);*/
+                }
+
+                catch (Exception e)
+                {
+                    if (e.InnerException != null)
+                    {
+                        _logmanager.Log(Tag, "sendNewBookedMessages", e.Message + "-" + e.InnerException.Message);
+                    }
+                    else
+                    {
+                        _logmanager.Log(Tag, "sendNewBookedMessages", e.Message);
+                    }
+                }
+            }
+        }
+
         private void SendBookedMessages(Trip preTrip)
         {
             using (var dataModel = new MibarimEntities())
             {
                 try
                 {
-                    var booked = dataModel.BookRequests.Where(x => x.TripId == preTrip.TripId && (bool) x.IsBooked);
+                    var booked = dataModel.BookRequests.Where(x => x.TripId == preTrip.TripId && (bool)x.IsBooked);
                     foreach (var bookRequest in booked)
                     {
                         var tripDrive = dataModel.vwDriverTrips.FirstOrDefault(x => x.TripId == preTrip.TripId);
@@ -3175,15 +3423,15 @@ namespace CoreManager.RouteManager
                         notifModel.Body = string.Format(getResource.getMessage("SeatReservedFor"),
                             tripDrive.SrcMainStName,
                             tripDrive.DstMainStName, tripDrive.TStartTime.ToString("HH:mm"));
-                        notifModel.RequestCode = (int) tripDrive.TripId;
-                        notifModel.NotificationId = (int) tripDrive.TripId;
+                        notifModel.RequestCode = (int)tripDrive.TripId;
+                        notifModel.NotificationId = (int)tripDrive.TripId;
                         //send passenger notif
-                        _notifManager.SendNotifToUser(notifModel, (int) bookRequest.UserId);
+                        _notifManager.SendNotifToUser(notifModel, (int)bookRequest.UserId);
                         //send driver notif
-                        _notifManager.SendNotifToUser(notifModel, (int) tripDrive.UserId);
+                        _notifManager.SendNotifToUser(notifModel, (int)tripDrive.UserId);
                         _notifManager.SendNotifToAdmins(notifModel);
                         //send passenger sms
-                        var user = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == (int) bookRequest.UserId);
+                        var user = dataModel.vwUserInfoes.FirstOrDefault(x => x.UserId == (int)bookRequest.UserId);
                         var mobileBrief = user.UserName.Substring(1);
                         string smsBody = string.Format(getResource.getMessage("SeatReservedFor"),
                             tripDrive.SrcMainStName,
@@ -3280,19 +3528,44 @@ namespace CoreManager.RouteManager
                                 return false;
                             }
                         }
+                        var after10Min = DateTime.Now.AddMinutes(-10);
+                        var now = DateTime.Now;
                         var trip = dataModel.Trips.FirstOrDefault(x => x.TripId == driveTrip.TripId);
-                        trip.TState = (int) TripState.CanceledByUser;
-                        dataModel.SaveChanges();
                         //cancel all filterTrips
-                        var filters=dataModel.Filters.Where(x => x.TripId == trip.TripId).ToList();
+                        var filterTrips = dataModel.vwFilterRequestTrips.Where(x => x.TripId == trip.TripId).ToList();
+                        foreach (var filterRequestTrip in filterTrips)
+                        {
+                            if (filterRequestTrip.TCreateTime <= filterRequestTrip.RCreateTime)
+                            {
+                                if (filterRequestTrip.RCreateTime < after10Min)
+                                {
+                                    SendCancelMessage(filterRequestTrip.FilterUserId, filterRequestTrip.FilterId, filterRequestTrip.RStartTime, filterRequestTrip.TripId);
+                                    //SendNewBookedMessages(filterRequestTrip.TripId);
+                                }
+                            }
+                            else if (filterRequestTrip.TCreateTime > filterRequestTrip.RCreateTime)
+                            {
+                                if (filterRequestTrip.TCreateTime < after10Min)
+                                {
+
+                                    //SendNewBookedMessages(filterRequestTrip.TripId);
+                                }
+                            }
+
+                        }
+
+
+                        var filters=dataModel.FilterRequests.Where(x => x.TripId == trip.TripId).ToList();
                         if (filters.Count > 0)
                         {
-                            if (trip.TStartTime < DateTime.Now.AddMinutes(-30))
+                            var time = DateTime.Now.AddMinutes(30);
+                            if (trip.TStartTime > time)
                             {
                                 foreach (var filter in filters)
                                 {
                                     filter.TripId = null;
                                 }
+                                trip.TState = (int)TripState.CanceledByUser;
                                 dataModel.SaveChanges();
                             }
                             else
@@ -3305,6 +3578,12 @@ namespace CoreManager.RouteManager
                                 return false;
                             }
                         }
+                        else
+                        {
+                            trip.TState = (int)TripState.CanceledByUser;
+                            dataModel.SaveChanges();
+                        }
+
                     }
                     else
                     {
@@ -3337,7 +3616,7 @@ namespace CoreManager.RouteManager
                 var trip =
                     dataModel.vwDriverTrips.FirstOrDefault(
                         x =>
-                            x.UserId == userId &&
+                            x.UserId == userId && !x.DrIsDeleted && 
                             (x.TState == (int) TripState.InRiding || x.TState == (int) TripState.InTripTime ||
                              x.TState == (int) TripState.InRanking));
                 if (trip != null)
@@ -4075,6 +4354,8 @@ namespace CoreManager.RouteManager
                 em.Entry = model.Entry;
                 em.Enterprise = model.Enterprise;
                 em.Introduce = model.Introduce;
+                em.SrcStation = model.SrcStation;
+                em.DstStation = model.DstStation;
                 if (model.Latitude != null)
                 {
                     em.Geo = RouteMapper.CreatePoint(model.Latitude, model.Longitude);
@@ -4187,9 +4468,7 @@ namespace CoreManager.RouteManager
                 filter.StationRouteId = st.StationRouteId;
                 filter.IsDelete = false;
                 filter.CreateTime=DateTime.Now;
-                filter.LastTimeSet=DateTime.Now;
                 filter.FilterUserId = userId;
-                filter.IsActive = false;
                 dataModel.Filters.Add(filter);
                 dataModel.SaveChanges();
                 filterModel.FilterId = filter.FilterId;
@@ -4207,13 +4486,31 @@ namespace CoreManager.RouteManager
                 }
                 else
                 {
+                    var filterReq =
+                        dataModel.FilterRequests.FirstOrDefault(x => x.FilterId == model.FilterId && x.IsActive);
+                    if (filterReq !=null)
+                    {
+                        var r = new MessageResponse()
+                        {
+                            Type = ResponseTypes.Error,
+                            Message = getResource.getMessage("TripAlreadyReserved")
+                        };
+                        _responseProvider.SetBusinessMessage(r);
+                        return filterModel;
+                    }
                     var filter = dataModel.Filters.FirstOrDefault(x => x.FilterId == model.FilterId && x.FilterUserId==userId);
                     if (filter != null)
                     {
-                        filter.LastTimeSet = GetNextDateTime(model.TimeHour, model.TimeMinute);
-                        filter.IsActive = true;
+                        var filterRequest=new FilterRequest();
+                        filterRequest.FilterId = filter.FilterId;
+                        filterRequest.RCreateTime=DateTime.Now;
+                        filterRequest.RStartTime= GetNextDateTime(model.TimeHour, model.TimeMinute);
+                        filterRequest.RState = (int) FilterRequestState.Scheduled;
+                        filterRequest.IsActive = true;
+                        filterRequest.IsCarpool = false;
+                        dataModel.FilterRequests.Add(filterRequest);
                         dataModel.SaveChanges();
-                        FindMatchTrips((DateTime)filter.LastTimeSet,filter.StationRouteId,filter.FilterId);
+                        FindMatchTrips(filterRequest.RStartTime, filter.StationRouteId, filterRequest.FilterRequestId);
                     }
                     else
                     {
@@ -4230,20 +4527,34 @@ namespace CoreManager.RouteManager
             return filterModel;
         }
 
-        private int FindMatchTrips(DateTime filterLastTimeSet, long filterStationRouteId, long filterFilterId)
+        private int FindMatchTrips(DateTime filterLastTimeSet, long filterStationRouteId, long filterRequestId)
         {
             using (var dataModel = new MibarimEntities())
             {
                 var matchTrips = dataModel.vwDriverTrips.Where(
-                                x =>
+                                x => 
                                    DbFunctions.TruncateTime(x.TStartTime) == filterLastTimeSet.Date &&
                                     x.TStartTime.Hour == filterLastTimeSet.Hour &&
                                     x.TStartTime.Minute == filterLastTimeSet.Minute
-                                     && x.StationRouteId == filterStationRouteId && x.TState==(int)TripState.Scheduled).ToList();
+                                     && x.StationRouteId == filterStationRouteId && !x.DrIsDeleted && x.TState==(int)TripState.Scheduled).ToList();
                 if (matchTrips.Count > 0)
                 {
-                    var filter = dataModel.Filters.FirstOrDefault(x => x.FilterId == filterFilterId);
-                    filter.TripId = matchTrips.FirstOrDefault().TripId;
+                    //has before trip
+                    var theMatchtrip = matchTrips.FirstOrDefault();
+                    var otherFilter =
+                        dataModel.FilterRequests.FirstOrDefault(x => x.TripId == theMatchtrip.TripId && x.IsActive);
+                    var filter = dataModel.FilterRequests.FirstOrDefault(x => x.FilterRequestId == filterRequestId);
+                    if (otherFilter != null)
+                    {
+                        filter.TripId = theMatchtrip.TripId;
+                        filter.IsCarpool = otherFilter.IsCarpool;
+                    }
+                    else
+                    {
+
+                        filter.TripId = theMatchtrip.TripId;
+                        filter.IsCarpool = true;
+                    }
                     dataModel.SaveChanges();
                     /*var matchFilters = dataModel.Filters.Where(
                                 x =>
@@ -4271,9 +4582,13 @@ namespace CoreManager.RouteManager
             var filterModelList = new List<FilterModel>();
             using (var dataModel = new MibarimEntities())
             {
-                var filters = dataModel.vwFilters.Where(x => x.FilterUserId == userId && !x.IsDelete);
+                var showThresholdTime=DateTime.Now.AddMinutes(-15);
+                var filters = dataModel.vwFilters.Where(x => x.FilterUserId == userId && !x.IsDelete).ToList();
+                var filterIds = filters.Select(x => x.FilterId);
+                var filterReqs = dataModel.FilterRequests.Where(x => filterIds.Contains(x.FilterId) && x.IsActive);
                 foreach (var filter in filters)
                 {
+                    var filterReq = filterReqs.FirstOrDefault(x => x.FilterId == filter.FilterId);
                     var filterModel=new FilterModel();
                     filterModel.FilterId = filter.FilterId;
                     filterModel.SrcStationId = filter.SrcMStationId;
@@ -4284,19 +4599,21 @@ namespace CoreManager.RouteManager
                     filterModel.DstStation = filter.DstStName;
                     filterModel.DstStLat = filter.DstStLat.ToString();
                     filterModel.DstStLng = filter.DstStLng.ToString();
-                    if (filter.IsActive)
+                    if (filterReq != null && filterReq.IsActive)
                     {
-                        filterModel.Time = (DateTime) filter.LastTimeSet;
-                        filterModel.TimeHour= ((DateTime)filter.LastTimeSet).Hour;
-                        filterModel.TimeMinute= ((DateTime)filter.LastTimeSet).Minute;
+                        filterModel.Time = filterReq.RStartTime;
+                        filterModel.TimeHour= ((DateTime)filterReq.RStartTime).Hour;
+                        filterModel.TimeMinute= ((DateTime)filterReq.RStartTime).Minute;
                         filterModel.IsActive = true;
+                        filterModel.IsMatched = filterReq.TripId != null;
                     }
                     else
                     {
+                        filterModel.IsMatched = false;
                         filterModel.Time = null;
                         filterModel.IsActive = false;
                     }
-                    filterModel.IsMatched = filter.TripId != null;
+                    
                     filterModelList.Add(filterModel);
                 }
             }
@@ -4311,7 +4628,7 @@ namespace CoreManager.RouteManager
                 var filter = dataModel.vwFilterPlus.FirstOrDefault(x => x.FilterId == model.FilterId && !x.IsDelete);
                 //var stationplus = dataModel.StationRoutePlus.FirstOrDefault(x => x.StationRouteId == filter.StationRouteId);
                 var times = dataModel.GetAggregatedTimes(DateTime.Now, filter.StationRouteId).ToList();
-                var trips = dataModel.vwDriverTrips.Where(x => x.StationRouteId == filter.StationRouteId && x.TState==(int)TripState.Scheduled).ToList();
+                var trips = dataModel.vwDriverTrips.Where(x => x.StationRouteId == filter.StationRouteId && x.TState==(int)TripState.Scheduled && !x.DrIsDeleted).ToList();
                 if (times.Count > 0 || trips.Count > 0)
                 {
                     foreach (var ti in times)
@@ -4337,7 +4654,7 @@ namespace CoreManager.RouteManager
                     }
                     foreach (var trip in trips)
                     {
-                        var filterCount = dataModel.vwFilters.Count(x => x.TripId == trip.TripId);
+                        var filterCount = dataModel.vwFilterRequests.Count(x => x.TripId == trip.TripId && x.IsActive);
                         var price = trip.PassPrice;
                         //price = RemoveCeilingDecimal(price / (filterCount + 1));
                         var aggregatedTimes = new FilterTimeModel()
@@ -4459,14 +4776,17 @@ namespace CoreManager.RouteManager
         {
             using (var dataModel = new MibarimEntities())
             {
-                var filter = dataModel.Filters.FirstOrDefault(x => x.FilterId == model.FilterId);
+                var filter = dataModel.Filters.FirstOrDefault(x => x.FilterId == model.FilterId && x.FilterUserId==userId && !x.IsDelete);
                 if (filter != null)
                 {
-                    if (filter.TripId != null)
+                    var time = DateTime.Now.AddMinutes(-30);
+                    var req = dataModel.FilterRequests.FirstOrDefault(x => x.FilterId == filter.FilterId && x.IsActive);
+                    if (req != null && req.TripId != null)
                     {
-                        if (filter.LastTimeSet < DateTime.Now.AddMinutes(-30))
+                        if (req.RStartTime < time)
                         {
                             filter.IsDelete = true;
+                            req.IsActive = false;
                             dataModel.SaveChanges();
                             return true;
                         }
@@ -4479,6 +4799,13 @@ namespace CoreManager.RouteManager
                             });
                             return false;
                         }
+                    }
+                    else
+                    {
+                        filter.IsDelete = true;
+                        //req.IsActive = false;
+                        dataModel.SaveChanges();
+                        return true;
                     }
                 }
             }
@@ -4520,9 +4847,9 @@ namespace CoreManager.RouteManager
                     sug.DstStation = ff.DstStName;
                     sug.DstStLat = ff.DstStLat.ToString();
                     sug.DstStLng = ff.DstStLng.ToString();
-                    sug.Time = aggf.LastTimeSet;
-                    sug.TimeHour = ((DateTime)aggf.LastTimeSet).Hour;
-                    sug.TimeMinute = ((DateTime)aggf.LastTimeSet).Minute;
+                    sug.Time = aggf.AggregatedTime;
+                    sug.TimeHour = ((DateTime)aggf.AggregatedTime).Hour;
+                    sug.TimeMinute = ((DateTime)aggf.AggregatedTime).Minute;
                     sug.PairPassengers = (int)aggf.co;
                     res.Add(sug);
                 }
@@ -4583,32 +4910,45 @@ namespace CoreManager.RouteManager
         {
             using (var dataModel = new MibarimEntities())
             {
-                var filter = dataModel.Filters.FirstOrDefault(x => x.FilterId == model.FilterId);
+                var filter = dataModel.Filters.FirstOrDefault(x => x.FilterId == model.FilterId && x.FilterUserId==userId);
                 if (filter != null)
                 {
-                    if (filter.TripId != null)
+                    var time = DateTime.Now.AddMinutes(30);
+                    var req = dataModel.FilterRequests.FirstOrDefault(x => x.FilterId == filter.FilterId && x.IsActive);
+                    if (req != null)
                     {
-                        if (filter.LastTimeSet < DateTime.Now.AddMinutes(-30))
-                        {
-                            filter.IsActive = false;
+                        if (req.TripId != null) {
+                            if (req.RStartTime > time)
+                            {
+                                req.RState = (int)FilterRequestState.CanceledByUser;
+                                req.IsActive = false;
+                                dataModel.SaveChanges();
+                                return true;
+                            }
+                            else
+                            {
+                                _responseProvider.SetBusinessMessage(new MessageResponse()
+                                {
+                                    Type = ResponseTypes.Error,
+                                    Message = getResource.getMessage("TripAlreadyReserved")
+                                });
+                                return false;
+                            }
+                        } else {
+                            req.RState = (int)FilterRequestState.CanceledByUser;
+                            req.IsActive = false;
                             dataModel.SaveChanges();
                             return true;
-                        }
-                        else
-                        {
-                            _responseProvider.SetBusinessMessage(new MessageResponse()
-                            {
-                                Type = ResponseTypes.Error,
-                                Message = getResource.getMessage("TripAlreadyReserved")
-                            });
-                            return false;
                         }
                     }
                     else
                     {
-                        filter.IsActive = false;
-                        dataModel.SaveChanges();
-                        return true;
+                        _responseProvider.SetBusinessMessage(new MessageResponse()
+                        {
+                            Type = ResponseTypes.Error,
+                            Message = getResource.getMessage("NotFound")
+                        });
+                        return false;
                     }
                     
                 }
@@ -4616,12 +4956,14 @@ namespace CoreManager.RouteManager
             return true;
         }
 
-        public TripTimeModel AcceptSuggestRoute(int userId, FilterModel model)
+        public TripTimeModel AcceptSuggestRoute(int userId, FilterModel model,bool isAdmin)
         {
             var res =new  TripTimeModel();
             using (var dataModel = new MibarimEntities())
             {
-                var filter = dataModel.Filters.FirstOrDefault(x => x.FilterId == model.FilterId);
+                var filter = dataModel.vwFilters.FirstOrDefault(x => x.FilterId == model.FilterId);
+                var filterreq =
+                    dataModel.FilterRequests.FirstOrDefault(x => x.FilterId == filter.FilterId && x.IsActive);
                 var srcStation = dataModel.Stations.FirstOrDefault(x => x.MainStationId == filter.SrcMStationId);
                 if (filter != null)
                 {
@@ -4655,7 +4997,7 @@ namespace CoreManager.RouteManager
 
                     
                     var trip = new Trip();
-                    trip.TStartTime = GetNextDateTime(((DateTime)filter.LastTimeSet).Hour, ((DateTime)filter.LastTimeSet).Minute);
+                    trip.TStartTime = GetNextDateTime(((DateTime)filterreq.RStartTime).Hour, ((DateTime)filterreq.RStartTime).Minute);
                     res.RemainHour = (int)(trip.TStartTime - DateTime.Now).TotalHours;
                     var remainMin = (int)(trip.TStartTime - DateTime.Now).TotalMinutes;
                     res.RemainMin = (remainMin % 60);
@@ -4666,7 +5008,10 @@ namespace CoreManager.RouteManager
                     dataModel.Trips.Add(trip);
                     dataModel.SaveChanges();
                     //var stId = dataModel.DriverRoutes.FirstOrDefault(x => x.DriverRouteId == filter.StationRouteId);
-                    FindMatchFilters(trip.TStartTime, filter.StationRouteId, trip.TripId);
+                    
+                        FindMatchFilters(trip.TStartTime, filter.StationRouteId, trip.TripId,isAdmin);
+                    
+                    
                     //var time = trip.TStartTime;
                     //var time = ((DateTime)filter.LastTimeSet);
                     
@@ -4675,22 +5020,26 @@ namespace CoreManager.RouteManager
             res.IsSubmited = true;
             return res;
         }
-
-        private int FindMatchFilters(DateTime time, long filterStationRouteId, long tripTripId)
+        
+        private int FindMatchFilters(DateTime time, long filterStationRouteId, long tripTripId,bool isAdmin)
         {
             using (var dataModel = new MibarimEntities())
             {
-                var matchFilters = dataModel.Filters.Where(
+                var matchFilters = dataModel.vwFilterRequests.Where(
                                 x =>
-                                   DbFunctions.TruncateTime(x.LastTimeSet) == time.Date &&
-                                    ((DateTime)x.LastTimeSet).Hour == time.Hour &&
-                                    ((DateTime)x.LastTimeSet).Minute == time.Minute
-                                     && x.StationRouteId == filterStationRouteId && x.IsActive && !x.IsDelete).ToList();
+                                   DbFunctions.TruncateTime(x.RStartTime) == time.Date &&
+                                    ((DateTime)x.RStartTime).Hour == time.Hour &&
+                                    ((DateTime)x.RStartTime).Minute == time.Minute
+                                     && x.StationRouteId == filterStationRouteId && (bool)x.IsActive).ToList();
                 if (matchFilters.Count > 0)
                 {
                     foreach (var matchFilter in matchFilters)
                     {
-                        matchFilter.TripId = tripTripId;
+                        var req =
+                            dataModel.FilterRequests.FirstOrDefault(
+                                x => x.FilterId == matchFilter.FilterId && x.IsActive);
+                        req.TripId = tripTripId;
+                        req.IsCarpool = !isAdmin;
                     }
                     dataModel.SaveChanges();
                 }
@@ -4699,47 +5048,65 @@ namespace CoreManager.RouteManager
             
         }
 
+
         public string SetUserNotifications()
         {
             using (var dataModel = new MibarimEntities())
             {
                 var minbefore = DateTime.Now.AddHours(1);
+                var nowtime = DateTime.Now;
                 var activefilters =
-                    dataModel.vwFilters.Where(x => x.IsActive && ((DateTime) x.LastTimeSet).Hour == minbefore.Hour
-                    && ((DateTime)x.LastTimeSet).Minute == minbefore.Minute);
+                    dataModel.vwFilterRequests.Where(x => DbFunctions.TruncateTime(x.RStartTime) == minbefore.Date &&
+                                    x.RStartTime.Hour == minbefore.Hour &&
+                                    x.RStartTime.Minute == minbefore.Minute && x.IsActive).ToList();
                 foreach (var activefilter in activefilters)
                 {
-                    var usersWithFilter = dataModel.Filters.Where(y => y.StationRouteId == activefilter.StationRouteId);
+                    var usersWithFilter = dataModel.Filters.Where(y => y.StationRouteId == activefilter.StationRouteId && !y.IsDelete).ToList();
                     foreach (var filter in usersWithFilter)
                     {
+                        if(activefilter.FilterUserId!=filter.FilterUserId && !dataModel.Notifications.Any(x=>x.NotifUserId== filter.FilterUserId && x.NotifExpireTime> nowtime && x.NotifType== (short)NotificationType.NotifForFilter))
+                        {
+                        
                         var notif=new Notification();
                         notif.FilterId = filter.FilterId;
                         notif.NotifCreateTime=DateTime.Now;
-                        notif.NotifExpireTime = (DateTime) activefilter.LastTimeSet;
+                        notif.NotifExpireTime = (DateTime) activefilter.RStartTime;
                         notif.IsNotificationSent = false;
                         notif.IsNotificationSeen = false;
                         notif.NotifBody = string.Format(getResource.getMessage("SimilarRoute"), activefilter.SrcStName, activefilter.DstStName,
-                            ((DateTime)activefilter.LastTimeSet).Hour,((DateTime)activefilter.LastTimeSet).Minute);
+                            ((DateTime)activefilter.RStartTime).Hour,((DateTime)activefilter.RStartTime).Minute);
                         notif.NotifTitle= string.Format(getResource.getMessage("GetAlong"));
                         notif.NotifUserId =(int) filter.FilterUserId;
                         notif.NotifType = (short) NotificationType.NotifForFilter;
                         dataModel.Notifications.Add(notif);
+                            dataModel.SaveChanges();
+                        }
                     }
                     var driversWithFilter =
-                        dataModel.DriverRoutes.Where(x => x.StationRouteId == activefilter.StationRouteId);
+                        dataModel.DriverRoutes.Where(x => x.StationRouteId == activefilter.StationRouteId && !x.DrIsDeleted).ToList();
                     foreach (var driverFilter in driversWithFilter)
                     {
-                        var notif = new Notification();
-                        notif.NotifCreateTime = DateTime.Now;
-                        notif.NotifExpireTime = (DateTime)activefilter.LastTimeSet;
-                        notif.IsNotificationSent = false;
-                        notif.IsNotificationSeen = false;
-                        notif.NotifBody = string.Format(getResource.getMessage("SimilarDriverRoute"), activefilter.SrcStName, activefilter.DstStName,
-                            ((DateTime)activefilter.LastTimeSet).Hour, ((DateTime)activefilter.LastTimeSet).Minute);
-                        notif.NotifTitle = string.Format(getResource.getMessage("AcceptRide"));
-                        notif.NotifUserId = (int)driverFilter.UserId;
-                        notif.NotifType = (short)NotificationType.NotifForDriver;
-                        dataModel.Notifications.Add(notif);
+                        if (activefilter.FilterUserId != driverFilter.UserId &&
+                            !dataModel.Notifications.Any(
+                                x =>
+                                    x.NotifUserId == driverFilter.UserId && x.NotifExpireTime > nowtime &&
+                                    x.NotifType == (short) NotificationType.NotifForDriver))
+                        {
+
+                            var notif = new Notification();
+                            notif.NotifCreateTime = DateTime.Now;
+                            notif.NotifExpireTime = (DateTime) activefilter.RStartTime;
+                            notif.IsNotificationSent = false;
+                            notif.IsNotificationSeen = false;
+                            notif.NotifBody = string.Format(getResource.getMessage("SimilarDriverRoute"),
+                                activefilter.SrcStName, activefilter.DstStName,
+                                ((DateTime) activefilter.RStartTime).Hour, ((DateTime) activefilter.RStartTime).Minute);
+                            notif.NotifTitle = string.Format(getResource.getMessage("AcceptRide"));
+                            notif.NotifUserId = (int) driverFilter.UserId;
+                            notif.NotifType = (short) NotificationType.NotifForDriver;
+                            dataModel.Notifications.Add(notif);
+                            dataModel.SaveChanges();
+                        }
                     }
                     dataModel.SaveChanges();
                 }
@@ -4747,13 +5114,87 @@ namespace CoreManager.RouteManager
             return "ok";
         }
 
+        public string SendNewBookedMessages()
+        {
+            using (var dataModel = new MibarimEntities())
+            {
+                try
+                {
+                    var after10Min = DateTime.Now.AddMinutes(-10);
+                    var now = DateTime.Now;
+                    var filterTrips = dataModel.vwFilterRequestTrips.Where(x => x.RStartTime > now && x.IsActive);
+                    foreach (var filterRequestTrip in filterTrips)
+                    {
+                        if (filterRequestTrip.TCreateTime <= filterRequestTrip.RCreateTime)
+                        {
+                            if (filterRequestTrip.RCreateTime.Hour == after10Min.Hour && filterRequestTrip.RCreateTime.Minute == after10Min.Minute)
+                            {
+                                SendNewBookedMessages(filterRequestTrip.TripId);
+                            }
+                        }
+                        else if (filterRequestTrip.TCreateTime > filterRequestTrip.RCreateTime)
+                        {
+                            if (filterRequestTrip.TCreateTime.Hour == after10Min.Hour && filterRequestTrip.TCreateTime.Minute == after10Min.Minute)
+                            {
+                                SendNewBookedMessages(filterRequestTrip.TripId);
+                            }
+                        }
+
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    if (e.InnerException != null)
+                    {
+                        _logmanager.Log(Tag, "sendNewBookedMessages", e.Message + "-" + e.InnerException.Message);
+                    }
+                    else
+                    {
+                        _logmanager.Log(Tag, "sendNewBookedMessages", e.Message);
+                    }
+                }
+            }
+            return "Done";
+        }
+
+        public List<ContactPassengersModel> GetPassengersInfo(int userId, DriverRouteModel model)
+        {
+            var res=new List<ContactPassengersModel>();
+            using (var dataModel = new MibarimEntities())
+            {
+                //todo: security isuue: everyone can see trip data
+                var dm = dataModel.vwFilterBooks.Where(x => x.TripId == model.TripId);
+                foreach (var vwFilterRequest in dm)
+                {
+                    var newcpm = new ContactPassengersModel();
+                    newcpm.PassengerName = vwFilterRequest.Name + " " + vwFilterRequest.Family;
+                    newcpm.Gender = vwFilterRequest.Gender == (int) Gender.Man ? "آقای" : "خانم";
+                    newcpm.PassengerMobile = vwFilterRequest.UserName;
+                    newcpm.ImageId = vwFilterRequest.UserImageId.ToString();
+                    newcpm.Fare = "2000";
+                    if (vwFilterRequest.IsBooked != null && (bool) vwFilterRequest.IsBooked)
+                    {
+                        newcpm.PayingMethod = (int) PayingMethod.OnLinePayed;
+                    }
+                    else
+                    {
+                        newcpm.PayingMethod = (int)PayingMethod.InCash;
+                    }
+                    res.Add(newcpm);
+                }
+
+            }
+            return res;
+        }
+
 
         public bool MakeStationRoutePlus()
         {
             var tmService=new TaxiMeterService();
-
             using (var dataModel = new MibarimEntities())
             {
+                dataModel.CopyStationRoutePlus();
                 var lastsnapToken =
                         dataModel.AppsTokens.OrderByDescending(x => x.TokenCreateTime)
                             .FirstOrDefault(x => x.TokenApp == (short)TokenApp.SnapApp);

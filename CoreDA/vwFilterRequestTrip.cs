@@ -12,10 +12,21 @@ namespace CoreDA
     using System;
     using System.Collections.Generic;
     
-    public partial class Filter
+    public partial class vwFilterRequestTrip
     {
+        public bool IsActive { get; set; }
+        public bool IsCarpool { get; set; }
+        public long TripId { get; set; }
+        public long DriverRouteId { get; set; }
+        public System.DateTime TStartTime { get; set; }
+        public System.DateTime TCreateTime { get; set; }
+        public short TEmptySeat { get; set; }
+        public short TState { get; set; }
+        public short RState { get; set; }
+        public System.DateTime RStartTime { get; set; }
+        public System.DateTime RCreateTime { get; set; }
         public long FilterId { get; set; }
-        public System.DateTime CreateTime { get; set; }
+        public long FilterRequestId { get; set; }
         public long FilterUserId { get; set; }
         public long SrcMStationId { get; set; }
         public long DstMStationId { get; set; }

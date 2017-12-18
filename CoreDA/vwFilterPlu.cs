@@ -15,7 +15,7 @@ namespace CoreDA
     public partial class vwFilterPlu
     {
         public long FilterId { get; set; }
-        public long StationRouteId { get; set; }
+        public Nullable<long> StationRouteId { get; set; }
         public Nullable<long> Five { get; set; }
         public Nullable<long> Six { get; set; }
         public Nullable<long> Seven { get; set; }
@@ -39,13 +39,11 @@ namespace CoreDA
         public long DstMStationId { get; set; }
         public bool IsDelete { get; set; }
         public long FilterUserId { get; set; }
-        public Nullable<System.DateTime> LastTimeSet { get; set; }
         public decimal SrcStLat { get; set; }
         public decimal SrcStLng { get; set; }
         public string SrcStName { get; set; }
         public decimal DstStLat { get; set; }
         public decimal DstStLng { get; set; }
         public string DstStName { get; set; }
-        public Nullable<long> TripId { get; set; }
     }
 }

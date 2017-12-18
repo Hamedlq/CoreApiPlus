@@ -232,6 +232,8 @@
           <Property Name="Entry" Type="nvarchar" MaxLength="56" />
           <Property Name="Introduce" Type="nvarchar" MaxLength="128" />
           <Property Name="Enterprise" Type="nvarchar" MaxLength="128" />
+          <Property Name="SrcStation" Type="nvarchar" MaxLength="128" />
+          <Property Name="DstStation" Type="nvarchar" MaxLength="128" />
         </EntityType>
         <EntityType Name="Event">
           <Key>
@@ -304,10 +306,20 @@
           <Property Name="SrcMStationId" Type="bigint" Nullable="false" />
           <Property Name="DstMStationId" Type="bigint" Nullable="false" />
           <Property Name="StationRouteId" Type="bigint" Nullable="false" />
-          <Property Name="LastTimeSet" Type="datetime" />
-          <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="IsDelete" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FilterRequest">
+          <Key>
+            <PropertyRef Name="FilterRequestId" />
+          </Key>
+          <Property Name="FilterRequestId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FilterId" Type="bigint" Nullable="false" />
+          <Property Name="RCreateTime" Type="datetime" Nullable="false" />
+          <Property Name="RStartTime" Type="datetime" Nullable="false" />
+          <Property Name="RState" Type="smallint" Nullable="false" />
           <Property Name="TripId" Type="bigint" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsCarpool" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="GoogleToken">
           <Key>
@@ -756,6 +768,69 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vw_PathRoute' does not have a pri
           <Property Name="RecommendPathSeq" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwActiveTrips' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vwActiveTrips">
+          <Key>
+            <PropertyRef Name="FilterRequestId" />
+            <PropertyRef Name="FilterId" />
+            <PropertyRef Name="RCreateTime" />
+            <PropertyRef Name="RStartTime" />
+            <PropertyRef Name="IsActive" />
+            <PropertyRef Name="RState" />
+            <PropertyRef Name="FilterUserId" />
+            <PropertyRef Name="SrcMStationId" />
+            <PropertyRef Name="DstMStationId" />
+            <PropertyRef Name="StationRouteId" />
+            <PropertyRef Name="IsDelete" />
+            <PropertyRef Name="SrcStName" />
+            <PropertyRef Name="SrcStLat" />
+            <PropertyRef Name="SrcStLng" />
+            <PropertyRef Name="DstStName" />
+            <PropertyRef Name="DstStLat" />
+            <PropertyRef Name="DstStLng" />
+            <PropertyRef Name="IsCarpool" />
+            <PropertyRef Name="PassMobile" />
+            <PropertyRef Name="TStartTime" />
+            <PropertyRef Name="TState" />
+            <PropertyRef Name="TEmptySeat" />
+            <PropertyRef Name="DriverRouteId" />
+            <PropertyRef Name="DrIsDeleted" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="DriverMobile" />
+          </Key>
+          <Property Name="FilterRequestId" Type="bigint" Nullable="false" />
+          <Property Name="FilterId" Type="bigint" Nullable="false" />
+          <Property Name="RCreateTime" Type="datetime" Nullable="false" />
+          <Property Name="RStartTime" Type="datetime" Nullable="false" />
+          <Property Name="TripId" Type="bigint" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="RState" Type="smallint" Nullable="false" />
+          <Property Name="FilterUserId" Type="bigint" Nullable="false" />
+          <Property Name="SrcMStationId" Type="bigint" Nullable="false" />
+          <Property Name="DstMStationId" Type="bigint" Nullable="false" />
+          <Property Name="StationRouteId" Type="bigint" Nullable="false" />
+          <Property Name="IsDelete" Type="bit" Nullable="false" />
+          <Property Name="SrcStName" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="SrcStLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+          <Property Name="SrcStLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+          <Property Name="DstStName" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="DstStLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+          <Property Name="DstStLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+          <Property Name="IsCarpool" Type="bit" Nullable="false" />
+          <Property Name="PassFamily" Type="nvarchar(max)" />
+          <Property Name="PassName" Type="nvarchar(max)" />
+          <Property Name="PassMobile" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="TStartTime" Type="datetime" Nullable="false" />
+          <Property Name="TState" Type="smallint" Nullable="false" />
+          <Property Name="TEmptySeat" Type="smallint" Nullable="false" />
+          <Property Name="DriverRouteId" Type="bigint" Nullable="false" />
+          <Property Name="DrIsDeleted" Type="bit" Nullable="false" />
+          <Property Name="UserId" Type="bigint" Nullable="false" />
+          <Property Name="DriverName" Type="nvarchar(max)" />
+          <Property Name="DriverFamily" Type="nvarchar(max)" />
+          <Property Name="DriverMobile" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'Mibarim_plus.dbo.vwBookedTrips' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vwBookedTrips">
           <Key>
@@ -1018,6 +1093,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwDriverTrip' does not have a pri
             <PropertyRef Name="StationRouteId" />
             <PropertyRef Name="DstMStationId" />
             <PropertyRef Name="SrcMStationId" />
+            <PropertyRef Name="DrIsDeleted" />
           </Key>
           <Property Name="TCreateTime" Type="datetime" Nullable="false" />
           <Property Name="TStartTime" Type="datetime" Nullable="false" />
@@ -1051,6 +1127,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwDriverTrip' does not have a pri
           <Property Name="StationRouteId" Type="bigint" Nullable="false" />
           <Property Name="DstMStationId" Type="bigint" Nullable="false" />
           <Property Name="SrcMStationId" Type="bigint" Nullable="false" />
+          <Property Name="DrIsDeleted" Type="bit" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'Mibarim_plus.dbo.vwFilter' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1069,12 +1146,10 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwFilter' does not have a primary
             <PropertyRef Name="DstMStationId" />
             <PropertyRef Name="SrcMStationId" />
             <PropertyRef Name="IsDelete" />
-            <PropertyRef Name="IsActive" />
           </Key>
           <Property Name="FilterId" Type="bigint" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="FilterUserId" Type="bigint" Nullable="false" />
-          <Property Name="LastTimeSet" Type="datetime" />
           <Property Name="SrcStName" Type="nvarchar" MaxLength="32" Nullable="false" />
           <Property Name="SrcStLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
           <Property Name="SrcStLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
@@ -1085,15 +1160,54 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwFilter' does not have a primary
           <Property Name="DstMStationId" Type="bigint" Nullable="false" />
           <Property Name="SrcMStationId" Type="bigint" Nullable="false" />
           <Property Name="IsDelete" Type="bit" Nullable="false" />
-          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwFilterBook' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vwFilterBook">
+          <Key>
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="IsActive" />
+            <PropertyRef Name="IsCarpool" />
+            <PropertyRef Name="CreateTime" />
+            <PropertyRef Name="FilterId" />
+            <PropertyRef Name="RState" />
+            <PropertyRef Name="RStartTime" />
+            <PropertyRef Name="RCreateTime" />
+            <PropertyRef Name="FilterRequestId" />
+            <PropertyRef Name="IsDelete" />
+            <PropertyRef Name="StationRouteId" />
+            <PropertyRef Name="FilterUserId" />
+            <PropertyRef Name="DstMStationId" />
+            <PropertyRef Name="SrcMStationId" />
+          </Key>
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Family" Type="nvarchar(max)" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="TripId" Type="bigint" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsCarpool" Type="bit" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="FilterId" Type="bigint" Nullable="false" />
+          <Property Name="RState" Type="smallint" Nullable="false" />
+          <Property Name="RStartTime" Type="datetime" Nullable="false" />
+          <Property Name="RCreateTime" Type="datetime" Nullable="false" />
+          <Property Name="FilterRequestId" Type="bigint" Nullable="false" />
+          <Property Name="IsDelete" Type="bit" Nullable="false" />
+          <Property Name="StationRouteId" Type="bigint" Nullable="false" />
+          <Property Name="FilterUserId" Type="bigint" Nullable="false" />
+          <Property Name="Gender" Type="int" />
+          <Property Name="DstMStationId" Type="bigint" Nullable="false" />
+          <Property Name="SrcMStationId" Type="bigint" Nullable="false" />
+          <Property Name="PayReqId" Type="bigint" />
+          <Property Name="BookingType" Type="smallint" />
+          <Property Name="IsBooked" Type="bit" />
+          <Property Name="UserImageId" Type="uniqueidentifier" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'Mibarim_plus.dbo.vwFilterPlus' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vwFilterPlus">
           <Key>
             <PropertyRef Name="FilterId" />
-            <PropertyRef Name="StationRouteId" />
             <PropertyRef Name="SrcMStationId" />
             <PropertyRef Name="DstMStationId" />
             <PropertyRef Name="IsDelete" />
@@ -1106,7 +1220,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwFilterPlus' does not have a pri
             <PropertyRef Name="DstStName" />
           </Key>
           <Property Name="FilterId" Type="bigint" Nullable="false" />
-          <Property Name="StationRouteId" Type="bigint" Nullable="false" />
+          <Property Name="StationRouteId" Type="bigint" />
           <Property Name="Five" Type="bigint" />
           <Property Name="Six" Type="bigint" />
           <Property Name="Seven" Type="bigint" />
@@ -1130,14 +1244,97 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwFilterPlus' does not have a pri
           <Property Name="DstMStationId" Type="bigint" Nullable="false" />
           <Property Name="IsDelete" Type="bit" Nullable="false" />
           <Property Name="FilterUserId" Type="bigint" Nullable="false" />
-          <Property Name="LastTimeSet" Type="datetime" />
           <Property Name="SrcStLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
           <Property Name="SrcStLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
           <Property Name="SrcStName" Type="nvarchar" MaxLength="32" Nullable="false" />
           <Property Name="DstStLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
           <Property Name="DstStLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
           <Property Name="DstStName" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwFilterRequest' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vwFilterRequest">
+          <Key>
+            <PropertyRef Name="FilterRequestId" />
+            <PropertyRef Name="FilterId" />
+            <PropertyRef Name="RCreateTime" />
+            <PropertyRef Name="RStartTime" />
+            <PropertyRef Name="IsActive" />
+            <PropertyRef Name="RState" />
+            <PropertyRef Name="FilterUserId" />
+            <PropertyRef Name="SrcMStationId" />
+            <PropertyRef Name="DstMStationId" />
+            <PropertyRef Name="StationRouteId" />
+            <PropertyRef Name="IsDelete" />
+            <PropertyRef Name="SrcStName" />
+            <PropertyRef Name="SrcStLat" />
+            <PropertyRef Name="SrcStLng" />
+            <PropertyRef Name="DstStName" />
+            <PropertyRef Name="DstStLat" />
+            <PropertyRef Name="DstStLng" />
+            <PropertyRef Name="IsCarpool" />
+          </Key>
+          <Property Name="FilterRequestId" Type="bigint" Nullable="false" />
+          <Property Name="FilterId" Type="bigint" Nullable="false" />
+          <Property Name="RCreateTime" Type="datetime" Nullable="false" />
+          <Property Name="RStartTime" Type="datetime" Nullable="false" />
           <Property Name="TripId" Type="bigint" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="RState" Type="smallint" Nullable="false" />
+          <Property Name="FilterUserId" Type="bigint" Nullable="false" />
+          <Property Name="SrcMStationId" Type="bigint" Nullable="false" />
+          <Property Name="DstMStationId" Type="bigint" Nullable="false" />
+          <Property Name="StationRouteId" Type="bigint" Nullable="false" />
+          <Property Name="IsDelete" Type="bit" Nullable="false" />
+          <Property Name="SrcStName" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="SrcStLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+          <Property Name="SrcStLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+          <Property Name="DstStName" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="DstStLat" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+          <Property Name="DstStLng" Type="decimal" Precision="20" Scale="17" Nullable="false" />
+          <Property Name="IsCarpool" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Mibarim_plus.dbo.vwFilterRequestTrip' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vwFilterRequestTrip">
+          <Key>
+            <PropertyRef Name="IsActive" />
+            <PropertyRef Name="IsCarpool" />
+            <PropertyRef Name="TripId" />
+            <PropertyRef Name="DriverRouteId" />
+            <PropertyRef Name="TStartTime" />
+            <PropertyRef Name="TCreateTime" />
+            <PropertyRef Name="TEmptySeat" />
+            <PropertyRef Name="TState" />
+            <PropertyRef Name="RState" />
+            <PropertyRef Name="RStartTime" />
+            <PropertyRef Name="RCreateTime" />
+            <PropertyRef Name="FilterId" />
+            <PropertyRef Name="FilterRequestId" />
+            <PropertyRef Name="FilterUserId" />
+            <PropertyRef Name="SrcMStationId" />
+            <PropertyRef Name="DstMStationId" />
+            <PropertyRef Name="StationRouteId" />
+            <PropertyRef Name="IsDelete" />
+          </Key>
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsCarpool" Type="bit" Nullable="false" />
+          <Property Name="TripId" Type="bigint" Nullable="false" />
+          <Property Name="DriverRouteId" Type="bigint" Nullable="false" />
+          <Property Name="TStartTime" Type="datetime" Nullable="false" />
+          <Property Name="TCreateTime" Type="datetime" Nullable="false" />
+          <Property Name="TEmptySeat" Type="smallint" Nullable="false" />
+          <Property Name="TState" Type="smallint" Nullable="false" />
+          <Property Name="RState" Type="smallint" Nullable="false" />
+          <Property Name="RStartTime" Type="datetime" Nullable="false" />
+          <Property Name="RCreateTime" Type="datetime" Nullable="false" />
+          <Property Name="FilterId" Type="bigint" Nullable="false" />
+          <Property Name="FilterRequestId" Type="bigint" Nullable="false" />
+          <Property Name="FilterUserId" Type="bigint" Nullable="false" />
+          <Property Name="SrcMStationId" Type="bigint" Nullable="false" />
+          <Property Name="DstMStationId" Type="bigint" Nullable="false" />
+          <Property Name="StationRouteId" Type="bigint" Nullable="false" />
+          <Property Name="IsDelete" Type="bit" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'Mibarim_plus.dbo.vwGroup' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1619,6 +1816,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="CopyStationRoutePlus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GenerateSimilarRoutes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="routeId" Type="int" Mode="In" />
           <Parameter Name="DistanceCoeffiecient" Type="int" Mode="In" />
@@ -1671,6 +1869,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
           <EntitySet Name="EventLog" EntityType="Self.EventLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Fanap" EntityType="Self.Fanap" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Filter" EntityType="Self.Filter" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FilterRequest" EntityType="Self.FilterRequest" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GoogleToken" EntityType="Self.GoogleToken" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Group" EntityType="Self.Group" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Image" EntityType="Self.Image" Schema="dbo" store:Type="Tables" />
@@ -1721,6 +1920,41 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vw_PathRoute].[RecommendPathId] AS [RecommendPathId], 
     [vw_PathRoute].[RecommendPathSeq] AS [RecommendPathSeq]
     FROM [dbo].[vw_PathRoute] AS [vw_PathRoute]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vwActiveTrips" EntityType="Self.vwActiveTrips" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vwActiveTrips].[FilterRequestId] AS [FilterRequestId], 
+    [vwActiveTrips].[FilterId] AS [FilterId], 
+    [vwActiveTrips].[RCreateTime] AS [RCreateTime], 
+    [vwActiveTrips].[RStartTime] AS [RStartTime], 
+    [vwActiveTrips].[TripId] AS [TripId], 
+    [vwActiveTrips].[IsActive] AS [IsActive], 
+    [vwActiveTrips].[RState] AS [RState], 
+    [vwActiveTrips].[FilterUserId] AS [FilterUserId], 
+    [vwActiveTrips].[SrcMStationId] AS [SrcMStationId], 
+    [vwActiveTrips].[DstMStationId] AS [DstMStationId], 
+    [vwActiveTrips].[StationRouteId] AS [StationRouteId], 
+    [vwActiveTrips].[IsDelete] AS [IsDelete], 
+    [vwActiveTrips].[SrcStName] AS [SrcStName], 
+    [vwActiveTrips].[SrcStLat] AS [SrcStLat], 
+    [vwActiveTrips].[SrcStLng] AS [SrcStLng], 
+    [vwActiveTrips].[DstStName] AS [DstStName], 
+    [vwActiveTrips].[DstStLat] AS [DstStLat], 
+    [vwActiveTrips].[DstStLng] AS [DstStLng], 
+    [vwActiveTrips].[IsCarpool] AS [IsCarpool], 
+    [vwActiveTrips].[PassFamily] AS [PassFamily], 
+    [vwActiveTrips].[PassName] AS [PassName], 
+    [vwActiveTrips].[PassMobile] AS [PassMobile], 
+    [vwActiveTrips].[TStartTime] AS [TStartTime], 
+    [vwActiveTrips].[TState] AS [TState], 
+    [vwActiveTrips].[TEmptySeat] AS [TEmptySeat], 
+    [vwActiveTrips].[DriverRouteId] AS [DriverRouteId], 
+    [vwActiveTrips].[DrIsDeleted] AS [DrIsDeleted], 
+    [vwActiveTrips].[UserId] AS [UserId], 
+    [vwActiveTrips].[DriverName] AS [DriverName], 
+    [vwActiveTrips].[DriverFamily] AS [DriverFamily], 
+    [vwActiveTrips].[DriverMobile] AS [DriverMobile]
+    FROM [dbo].[vwActiveTrips] AS [vwActiveTrips]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vwBookedTrips" EntityType="Self.vwBookedTrips" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -1916,7 +2150,8 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vwDriverTrip].[VerifiedLevel] AS [VerifiedLevel], 
     [vwDriverTrip].[StationRouteId] AS [StationRouteId], 
     [vwDriverTrip].[DstMStationId] AS [DstMStationId], 
-    [vwDriverTrip].[SrcMStationId] AS [SrcMStationId]
+    [vwDriverTrip].[SrcMStationId] AS [SrcMStationId], 
+    [vwDriverTrip].[DrIsDeleted] AS [DrIsDeleted]
     FROM [dbo].[vwDriverTrip] AS [vwDriverTrip]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vwFilter" EntityType="Self.vwFilter" store:Type="Views" store:Schema="dbo">
@@ -1924,7 +2159,6 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vwFilter].[FilterId] AS [FilterId], 
     [vwFilter].[CreateTime] AS [CreateTime], 
     [vwFilter].[FilterUserId] AS [FilterUserId], 
-    [vwFilter].[LastTimeSet] AS [LastTimeSet], 
     [vwFilter].[SrcStName] AS [SrcStName], 
     [vwFilter].[SrcStLat] AS [SrcStLat], 
     [vwFilter].[SrcStLng] AS [SrcStLng], 
@@ -1934,10 +2168,34 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vwFilter].[StationRouteId] AS [StationRouteId], 
     [vwFilter].[DstMStationId] AS [DstMStationId], 
     [vwFilter].[SrcMStationId] AS [SrcMStationId], 
-    [vwFilter].[IsDelete] AS [IsDelete], 
-    [vwFilter].[IsActive] AS [IsActive], 
-    [vwFilter].[TripId] AS [TripId]
+    [vwFilter].[IsDelete] AS [IsDelete]
     FROM [dbo].[vwFilter] AS [vwFilter]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vwFilterBook" EntityType="Self.vwFilterBook" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vwFilterBook].[Name] AS [Name], 
+    [vwFilterBook].[Family] AS [Family], 
+    [vwFilterBook].[UserName] AS [UserName], 
+    [vwFilterBook].[TripId] AS [TripId], 
+    [vwFilterBook].[IsActive] AS [IsActive], 
+    [vwFilterBook].[IsCarpool] AS [IsCarpool], 
+    [vwFilterBook].[CreateTime] AS [CreateTime], 
+    [vwFilterBook].[FilterId] AS [FilterId], 
+    [vwFilterBook].[RState] AS [RState], 
+    [vwFilterBook].[RStartTime] AS [RStartTime], 
+    [vwFilterBook].[RCreateTime] AS [RCreateTime], 
+    [vwFilterBook].[FilterRequestId] AS [FilterRequestId], 
+    [vwFilterBook].[IsDelete] AS [IsDelete], 
+    [vwFilterBook].[StationRouteId] AS [StationRouteId], 
+    [vwFilterBook].[FilterUserId] AS [FilterUserId], 
+    [vwFilterBook].[Gender] AS [Gender], 
+    [vwFilterBook].[DstMStationId] AS [DstMStationId], 
+    [vwFilterBook].[SrcMStationId] AS [SrcMStationId], 
+    [vwFilterBook].[PayReqId] AS [PayReqId], 
+    [vwFilterBook].[BookingType] AS [BookingType], 
+    [vwFilterBook].[IsBooked] AS [IsBooked], 
+    [vwFilterBook].[UserImageId] AS [UserImageId]
+    FROM [dbo].[vwFilterBook] AS [vwFilterBook]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vwFilterPlus" EntityType="Self.vwFilterPlus" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -1966,15 +2224,58 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
     [vwFilterPlus].[DstMStationId] AS [DstMStationId], 
     [vwFilterPlus].[IsDelete] AS [IsDelete], 
     [vwFilterPlus].[FilterUserId] AS [FilterUserId], 
-    [vwFilterPlus].[LastTimeSet] AS [LastTimeSet], 
     [vwFilterPlus].[SrcStLat] AS [SrcStLat], 
     [vwFilterPlus].[SrcStLng] AS [SrcStLng], 
     [vwFilterPlus].[SrcStName] AS [SrcStName], 
     [vwFilterPlus].[DstStLat] AS [DstStLat], 
     [vwFilterPlus].[DstStLng] AS [DstStLng], 
-    [vwFilterPlus].[DstStName] AS [DstStName], 
-    [vwFilterPlus].[TripId] AS [TripId]
+    [vwFilterPlus].[DstStName] AS [DstStName]
     FROM [dbo].[vwFilterPlus] AS [vwFilterPlus]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vwFilterRequest" EntityType="Self.vwFilterRequest" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vwFilterRequest].[FilterRequestId] AS [FilterRequestId], 
+    [vwFilterRequest].[FilterId] AS [FilterId], 
+    [vwFilterRequest].[RCreateTime] AS [RCreateTime], 
+    [vwFilterRequest].[RStartTime] AS [RStartTime], 
+    [vwFilterRequest].[TripId] AS [TripId], 
+    [vwFilterRequest].[IsActive] AS [IsActive], 
+    [vwFilterRequest].[RState] AS [RState], 
+    [vwFilterRequest].[FilterUserId] AS [FilterUserId], 
+    [vwFilterRequest].[SrcMStationId] AS [SrcMStationId], 
+    [vwFilterRequest].[DstMStationId] AS [DstMStationId], 
+    [vwFilterRequest].[StationRouteId] AS [StationRouteId], 
+    [vwFilterRequest].[IsDelete] AS [IsDelete], 
+    [vwFilterRequest].[SrcStName] AS [SrcStName], 
+    [vwFilterRequest].[SrcStLat] AS [SrcStLat], 
+    [vwFilterRequest].[SrcStLng] AS [SrcStLng], 
+    [vwFilterRequest].[DstStName] AS [DstStName], 
+    [vwFilterRequest].[DstStLat] AS [DstStLat], 
+    [vwFilterRequest].[DstStLng] AS [DstStLng], 
+    [vwFilterRequest].[IsCarpool] AS [IsCarpool]
+    FROM [dbo].[vwFilterRequest] AS [vwFilterRequest]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vwFilterRequestTrip" EntityType="Self.vwFilterRequestTrip" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vwFilterRequestTrip].[IsActive] AS [IsActive], 
+    [vwFilterRequestTrip].[IsCarpool] AS [IsCarpool], 
+    [vwFilterRequestTrip].[TripId] AS [TripId], 
+    [vwFilterRequestTrip].[DriverRouteId] AS [DriverRouteId], 
+    [vwFilterRequestTrip].[TStartTime] AS [TStartTime], 
+    [vwFilterRequestTrip].[TCreateTime] AS [TCreateTime], 
+    [vwFilterRequestTrip].[TEmptySeat] AS [TEmptySeat], 
+    [vwFilterRequestTrip].[TState] AS [TState], 
+    [vwFilterRequestTrip].[RState] AS [RState], 
+    [vwFilterRequestTrip].[RStartTime] AS [RStartTime], 
+    [vwFilterRequestTrip].[RCreateTime] AS [RCreateTime], 
+    [vwFilterRequestTrip].[FilterId] AS [FilterId], 
+    [vwFilterRequestTrip].[FilterRequestId] AS [FilterRequestId], 
+    [vwFilterRequestTrip].[FilterUserId] AS [FilterUserId], 
+    [vwFilterRequestTrip].[SrcMStationId] AS [SrcMStationId], 
+    [vwFilterRequestTrip].[DstMStationId] AS [DstMStationId], 
+    [vwFilterRequestTrip].[StationRouteId] AS [StationRouteId], 
+    [vwFilterRequestTrip].[IsDelete] AS [IsDelete]
+    FROM [dbo].[vwFilterRequestTrip] AS [vwFilterRequestTrip]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vwGroup" EntityType="Self.vwGroup" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -2386,21 +2687,27 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
             <Parameter Name="userId" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="AppsTokens" EntityType="MibarimModel.AppsToken" />
-          <EntitySet Name="vwDriverTrips" EntityType="MibarimModel.vwDriverTrip" />
-          <EntitySet Name="Employees" EntityType="MibarimModel.Employee" />
           <EntitySet Name="StationRoutePlus" EntityType="MibarimModel.StationRoutePlu" />
+          <EntitySet Name="TmLocations" EntityType="MibarimModel.TmLocation" />
+          <EntitySet Name="Notifications" EntityType="MibarimModel.Notification" />
           <FunctionImport Name="GetAggregatedFilters" ReturnType="Collection(MibarimModel.GetAggregatedFilters_Result)">
           <Parameter Name="from" Mode="In" Type="DateTime" />
           </FunctionImport>
-          <EntitySet Name="TmLocations" EntityType="MibarimModel.TmLocation" />
-          <EntitySet Name="Notifications" EntityType="MibarimModel.Notification" />
           <FunctionImport Name="GetAggregatedTimes" ReturnType="Collection(MibarimModel.GetAggregatedTimes_Result)">
             <Parameter Name="from" Mode="In" Type="DateTime" />
             <Parameter Name="stationRouteId" Mode="In" Type="Int64" />
           </FunctionImport>
           <EntitySet Name="Filters" EntityType="MibarimModel.Filter" />
+          <EntitySet Name="vwDriverTrips" EntityType="MibarimModel.vwDriverTrip" />
           <EntitySet Name="vwFilters" EntityType="MibarimModel.vwFilter" />
           <EntitySet Name="vwFilterPlus" EntityType="MibarimModel.vwFilterPlu" />
+          <EntitySet Name="FilterRequests" EntityType="MibarimModel.FilterRequest" />
+          <EntitySet Name="vwFilterRequests" EntityType="MibarimModel.vwFilterRequest" />
+          <EntitySet Name="vwActiveTrips" EntityType="MibarimModel.vwActiveTrip" />
+          <EntitySet Name="vwFilterBooks" EntityType="MibarimModel.vwFilterBook" />
+          <FunctionImport Name="CopyStationRoutePlus" />
+          <EntitySet Name="vwFilterRequestTrips" EntityType="MibarimModel.vwFilterRequestTrip" />
+          <EntitySet Name="Employees" EntityType="MibarimModel.Employee" />
           </EntityContainer>
         <EntityType Name="BankInfo">
           <Key>
@@ -3799,6 +4106,91 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
           <Property Name="TokenState" Type="Int16" Nullable="false" />
           <Property Name="Token" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="StationRoutePlu">
+          <Key>
+            <PropertyRef Name="StationRouteId" />
+          </Key>
+          <Property Name="StationRouteId" Type="Int64" Nullable="false" />
+          <Property Name="Five" Type="Int64" />
+          <Property Name="Six" Type="Int64" />
+          <Property Name="Seven" Type="Int64" />
+          <Property Name="Eight" Type="Int64" />
+          <Property Name="Nine" Type="Int64" />
+          <Property Name="Ten" Type="Int64" />
+          <Property Name="Eleven" Type="Int64" />
+          <Property Name="Twelve" Type="Int64" />
+          <Property Name="Thirteen" Type="Int64" />
+          <Property Name="Fourteen" Type="Int64" />
+          <Property Name="Fifteen" Type="Int64" />
+          <Property Name="Sixteen" Type="Int64" />
+          <Property Name="Seventeen" Type="Int64" />
+          <Property Name="Eighteen" Type="Int64" />
+          <Property Name="Nineteen" Type="Int64" />
+          <Property Name="Twenty" Type="Int64" />
+          <Property Name="TwentyOne" Type="Int64" />
+          <Property Name="TwentyTwo" Type="Int64" />
+          <Property Name="TwentyThree" Type="Int64" />
+        </EntityType>
+        <EntityType Name="TmLocation">
+          <Key>
+            <PropertyRef Name="TmLocationId" />
+          </Key>
+          <Property Name="TmLocationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TmSrcLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="TmSrcLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="TmDstLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="TmDstLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+        </EntityType>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="NotificationId" />
+          </Key>
+          <Property Name="NotificationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NotifUserId" Type="Int32" Nullable="false" />
+          <Property Name="NotifCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="NotifExpireTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FilterId" Type="Int64" />
+          <Property Name="NotifTitle" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="NotifBody" Type="String" Nullable="false" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="NotifType" Type="Int16" Nullable="false" />
+          <Property Name="IsNotificationSent" Type="Boolean" Nullable="false" />
+          <Property Name="IsNotificationSeen" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <ComplexType Name="GetAggregatedFilters_Result">
+          <Property Type="Int64" Name="FilterId" Nullable="false" />
+          <Property Type="DateTime" Name="CreateTime" Nullable="false" Precision="23" />
+          <Property Type="Int64" Name="FilterUserId" Nullable="false" />
+          <Property Type="Int64" Name="SrcMStationId" Nullable="false" />
+          <Property Type="Int64" Name="DstMStationId" Nullable="false" />
+          <Property Type="Boolean" Name="IsDelete" Nullable="false" />
+          <Property Type="Int64" Name="StationRouteId" Nullable="false" />
+          <Property Type="DateTime" Name="AggregatedTime" Nullable="true" Precision="16" />
+          <Property Type="Int32" Name="co" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetAggregatedTimes_Result">
+          <Property Type="Int64" Name="FilterId" Nullable="false" />
+          <Property Type="DateTime" Name="CreateTime" Nullable="false" Precision="23" />
+          <Property Type="Int64" Name="FilterUserId" Nullable="false" />
+          <Property Type="Int64" Name="SrcMStationId" Nullable="false" />
+          <Property Type="Int64" Name="DstMStationId" Nullable="false" />
+          <Property Type="Boolean" Name="IsDelete" Nullable="false" />
+          <Property Type="DateTime" Name="RStartTime" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="AggregatedTime" Nullable="true" Precision="16" />
+          <Property Type="Int32" Name="co" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="Filter">
+          <Key>
+            <PropertyRef Name="FilterId" />
+          </Key>
+          <Property Name="FilterId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FilterUserId" Type="Int64" Nullable="false" />
+          <Property Name="SrcMStationId" Type="Int64" Nullable="false" />
+          <Property Name="DstMStationId" Type="Int64" Nullable="false" />
+          <Property Name="StationRouteId" Type="Int64" Nullable="false" />
+          <Property Name="IsDelete" Type="Boolean" Nullable="false" />
+        </EntityType>
         <EntityType Name="vwDriverTrip">
           <Key>
             <PropertyRef Name="TCreateTime" />
@@ -3812,6 +4204,7 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
             <PropertyRef Name="StationRouteId" />
             <PropertyRef Name="DstMStationId" />
             <PropertyRef Name="SrcMStationId" />
+            <PropertyRef Name="DrIsDeleted" />
           </Key>
           <Property Name="TCreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="TStartTime" Type="DateTime" Nullable="false" Precision="3" />
@@ -3845,6 +4238,278 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
           <Property Name="StationRouteId" Type="Int64" Nullable="false" />
           <Property Name="DstMStationId" Type="Int64" Nullable="false" />
           <Property Name="SrcMStationId" Type="Int64" Nullable="false" />
+          <Property Name="DrIsDeleted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="vwFilter">
+          <Key>
+            <PropertyRef Name="FilterId" />
+            <PropertyRef Name="CreateTime" />
+            <PropertyRef Name="FilterUserId" />
+            <PropertyRef Name="SrcStName" />
+            <PropertyRef Name="SrcStLat" />
+            <PropertyRef Name="SrcStLng" />
+            <PropertyRef Name="DstStName" />
+            <PropertyRef Name="DstStLat" />
+            <PropertyRef Name="DstStLng" />
+            <PropertyRef Name="StationRouteId" />
+            <PropertyRef Name="DstMStationId" />
+            <PropertyRef Name="SrcMStationId" />
+            <PropertyRef Name="IsDelete" />
+          </Key>
+          <Property Name="FilterId" Type="Int64" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FilterUserId" Type="Int64" Nullable="false" />
+          <Property Name="SrcStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="SrcStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="SrcStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="DstStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="DstStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="DstStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="StationRouteId" Type="Int64" Nullable="false" />
+          <Property Name="DstMStationId" Type="Int64" Nullable="false" />
+          <Property Name="SrcMStationId" Type="Int64" Nullable="false" />
+          <Property Name="IsDelete" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="vwFilterPlu">
+          <Key>
+            <PropertyRef Name="FilterId" />
+            <PropertyRef Name="SrcMStationId" />
+            <PropertyRef Name="DstMStationId" />
+            <PropertyRef Name="IsDelete" />
+            <PropertyRef Name="FilterUserId" />
+            <PropertyRef Name="SrcStLat" />
+            <PropertyRef Name="SrcStLng" />
+            <PropertyRef Name="SrcStName" />
+            <PropertyRef Name="DstStLat" />
+            <PropertyRef Name="DstStLng" />
+            <PropertyRef Name="DstStName" />
+          </Key>
+          <Property Name="FilterId" Type="Int64" Nullable="false" />
+          <Property Name="StationRouteId" Type="Int64" />
+          <Property Name="Five" Type="Int64" />
+          <Property Name="Six" Type="Int64" />
+          <Property Name="Seven" Type="Int64" />
+          <Property Name="Eight" Type="Int64" />
+          <Property Name="Nine" Type="Int64" />
+          <Property Name="Ten" Type="Int64" />
+          <Property Name="Eleven" Type="Int64" />
+          <Property Name="Twelve" Type="Int64" />
+          <Property Name="Thirteen" Type="Int64" />
+          <Property Name="Fourteen" Type="Int64" />
+          <Property Name="Fifteen" Type="Int64" />
+          <Property Name="Sixteen" Type="Int64" />
+          <Property Name="Seventeen" Type="Int64" />
+          <Property Name="Eighteen" Type="Int64" />
+          <Property Name="Nineteen" Type="Int64" />
+          <Property Name="Twenty" Type="Int64" />
+          <Property Name="TwentyOne" Type="Int64" />
+          <Property Name="TwentyTwo" Type="Int64" />
+          <Property Name="TwentyThree" Type="Int64" />
+          <Property Name="SrcMStationId" Type="Int64" Nullable="false" />
+          <Property Name="DstMStationId" Type="Int64" Nullable="false" />
+          <Property Name="IsDelete" Type="Boolean" Nullable="false" />
+          <Property Name="FilterUserId" Type="Int64" Nullable="false" />
+          <Property Name="SrcStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="SrcStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="SrcStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="DstStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="DstStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="DstStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="FilterRequest">
+          <Key>
+            <PropertyRef Name="FilterRequestId" />
+          </Key>
+          <Property Name="FilterRequestId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FilterId" Type="Int64" Nullable="false" />
+          <Property Name="RCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RStartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RState" Type="Int16" Nullable="false" />
+          <Property Name="TripId" Type="Int64" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsCarpool" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="vwFilterRequest">
+          <Key>
+            <PropertyRef Name="FilterRequestId" />
+            <PropertyRef Name="FilterId" />
+            <PropertyRef Name="RCreateTime" />
+            <PropertyRef Name="RStartTime" />
+            <PropertyRef Name="IsActive" />
+            <PropertyRef Name="RState" />
+            <PropertyRef Name="FilterUserId" />
+            <PropertyRef Name="SrcMStationId" />
+            <PropertyRef Name="DstMStationId" />
+            <PropertyRef Name="StationRouteId" />
+            <PropertyRef Name="IsDelete" />
+            <PropertyRef Name="SrcStName" />
+            <PropertyRef Name="SrcStLat" />
+            <PropertyRef Name="SrcStLng" />
+            <PropertyRef Name="DstStName" />
+            <PropertyRef Name="DstStLat" />
+            <PropertyRef Name="DstStLng" />
+            <PropertyRef Name="IsCarpool" />
+          </Key>
+          <Property Name="FilterRequestId" Type="Int64" Nullable="false" />
+          <Property Name="FilterId" Type="Int64" Nullable="false" />
+          <Property Name="RCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RStartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TripId" Type="Int64" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="RState" Type="Int16" Nullable="false" />
+          <Property Name="FilterUserId" Type="Int64" Nullable="false" />
+          <Property Name="SrcMStationId" Type="Int64" Nullable="false" />
+          <Property Name="DstMStationId" Type="Int64" Nullable="false" />
+          <Property Name="StationRouteId" Type="Int64" Nullable="false" />
+          <Property Name="IsDelete" Type="Boolean" Nullable="false" />
+          <Property Name="SrcStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="SrcStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="SrcStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="DstStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="DstStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="DstStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="IsCarpool" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="vwActiveTrip">
+          <Key>
+            <PropertyRef Name="FilterRequestId" />
+            <PropertyRef Name="FilterId" />
+            <PropertyRef Name="RCreateTime" />
+            <PropertyRef Name="RStartTime" />
+            <PropertyRef Name="IsActive" />
+            <PropertyRef Name="RState" />
+            <PropertyRef Name="FilterUserId" />
+            <PropertyRef Name="SrcMStationId" />
+            <PropertyRef Name="DstMStationId" />
+            <PropertyRef Name="StationRouteId" />
+            <PropertyRef Name="IsDelete" />
+            <PropertyRef Name="SrcStName" />
+            <PropertyRef Name="SrcStLat" />
+            <PropertyRef Name="SrcStLng" />
+            <PropertyRef Name="DstStName" />
+            <PropertyRef Name="DstStLat" />
+            <PropertyRef Name="DstStLng" />
+            <PropertyRef Name="IsCarpool" />
+            <PropertyRef Name="PassMobile" />
+            <PropertyRef Name="TStartTime" />
+            <PropertyRef Name="TState" />
+            <PropertyRef Name="TEmptySeat" />
+            <PropertyRef Name="DriverRouteId" />
+            <PropertyRef Name="DrIsDeleted" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="DriverMobile" />
+          </Key>
+          <Property Name="FilterRequestId" Type="Int64" Nullable="false" />
+          <Property Name="FilterId" Type="Int64" Nullable="false" />
+          <Property Name="RCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RStartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TripId" Type="Int64" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="RState" Type="Int16" Nullable="false" />
+          <Property Name="FilterUserId" Type="Int64" Nullable="false" />
+          <Property Name="SrcMStationId" Type="Int64" Nullable="false" />
+          <Property Name="DstMStationId" Type="Int64" Nullable="false" />
+          <Property Name="StationRouteId" Type="Int64" Nullable="false" />
+          <Property Name="IsDelete" Type="Boolean" Nullable="false" />
+          <Property Name="SrcStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="SrcStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="SrcStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="DstStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="DstStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="DstStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
+          <Property Name="IsCarpool" Type="Boolean" Nullable="false" />
+          <Property Name="PassFamily" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PassName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PassMobile" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="TStartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TState" Type="Int16" Nullable="false" />
+          <Property Name="TEmptySeat" Type="Int16" Nullable="false" />
+          <Property Name="DriverRouteId" Type="Int64" Nullable="false" />
+          <Property Name="DrIsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="UserId" Type="Int64" Nullable="false" />
+          <Property Name="DriverName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DriverFamily" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DriverMobile" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="vwFilterBook">
+          <Key>
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="IsActive" />
+            <PropertyRef Name="IsCarpool" />
+            <PropertyRef Name="CreateTime" />
+            <PropertyRef Name="FilterId" />
+            <PropertyRef Name="RState" />
+            <PropertyRef Name="RStartTime" />
+            <PropertyRef Name="RCreateTime" />
+            <PropertyRef Name="FilterRequestId" />
+            <PropertyRef Name="IsDelete" />
+            <PropertyRef Name="StationRouteId" />
+            <PropertyRef Name="FilterUserId" />
+            <PropertyRef Name="DstMStationId" />
+            <PropertyRef Name="SrcMStationId" />
+          </Key>
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Family" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="TripId" Type="Int64" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsCarpool" Type="Boolean" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FilterId" Type="Int64" Nullable="false" />
+          <Property Name="RState" Type="Int16" Nullable="false" />
+          <Property Name="RStartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FilterRequestId" Type="Int64" Nullable="false" />
+          <Property Name="IsDelete" Type="Boolean" Nullable="false" />
+          <Property Name="StationRouteId" Type="Int64" Nullable="false" />
+          <Property Name="FilterUserId" Type="Int64" Nullable="false" />
+          <Property Name="Gender" Type="Int32" />
+          <Property Name="DstMStationId" Type="Int64" Nullable="false" />
+          <Property Name="SrcMStationId" Type="Int64" Nullable="false" />
+          <Property Name="PayReqId" Type="Int64" />
+          <Property Name="BookingType" Type="Int16" />
+          <Property Name="IsBooked" Type="Boolean" />
+          <Property Name="UserImageId" Type="Guid" />
+        </EntityType>
+        <EntityType Name="vwFilterRequestTrip">
+          <Key>
+            <PropertyRef Name="IsActive" />
+            <PropertyRef Name="IsCarpool" />
+            <PropertyRef Name="TripId" />
+            <PropertyRef Name="DriverRouteId" />
+            <PropertyRef Name="TStartTime" />
+            <PropertyRef Name="TCreateTime" />
+            <PropertyRef Name="TEmptySeat" />
+            <PropertyRef Name="TState" />
+            <PropertyRef Name="RState" />
+            <PropertyRef Name="RStartTime" />
+            <PropertyRef Name="RCreateTime" />
+            <PropertyRef Name="FilterId" />
+            <PropertyRef Name="FilterRequestId" />
+            <PropertyRef Name="FilterUserId" />
+            <PropertyRef Name="SrcMStationId" />
+            <PropertyRef Name="DstMStationId" />
+            <PropertyRef Name="StationRouteId" />
+            <PropertyRef Name="IsDelete" />
+          </Key>
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsCarpool" Type="Boolean" Nullable="false" />
+          <Property Name="TripId" Type="Int64" Nullable="false" />
+          <Property Name="DriverRouteId" Type="Int64" Nullable="false" />
+          <Property Name="TStartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TEmptySeat" Type="Int16" Nullable="false" />
+          <Property Name="TState" Type="Int16" Nullable="false" />
+          <Property Name="RState" Type="Int16" Nullable="false" />
+          <Property Name="RStartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RCreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FilterId" Type="Int64" Nullable="false" />
+          <Property Name="FilterRequestId" Type="Int64" Nullable="false" />
+          <Property Name="FilterUserId" Type="Int64" Nullable="false" />
+          <Property Name="SrcMStationId" Type="Int64" Nullable="false" />
+          <Property Name="DstMStationId" Type="Int64" Nullable="false" />
+          <Property Name="StationRouteId" Type="Int64" Nullable="false" />
+          <Property Name="IsDelete" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Employee">
           <Key>
@@ -3865,178 +4530,8 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
           <Property Name="Entry" Type="String" MaxLength="56" FixedLength="false" Unicode="true" />
           <Property Name="Introduce" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="Enterprise" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="StationRoutePlu">
-          <Key>
-            <PropertyRef Name="StationRouteId" />
-          </Key>
-          <Property Name="StationRouteId" Type="Int64" Nullable="false" />
-          <Property Name="Five" Type="Int64" />
-          <Property Name="Six" Type="Int64" />
-          <Property Name="Seven" Type="Int64" />
-          <Property Name="Eight" Type="Int64" />
-          <Property Name="Nine" Type="Int64" />
-          <Property Name="Ten" Type="Int64" />
-          <Property Name="Eleven" Type="Int64" />
-          <Property Name="Twelve" Type="Int64" />
-          <Property Name="Thirteen" Type="Int64" />
-          <Property Name="Fourteen" Type="Int64" />
-          <Property Name="Fifteen" Type="Int64" />
-          <Property Name="Sixteen" Type="Int64" />
-          <Property Name="Seventeen" Type="Int64" />
-          <Property Name="Eighteen" Type="Int64" />
-          <Property Name="Nineteen" Type="Int64" />
-          <Property Name="Twenty" Type="Int64" />
-          <Property Name="TwentyOne" Type="Int64" />
-          <Property Name="TwentyTwo" Type="Int64" />
-          <Property Name="TwentyThree" Type="Int64" />
-        </EntityType>
-        <ComplexType Name="GetAggregatedFilters_Result">
-          <Property Type="Int64" Name="FilterId" Nullable="false" />
-          <Property Type="DateTime" Name="CreateTime" Nullable="false" Precision="23" />
-          <Property Type="Int64" Name="FilterUserId" Nullable="false" />
-          <Property Type="Int64" Name="SrcMStationId" Nullable="false" />
-          <Property Type="Int64" Name="DstMStationId" Nullable="false" />
-          <Property Type="DateTime" Name="LastTimeSet" Nullable="true" Precision="23" />
-          <Property Type="Boolean" Name="IsDelete" Nullable="false" />
-          <Property Type="Int64" Name="StationRouteId" Nullable="false" />
-          <Property Type="DateTime" Name="AggregatedTime" Nullable="true" Precision="16" />
-          <Property Type="Int32" Name="co" Nullable="true" />
-        </ComplexType>
-        <EntityType Name="TmLocation">
-          <Key>
-            <PropertyRef Name="TmLocationId" />
-          </Key>
-          <Property Name="TmLocationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="TmSrcLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-          <Property Name="TmSrcLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-          <Property Name="TmDstLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-          <Property Name="TmDstLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-        </EntityType>
-        <EntityType Name="Notification">
-          <Key>
-            <PropertyRef Name="NotificationId" />
-          </Key>
-          <Property Name="NotificationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NotifUserId" Type="Int32" Nullable="false" />
-          <Property Name="NotifCreateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="NotifExpireTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="FilterId" Type="Int64" />
-          <Property Name="NotifTitle" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="NotifBody" Type="String" Nullable="false" MaxLength="512" FixedLength="false" Unicode="true" />
-          <Property Name="NotifType" Type="Int16" Nullable="false" />
-          <Property Name="IsNotificationSent" Type="Boolean" Nullable="false" />
-          <Property Name="IsNotificationSeen" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <ComplexType Name="GetAggregatedTimes_Result">
-          <Property Type="Int64" Name="FilterId" Nullable="false" />
-          <Property Type="DateTime" Name="CreateTime" Nullable="false" Precision="23" />
-          <Property Type="Int64" Name="FilterUserId" Nullable="false" />
-          <Property Type="Int64" Name="SrcMStationId" Nullable="false" />
-          <Property Type="Int64" Name="DstMStationId" Nullable="false" />
-          <Property Type="DateTime" Name="LastTimeSet" Nullable="true" Precision="23" />
-          <Property Type="Boolean" Name="IsDelete" Nullable="false" />
-          <Property Type="DateTime" Name="AggregatedTime" Nullable="true" Precision="16" />
-          <Property Type="Int32" Name="co" Nullable="true" />
-        </ComplexType>
-        <EntityType Name="Filter">
-          <Key>
-            <PropertyRef Name="FilterId" />
-          </Key>
-          <Property Name="FilterId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="FilterUserId" Type="Int64" Nullable="false" />
-          <Property Name="SrcMStationId" Type="Int64" Nullable="false" />
-          <Property Name="DstMStationId" Type="Int64" Nullable="false" />
-          <Property Name="StationRouteId" Type="Int64" Nullable="false" />
-          <Property Name="LastTimeSet" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="IsDelete" Type="Boolean" Nullable="false" />
-          <Property Name="TripId" Type="Int64" />
-        </EntityType>
-        <EntityType Name="vwFilter">
-          <Key>
-            <PropertyRef Name="FilterId" />
-            <PropertyRef Name="CreateTime" />
-            <PropertyRef Name="FilterUserId" />
-            <PropertyRef Name="SrcStName" />
-            <PropertyRef Name="SrcStLat" />
-            <PropertyRef Name="SrcStLng" />
-            <PropertyRef Name="DstStName" />
-            <PropertyRef Name="DstStLat" />
-            <PropertyRef Name="DstStLng" />
-            <PropertyRef Name="StationRouteId" />
-            <PropertyRef Name="DstMStationId" />
-            <PropertyRef Name="SrcMStationId" />
-            <PropertyRef Name="IsDelete" />
-            <PropertyRef Name="IsActive" />
-          </Key>
-          <Property Name="FilterId" Type="Int64" Nullable="false" />
-          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="FilterUserId" Type="Int64" Nullable="false" />
-          <Property Name="LastTimeSet" Type="DateTime" Precision="3" />
-          <Property Name="SrcStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
-          <Property Name="SrcStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-          <Property Name="SrcStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-          <Property Name="DstStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
-          <Property Name="DstStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-          <Property Name="DstStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-          <Property Name="StationRouteId" Type="Int64" Nullable="false" />
-          <Property Name="DstMStationId" Type="Int64" Nullable="false" />
-          <Property Name="SrcMStationId" Type="Int64" Nullable="false" />
-          <Property Name="IsDelete" Type="Boolean" Nullable="false" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="TripId" Type="Int64" />
-        </EntityType>
-        <EntityType Name="vwFilterPlu">
-          <Key>
-            <PropertyRef Name="FilterId" />
-            <PropertyRef Name="StationRouteId" />
-            <PropertyRef Name="SrcMStationId" />
-            <PropertyRef Name="DstMStationId" />
-            <PropertyRef Name="IsDelete" />
-            <PropertyRef Name="FilterUserId" />
-            <PropertyRef Name="SrcStLat" />
-            <PropertyRef Name="SrcStLng" />
-            <PropertyRef Name="SrcStName" />
-            <PropertyRef Name="DstStLat" />
-            <PropertyRef Name="DstStLng" />
-            <PropertyRef Name="DstStName" />
-          </Key>
-          <Property Name="FilterId" Type="Int64" Nullable="false" />
-          <Property Name="StationRouteId" Type="Int64" Nullable="false" />
-          <Property Name="Five" Type="Int64" />
-          <Property Name="Six" Type="Int64" />
-          <Property Name="Seven" Type="Int64" />
-          <Property Name="Eight" Type="Int64" />
-          <Property Name="Nine" Type="Int64" />
-          <Property Name="Ten" Type="Int64" />
-          <Property Name="Eleven" Type="Int64" />
-          <Property Name="Twelve" Type="Int64" />
-          <Property Name="Thirteen" Type="Int64" />
-          <Property Name="Fourteen" Type="Int64" />
-          <Property Name="Fifteen" Type="Int64" />
-          <Property Name="Sixteen" Type="Int64" />
-          <Property Name="Seventeen" Type="Int64" />
-          <Property Name="Eighteen" Type="Int64" />
-          <Property Name="Nineteen" Type="Int64" />
-          <Property Name="Twenty" Type="Int64" />
-          <Property Name="TwentyOne" Type="Int64" />
-          <Property Name="TwentyTwo" Type="Int64" />
-          <Property Name="TwentyThree" Type="Int64" />
-          <Property Name="SrcMStationId" Type="Int64" Nullable="false" />
-          <Property Name="DstMStationId" Type="Int64" Nullable="false" />
-          <Property Name="IsDelete" Type="Boolean" Nullable="false" />
-          <Property Name="FilterUserId" Type="Int64" Nullable="false" />
-          <Property Name="LastTimeSet" Type="DateTime" Precision="3" />
-          <Property Name="SrcStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-          <Property Name="SrcStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-          <Property Name="SrcStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
-          <Property Name="DstStLat" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-          <Property Name="DstStLng" Type="Decimal" Nullable="false" Precision="20" Scale="17" />
-          <Property Name="DstStName" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
-          <Property Name="TripId" Type="Int64" />
+          <Property Name="SrcStation" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="DstStation" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -5331,9 +5826,107 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="StationRoutePlus">
+            <EntityTypeMapping TypeName="MibarimModel.StationRoutePlu">
+              <MappingFragment StoreEntitySet="StationRoutePlus">
+                <ScalarProperty Name="TwentyThree" ColumnName="TwentyThree" />
+                <ScalarProperty Name="TwentyTwo" ColumnName="TwentyTwo" />
+                <ScalarProperty Name="TwentyOne" ColumnName="TwentyOne" />
+                <ScalarProperty Name="Twenty" ColumnName="Twenty" />
+                <ScalarProperty Name="Nineteen" ColumnName="Nineteen" />
+                <ScalarProperty Name="Eighteen" ColumnName="Eighteen" />
+                <ScalarProperty Name="Seventeen" ColumnName="Seventeen" />
+                <ScalarProperty Name="Sixteen" ColumnName="Sixteen" />
+                <ScalarProperty Name="Fifteen" ColumnName="Fifteen" />
+                <ScalarProperty Name="Fourteen" ColumnName="Fourteen" />
+                <ScalarProperty Name="Thirteen" ColumnName="Thirteen" />
+                <ScalarProperty Name="Twelve" ColumnName="Twelve" />
+                <ScalarProperty Name="Eleven" ColumnName="Eleven" />
+                <ScalarProperty Name="Ten" ColumnName="Ten" />
+                <ScalarProperty Name="Nine" ColumnName="Nine" />
+                <ScalarProperty Name="Eight" ColumnName="Eight" />
+                <ScalarProperty Name="Seven" ColumnName="Seven" />
+                <ScalarProperty Name="Six" ColumnName="Six" />
+                <ScalarProperty Name="Five" ColumnName="Five" />
+                <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TmLocations">
+            <EntityTypeMapping TypeName="MibarimModel.TmLocation">
+              <MappingFragment StoreEntitySet="TmLocation">
+                <ScalarProperty Name="TmDstLng" ColumnName="TmDstLng" />
+                <ScalarProperty Name="TmDstLat" ColumnName="TmDstLat" />
+                <ScalarProperty Name="TmSrcLng" ColumnName="TmSrcLng" />
+                <ScalarProperty Name="TmSrcLat" ColumnName="TmSrcLat" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="TmLocationId" ColumnName="TmLocationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Notifications">
+            <EntityTypeMapping TypeName="MibarimModel.Notification">
+              <MappingFragment StoreEntitySet="Notification">
+                <ScalarProperty Name="IsNotificationSeen" ColumnName="IsNotificationSeen" />
+                <ScalarProperty Name="IsNotificationSent" ColumnName="IsNotificationSent" />
+                <ScalarProperty Name="NotifType" ColumnName="NotifType" />
+                <ScalarProperty Name="NotifBody" ColumnName="NotifBody" />
+                <ScalarProperty Name="NotifTitle" ColumnName="NotifTitle" />
+                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
+                <ScalarProperty Name="NotifExpireTime" ColumnName="NotifExpireTime" />
+                <ScalarProperty Name="NotifCreateTime" ColumnName="NotifCreateTime" />
+                <ScalarProperty Name="NotifUserId" ColumnName="NotifUserId" />
+                <ScalarProperty Name="NotificationId" ColumnName="NotificationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetAggregatedFilters" FunctionName="MibarimModel.Store.GetAggregatedFilters">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MibarimModel.GetAggregatedFilters_Result">
+                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
+                <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
+                <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
+                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+                <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
+                <ScalarProperty Name="AggregatedTime" ColumnName="AggregatedTime" />
+                <ScalarProperty Name="co" ColumnName="co" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAggregatedTimes" FunctionName="MibarimModel.Store.GetAggregatedTimes">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MibarimModel.GetAggregatedTimes_Result">
+                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
+                <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
+                <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
+                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+                <ScalarProperty Name="RStartTime" ColumnName="RStartTime" />
+                <ScalarProperty Name="AggregatedTime" ColumnName="AggregatedTime" />
+                <ScalarProperty Name="co" ColumnName="co" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="Filters">
+            <EntityTypeMapping TypeName="MibarimModel.Filter">
+              <MappingFragment StoreEntitySet="Filter">
+                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+                <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
+                <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
+                <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
+                <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="vwDriverTrips">
             <EntityTypeMapping TypeName="MibarimModel.vwDriverTrip">
               <MappingFragment StoreEntitySet="vwDriverTrip">
+                <ScalarProperty Name="DrIsDeleted" ColumnName="DrIsDeleted" />
                 <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
                 <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
                 <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
@@ -5369,9 +5962,196 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="vwFilters">
+            <EntityTypeMapping TypeName="MibarimModel.vwFilter">
+              <MappingFragment StoreEntitySet="vwFilter">
+                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+                <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
+                <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
+                <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
+                <ScalarProperty Name="DstStLng" ColumnName="DstStLng" />
+                <ScalarProperty Name="DstStLat" ColumnName="DstStLat" />
+                <ScalarProperty Name="DstStName" ColumnName="DstStName" />
+                <ScalarProperty Name="SrcStLng" ColumnName="SrcStLng" />
+                <ScalarProperty Name="SrcStLat" ColumnName="SrcStLat" />
+                <ScalarProperty Name="SrcStName" ColumnName="SrcStName" />
+                <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vwFilterPlus">
+            <EntityTypeMapping TypeName="MibarimModel.vwFilterPlu">
+              <MappingFragment StoreEntitySet="vwFilterPlus">
+                <ScalarProperty Name="DstStName" ColumnName="DstStName" />
+                <ScalarProperty Name="DstStLng" ColumnName="DstStLng" />
+                <ScalarProperty Name="DstStLat" ColumnName="DstStLat" />
+                <ScalarProperty Name="SrcStName" ColumnName="SrcStName" />
+                <ScalarProperty Name="SrcStLng" ColumnName="SrcStLng" />
+                <ScalarProperty Name="SrcStLat" ColumnName="SrcStLat" />
+                <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
+                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+                <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
+                <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
+                <ScalarProperty Name="TwentyThree" ColumnName="TwentyThree" />
+                <ScalarProperty Name="TwentyTwo" ColumnName="TwentyTwo" />
+                <ScalarProperty Name="TwentyOne" ColumnName="TwentyOne" />
+                <ScalarProperty Name="Twenty" ColumnName="Twenty" />
+                <ScalarProperty Name="Nineteen" ColumnName="Nineteen" />
+                <ScalarProperty Name="Eighteen" ColumnName="Eighteen" />
+                <ScalarProperty Name="Seventeen" ColumnName="Seventeen" />
+                <ScalarProperty Name="Sixteen" ColumnName="Sixteen" />
+                <ScalarProperty Name="Fifteen" ColumnName="Fifteen" />
+                <ScalarProperty Name="Fourteen" ColumnName="Fourteen" />
+                <ScalarProperty Name="Thirteen" ColumnName="Thirteen" />
+                <ScalarProperty Name="Twelve" ColumnName="Twelve" />
+                <ScalarProperty Name="Eleven" ColumnName="Eleven" />
+                <ScalarProperty Name="Ten" ColumnName="Ten" />
+                <ScalarProperty Name="Nine" ColumnName="Nine" />
+                <ScalarProperty Name="Eight" ColumnName="Eight" />
+                <ScalarProperty Name="Seven" ColumnName="Seven" />
+                <ScalarProperty Name="Six" ColumnName="Six" />
+                <ScalarProperty Name="Five" ColumnName="Five" />
+                <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
+                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FilterRequests">
+            <EntityTypeMapping TypeName="MibarimModel.FilterRequest">
+              <MappingFragment StoreEntitySet="FilterRequest">
+                <ScalarProperty Name="IsCarpool" ColumnName="IsCarpool" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="TripId" ColumnName="TripId" />
+                <ScalarProperty Name="RState" ColumnName="RState" />
+                <ScalarProperty Name="RStartTime" ColumnName="RStartTime" />
+                <ScalarProperty Name="RCreateTime" ColumnName="RCreateTime" />
+                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
+                <ScalarProperty Name="FilterRequestId" ColumnName="FilterRequestId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vwFilterRequests">
+            <EntityTypeMapping TypeName="MibarimModel.vwFilterRequest">
+              <MappingFragment StoreEntitySet="vwFilterRequest">
+                <ScalarProperty Name="IsCarpool" ColumnName="IsCarpool" />
+                <ScalarProperty Name="DstStLng" ColumnName="DstStLng" />
+                <ScalarProperty Name="DstStLat" ColumnName="DstStLat" />
+                <ScalarProperty Name="DstStName" ColumnName="DstStName" />
+                <ScalarProperty Name="SrcStLng" ColumnName="SrcStLng" />
+                <ScalarProperty Name="SrcStLat" ColumnName="SrcStLat" />
+                <ScalarProperty Name="SrcStName" ColumnName="SrcStName" />
+                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+                <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
+                <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
+                <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
+                <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
+                <ScalarProperty Name="RState" ColumnName="RState" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="TripId" ColumnName="TripId" />
+                <ScalarProperty Name="RStartTime" ColumnName="RStartTime" />
+                <ScalarProperty Name="RCreateTime" ColumnName="RCreateTime" />
+                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
+                <ScalarProperty Name="FilterRequestId" ColumnName="FilterRequestId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vwActiveTrips">
+            <EntityTypeMapping TypeName="MibarimModel.vwActiveTrip">
+              <MappingFragment StoreEntitySet="vwActiveTrips">
+                <ScalarProperty Name="DriverMobile" ColumnName="DriverMobile" />
+                <ScalarProperty Name="DriverFamily" ColumnName="DriverFamily" />
+                <ScalarProperty Name="DriverName" ColumnName="DriverName" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="DrIsDeleted" ColumnName="DrIsDeleted" />
+                <ScalarProperty Name="DriverRouteId" ColumnName="DriverRouteId" />
+                <ScalarProperty Name="TEmptySeat" ColumnName="TEmptySeat" />
+                <ScalarProperty Name="TState" ColumnName="TState" />
+                <ScalarProperty Name="TStartTime" ColumnName="TStartTime" />
+                <ScalarProperty Name="PassMobile" ColumnName="PassMobile" />
+                <ScalarProperty Name="PassName" ColumnName="PassName" />
+                <ScalarProperty Name="PassFamily" ColumnName="PassFamily" />
+                <ScalarProperty Name="IsCarpool" ColumnName="IsCarpool" />
+                <ScalarProperty Name="DstStLng" ColumnName="DstStLng" />
+                <ScalarProperty Name="DstStLat" ColumnName="DstStLat" />
+                <ScalarProperty Name="DstStName" ColumnName="DstStName" />
+                <ScalarProperty Name="SrcStLng" ColumnName="SrcStLng" />
+                <ScalarProperty Name="SrcStLat" ColumnName="SrcStLat" />
+                <ScalarProperty Name="SrcStName" ColumnName="SrcStName" />
+                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+                <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
+                <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
+                <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
+                <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
+                <ScalarProperty Name="RState" ColumnName="RState" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="TripId" ColumnName="TripId" />
+                <ScalarProperty Name="RStartTime" ColumnName="RStartTime" />
+                <ScalarProperty Name="RCreateTime" ColumnName="RCreateTime" />
+                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
+                <ScalarProperty Name="FilterRequestId" ColumnName="FilterRequestId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vwFilterBooks">
+            <EntityTypeMapping TypeName="MibarimModel.vwFilterBook">
+              <MappingFragment StoreEntitySet="vwFilterBook">
+                <ScalarProperty Name="UserImageId" ColumnName="UserImageId" />
+                <ScalarProperty Name="IsBooked" ColumnName="IsBooked" />
+                <ScalarProperty Name="BookingType" ColumnName="BookingType" />
+                <ScalarProperty Name="PayReqId" ColumnName="PayReqId" />
+                <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
+                <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
+                <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
+                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+                <ScalarProperty Name="FilterRequestId" ColumnName="FilterRequestId" />
+                <ScalarProperty Name="RCreateTime" ColumnName="RCreateTime" />
+                <ScalarProperty Name="RStartTime" ColumnName="RStartTime" />
+                <ScalarProperty Name="RState" ColumnName="RState" />
+                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="IsCarpool" ColumnName="IsCarpool" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="TripId" ColumnName="TripId" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Family" ColumnName="Family" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CopyStationRoutePlus" FunctionName="MibarimModel.Store.CopyStationRoutePlus" />
+          <EntitySetMapping Name="vwFilterRequestTrips">
+            <EntityTypeMapping TypeName="MibarimModel.vwFilterRequestTrip">
+              <MappingFragment StoreEntitySet="vwFilterRequestTrip">
+                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+                <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
+                <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
+                <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
+                <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
+                <ScalarProperty Name="FilterRequestId" ColumnName="FilterRequestId" />
+                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
+                <ScalarProperty Name="RCreateTime" ColumnName="RCreateTime" />
+                <ScalarProperty Name="RStartTime" ColumnName="RStartTime" />
+                <ScalarProperty Name="RState" ColumnName="RState" />
+                <ScalarProperty Name="TState" ColumnName="TState" />
+                <ScalarProperty Name="TEmptySeat" ColumnName="TEmptySeat" />
+                <ScalarProperty Name="TCreateTime" ColumnName="TCreateTime" />
+                <ScalarProperty Name="TStartTime" ColumnName="TStartTime" />
+                <ScalarProperty Name="DriverRouteId" ColumnName="DriverRouteId" />
+                <ScalarProperty Name="TripId" ColumnName="TripId" />
+                <ScalarProperty Name="IsCarpool" ColumnName="IsCarpool" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Employees">
             <EntityTypeMapping TypeName="MibarimModel.Employee">
               <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="DstStation" ColumnName="DstStation" />
+                <ScalarProperty Name="SrcStation" ColumnName="SrcStation" />
                 <ScalarProperty Name="Enterprise" ColumnName="Enterprise" />
                 <ScalarProperty Name="Introduce" ColumnName="Introduce" />
                 <ScalarProperty Name="Entry" ColumnName="Entry" />
@@ -5387,168 +6167,6 @@ warning 6002: The table/view 'Mibarim_plus.dbo.vwUserInfo' does not have a prima
                 <ScalarProperty Name="Family" ColumnName="Family" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="StationRoutePlus">
-            <EntityTypeMapping TypeName="MibarimModel.StationRoutePlu">
-              <MappingFragment StoreEntitySet="StationRoutePlus">
-                <ScalarProperty Name="TwentyThree" ColumnName="TwentyThree" />
-                <ScalarProperty Name="TwentyTwo" ColumnName="TwentyTwo" />
-                <ScalarProperty Name="TwentyOne" ColumnName="TwentyOne" />
-                <ScalarProperty Name="Twenty" ColumnName="Twenty" />
-                <ScalarProperty Name="Nineteen" ColumnName="Nineteen" />
-                <ScalarProperty Name="Eighteen" ColumnName="Eighteen" />
-                <ScalarProperty Name="Seventeen" ColumnName="Seventeen" />
-                <ScalarProperty Name="Sixteen" ColumnName="Sixteen" />
-                <ScalarProperty Name="Fifteen" ColumnName="Fifteen" />
-                <ScalarProperty Name="Fourteen" ColumnName="Fourteen" />
-                <ScalarProperty Name="Thirteen" ColumnName="Thirteen" />
-                <ScalarProperty Name="Twelve" ColumnName="Twelve" />
-                <ScalarProperty Name="Eleven" ColumnName="Eleven" />
-                <ScalarProperty Name="Ten" ColumnName="Ten" />
-                <ScalarProperty Name="Nine" ColumnName="Nine" />
-                <ScalarProperty Name="Eight" ColumnName="Eight" />
-                <ScalarProperty Name="Seven" ColumnName="Seven" />
-                <ScalarProperty Name="Six" ColumnName="Six" />
-                <ScalarProperty Name="Five" ColumnName="Five" />
-                <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetAggregatedFilters" FunctionName="MibarimModel.Store.GetAggregatedFilters">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="MibarimModel.GetAggregatedFilters_Result">
-                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
-                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-                <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
-                <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
-                <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
-                <ScalarProperty Name="LastTimeSet" ColumnName="LastTimeSet" />
-                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
-                <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
-                <ScalarProperty Name="AggregatedTime" ColumnName="AggregatedTime" />
-                <ScalarProperty Name="co" ColumnName="co" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <EntitySetMapping Name="TmLocations">
-            <EntityTypeMapping TypeName="MibarimModel.TmLocation">
-              <MappingFragment StoreEntitySet="TmLocation">
-                <ScalarProperty Name="TmDstLng" ColumnName="TmDstLng" />
-                <ScalarProperty Name="TmDstLat" ColumnName="TmDstLat" />
-                <ScalarProperty Name="TmSrcLng" ColumnName="TmSrcLng" />
-                <ScalarProperty Name="TmSrcLat" ColumnName="TmSrcLat" />
-                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-                <ScalarProperty Name="TmLocationId" ColumnName="TmLocationId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Notifications">
-            <EntityTypeMapping TypeName="MibarimModel.Notification">
-              <MappingFragment StoreEntitySet="Notification">
-                <ScalarProperty Name="IsNotificationSeen" ColumnName="IsNotificationSeen" />
-                <ScalarProperty Name="IsNotificationSent" ColumnName="IsNotificationSent" />
-                <ScalarProperty Name="NotifType" ColumnName="NotifType" />
-                <ScalarProperty Name="NotifBody" ColumnName="NotifBody" />
-                <ScalarProperty Name="NotifTitle" ColumnName="NotifTitle" />
-                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
-                <ScalarProperty Name="NotifExpireTime" ColumnName="NotifExpireTime" />
-                <ScalarProperty Name="NotifCreateTime" ColumnName="NotifCreateTime" />
-                <ScalarProperty Name="NotifUserId" ColumnName="NotifUserId" />
-                <ScalarProperty Name="NotificationId" ColumnName="NotificationId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetAggregatedTimes" FunctionName="MibarimModel.Store.GetAggregatedTimes">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="MibarimModel.GetAggregatedTimes_Result">
-                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
-                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-                <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
-                <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
-                <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
-                <ScalarProperty Name="LastTimeSet" ColumnName="LastTimeSet" />
-                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
-                <ScalarProperty Name="AggregatedTime" ColumnName="AggregatedTime" />
-                <ScalarProperty Name="co" ColumnName="co" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <EntitySetMapping Name="Filters">
-            <EntityTypeMapping TypeName="MibarimModel.Filter">
-              <MappingFragment StoreEntitySet="Filter">
-                <ScalarProperty Name="TripId" ColumnName="TripId" />
-                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="LastTimeSet" ColumnName="LastTimeSet" />
-                <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
-                <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
-                <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
-                <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
-                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="vwFilters">
-            <EntityTypeMapping TypeName="MibarimModel.vwFilter">
-              <MappingFragment StoreEntitySet="vwFilter">
-                <ScalarProperty Name="TripId" ColumnName="TripId" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
-                <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
-                <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
-                <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
-                <ScalarProperty Name="DstStLng" ColumnName="DstStLng" />
-                <ScalarProperty Name="DstStLat" ColumnName="DstStLat" />
-                <ScalarProperty Name="DstStName" ColumnName="DstStName" />
-                <ScalarProperty Name="SrcStLng" ColumnName="SrcStLng" />
-                <ScalarProperty Name="SrcStLat" ColumnName="SrcStLat" />
-                <ScalarProperty Name="SrcStName" ColumnName="SrcStName" />
-                <ScalarProperty Name="LastTimeSet" ColumnName="LastTimeSet" />
-                <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
-                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="vwFilterPlus">
-            <EntityTypeMapping TypeName="MibarimModel.vwFilterPlu">
-              <MappingFragment StoreEntitySet="vwFilterPlus">
-                <ScalarProperty Name="TripId" ColumnName="TripId" />
-                <ScalarProperty Name="DstStName" ColumnName="DstStName" />
-                <ScalarProperty Name="DstStLng" ColumnName="DstStLng" />
-                <ScalarProperty Name="DstStLat" ColumnName="DstStLat" />
-                <ScalarProperty Name="SrcStName" ColumnName="SrcStName" />
-                <ScalarProperty Name="SrcStLng" ColumnName="SrcStLng" />
-                <ScalarProperty Name="SrcStLat" ColumnName="SrcStLat" />
-                <ScalarProperty Name="LastTimeSet" ColumnName="LastTimeSet" />
-                <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
-                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
-                <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
-                <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
-                <ScalarProperty Name="TwentyThree" ColumnName="TwentyThree" />
-                <ScalarProperty Name="TwentyTwo" ColumnName="TwentyTwo" />
-                <ScalarProperty Name="TwentyOne" ColumnName="TwentyOne" />
-                <ScalarProperty Name="Twenty" ColumnName="Twenty" />
-                <ScalarProperty Name="Nineteen" ColumnName="Nineteen" />
-                <ScalarProperty Name="Eighteen" ColumnName="Eighteen" />
-                <ScalarProperty Name="Seventeen" ColumnName="Seventeen" />
-                <ScalarProperty Name="Sixteen" ColumnName="Sixteen" />
-                <ScalarProperty Name="Fifteen" ColumnName="Fifteen" />
-                <ScalarProperty Name="Fourteen" ColumnName="Fourteen" />
-                <ScalarProperty Name="Thirteen" ColumnName="Thirteen" />
-                <ScalarProperty Name="Twelve" ColumnName="Twelve" />
-                <ScalarProperty Name="Eleven" ColumnName="Eleven" />
-                <ScalarProperty Name="Ten" ColumnName="Ten" />
-                <ScalarProperty Name="Nine" ColumnName="Nine" />
-                <ScalarProperty Name="Eight" ColumnName="Eight" />
-                <ScalarProperty Name="Seven" ColumnName="Seven" />
-                <ScalarProperty Name="Six" ColumnName="Six" />
-                <ScalarProperty Name="Five" ColumnName="Five" />
-                <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
-                <ScalarProperty Name="FilterId" ColumnName="FilterId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

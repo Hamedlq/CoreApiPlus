@@ -28,6 +28,7 @@ namespace CoreManager.ResponseProvider
         //string GenerateInvalidUserPassResponse();
         ResponseModel GenerateRouteResponse(List<RouteResponseModel> list);
         ResponseModel GenerateRouteResponse(List<NotifModel> list);
+        ResponseModel GenerateRouteResponse(List<ActiveTripModel> list);
         ResponseModel GenerateRouteResponse(List<StationModel> list);
         ResponseModel GenerateRouteResponse(List<StationRouteModel> list);
         ResponseModel GenerateRouteResponse(List<FilterTimeModel> list);
@@ -35,6 +36,7 @@ namespace CoreManager.ResponseProvider
         ResponseModel GenerateRouteResponse(List<PersoanlInfoModel> list);
         ResponseModel GenerateRouteResponse(List<PassRouteModel> list);
         ResponseModel GenerateRouteResponse(List<DriverRouteModel> list);
+        ResponseModel GenerateRouteResponse(List<ContactPassengersModel> list);
         ResponseModel GenerateRouteResponse(List<GasRank> list);
         ResponseModel GenerateRouteResponse(List<BriefRouteModel> list);
         ResponseModel GenerateDiscountResponse(List<DiscountModel> list);

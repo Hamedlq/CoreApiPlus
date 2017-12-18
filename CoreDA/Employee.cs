@@ -29,5 +29,7 @@ namespace CoreDA
         public string Entry { get; set; }
         public string Introduce { get; set; }
         public string Enterprise { get; set; }
+        public string SrcStation { get; set; }
+        public string DstStation { get; set; }
     }
 }

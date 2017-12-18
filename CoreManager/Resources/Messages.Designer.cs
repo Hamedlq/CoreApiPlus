@@ -160,6 +160,15 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to راننده مسیر {0} به {1} ساعت {2} را کنسل کرد..
+        /// </summary>
+        public static string CancelReservedSeat {
+            get {
+                return ResourceManager.GetString("CancelReservedSeat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to این مسیر در یک گروه ثبت شده است و نمی توانید آن را حذف کنید.
         /// </summary>
         public static string CantDelete {
@@ -412,7 +421,7 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to با معرفی راننده در مسیرهای تعریف شده در اپلیکیشن، پس از ۲۰ بار ثبت مسیر در یک ماه توسط راننده ۳۰،۰۰۰ تومان وجه نقد دریافت نمایید و ۳۰۰۰ تومان به ازای هر سفر به راننده هدیه دهید .
+        ///   Looks up a localized string similar to با معرفی راننده در مسیرهای تعریف شده در اپلیکیشن، پس از ۲۰ بار ثبت مسیر در یک ماه توسط راننده ۳۰،۰۰۰ تومان وجه نقد دریافت نمایید.
         /// </summary>
         public static string InviteDriverDriver {
             get {
@@ -430,7 +439,7 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to با معرفی مسافر در مسیر خود، پس از انجام ۵ سفر در یک ماه علاوه بر دریافت ۱۰،۰۰۰ تومان وجه نقد یک سفر رایگان به او هدیه دهید .
+        ///   Looks up a localized string similar to با معرفی مسافر در مسیر خود، پس از انجام ۵ سفر در یک ماه علاوه بر دریافت ۱۰،۰۰۰ تومان وجه نقد یک سفر با ۵۰ درصد تخفیف به او هدیه دهید .
         /// </summary>
         public static string InviteDriverPass {
             get {
@@ -459,7 +468,7 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to با معرفی راننده در مسیرهای تعریف شده در اپلیکیشن و انجام ۱۰ سفر در یک ماه با او  ۵۰،۰۰۰ تومان اعتبار رایگان دریافت نمایید و ۳۰۰۰ تومان به ازای هر سفر به راننده هدیه دهید.
+        ///   Looks up a localized string similar to با معرفی راننده در مسیرهای تعریف شده در اپلیکیشن و انجام ۱۰ سفر در یک ماه با او  ۵۰،۰۰۰ تومان اعتبار رایگان دریافت نمایید.
         /// </summary>
         public static string InvitePassDriver {
             get {
@@ -477,7 +486,7 @@ namespace CoreManager.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to با معرفی دوستان خود در مسیرهای تعریف شده در اپلیکیشن، پس از اولین سفر او در یک ماه  ۱۰،۰۰۰ تومان اعتبار رایگان دریافت نمایید و یک سفر رایگان به دوست خود هدیه دهید..
+        ///   Looks up a localized string similar to با معرفی دوستان خود در مسیرهای تعریف شده در اپلیکیشن، پس از اولین سفر او در یک ماه  ۱۰،۰۰۰ تومان اعتبار رایگان دریافت نمایید و یک سفر با ۵۰ درصد تخفیف به دوست خود هدیه دهید..
         /// </summary>
         public static string InvitePassPass {
             get {
@@ -1031,6 +1040,15 @@ namespace CoreManager.Resources {
         public static string TripAlreadySet {
             get {
                 return ResourceManager.GetString("TripAlreadySet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سفر کنسل شد.
+        /// </summary>
+        public static string TripCancelled {
+            get {
+                return ResourceManager.GetString("TripCancelled", resourceCulture);
             }
         }
         

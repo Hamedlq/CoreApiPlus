@@ -91,16 +91,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/18/2013 02:42:56</publishTime>
     </File>
     <File Include="bin/CoreApi.dll">
-      <publishTime>12/06/2017 14:59:50</publishTime>
+      <publishTime>12/18/2017 01:20:58</publishTime>
     </File>
     <File Include="bin/CoreDA.dll">
-      <publishTime>12/05/2017 10:05:21</publishTime>
+      <publishTime>12/16/2017 20:30:45</publishTime>
     </File>
     <File Include="bin/CoreExternalService.dll">
-      <publishTime>11/25/2017 18:32:15</publishTime>
+      <publishTime>12/16/2017 17:25:03</publishTime>
     </File>
     <File Include="bin/CoreManager.dll">
-      <publishTime>12/06/2017 14:59:46</publishTime>
+      <publishTime>12/18/2017 01:20:54</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>09/07/2015 20:58:45</publishTime>
@@ -325,7 +325,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/07/2015 20:58:33</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>12/02/2017 21:45:44</publishTime>
+      <publishTime>12/16/2017 17:25:07</publishTime>
     </File>
   </ItemGroup>
 </Project>

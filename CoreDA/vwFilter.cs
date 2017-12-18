@@ -17,7 +17,6 @@ namespace CoreDA
         public long FilterId { get; set; }
         public System.DateTime CreateTime { get; set; }
         public long FilterUserId { get; set; }
-        public Nullable<System.DateTime> LastTimeSet { get; set; }
         public string SrcStName { get; set; }
         public decimal SrcStLat { get; set; }
         public decimal SrcStLng { get; set; }
@@ -28,7 +27,5 @@ namespace CoreDA
         public long DstMStationId { get; set; }
         public long SrcMStationId { get; set; }
         public bool IsDelete { get; set; }
-        public bool IsActive { get; set; }
-        public Nullable<long> TripId { get; set; }
     }
 }

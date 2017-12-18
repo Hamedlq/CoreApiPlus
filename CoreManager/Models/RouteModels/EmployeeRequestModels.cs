@@ -23,6 +23,8 @@ namespace CoreManager.Models
         public string Entry { set; get; }
         public string Introduce { set; get; }
         public string Enterprise { set; get; }
+        public string SrcStation { set; get; }
+        public string DstStation { set; get; }
 
     }
 

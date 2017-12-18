@@ -12,14 +12,15 @@ namespace CoreDA
     using System;
     using System.Collections.Generic;
     
-    public partial class Filter
+    public partial class FilterRequest
     {
+        public long FilterRequestId { get; set; }
         public long FilterId { get; set; }
-        public System.DateTime CreateTime { get; set; }
-        public long FilterUserId { get; set; }
-        public long SrcMStationId { get; set; }
-        public long DstMStationId { get; set; }
-        public long StationRouteId { get; set; }
-        public bool IsDelete { get; set; }
+        public System.DateTime RCreateTime { get; set; }
+        public System.DateTime RStartTime { get; set; }
+        public short RState { get; set; }
+        public Nullable<long> TripId { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsCarpool { get; set; }
     }
 }

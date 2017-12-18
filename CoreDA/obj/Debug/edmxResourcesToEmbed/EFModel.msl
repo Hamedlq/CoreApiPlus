@@ -1288,44 +1288,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="vwDriverTrips">
-      <EntityTypeMapping TypeName="MibarimModel.vwDriverTrip">
-        <MappingFragment StoreEntitySet="vwDriverTrip">
-          <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
-          <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
-          <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
-          <ScalarProperty Name="VerifiedLevel" ColumnName="VerifiedLevel" />
-          <ScalarProperty Name="PassPrice" ColumnName="PassPrice" />
-          <ScalarProperty Name="DriverPrice" ColumnName="DriverPrice" />
-          <ScalarProperty Name="DstMainStLng" ColumnName="DstMainStLng" />
-          <ScalarProperty Name="DstMainStLat" ColumnName="DstMainStLat" />
-          <ScalarProperty Name="DstMainStName" ColumnName="DstMainStName" />
-          <ScalarProperty Name="SrcStlng" ColumnName="SrcStlng" />
-          <ScalarProperty Name="SrcStLat" ColumnName="SrcStLat" />
-          <ScalarProperty Name="SrcStAdd" ColumnName="SrcStAdd" />
-          <ScalarProperty Name="SrcMainStGeo" ColumnName="SrcMainStGeo" />
-          <ScalarProperty Name="SrcMainStLng" ColumnName="SrcMainStLng" />
-          <ScalarProperty Name="SrcMainStLat" ColumnName="SrcMainStLat" />
-          <ScalarProperty Name="SrcMainStationId" ColumnName="SrcMainStationId" />
-          <ScalarProperty Name="SrcMainStName" ColumnName="SrcMainStName" />
-          <ScalarProperty Name="TripId" ColumnName="TripId" />
-          <ScalarProperty Name="CarPlateNo" ColumnName="CarPlateNo" />
-          <ScalarProperty Name="CarColor" ColumnName="CarColor" />
-          <ScalarProperty Name="CarType" ColumnName="CarType" />
-          <ScalarProperty Name="UserImageId" ColumnName="UserImageId" />
-          <ScalarProperty Name="UserName" ColumnName="UserName" />
-          <ScalarProperty Name="Gender" ColumnName="Gender" />
-          <ScalarProperty Name="Family" ColumnName="Family" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="DriverRouteId" ColumnName="DriverRouteId" />
-          <ScalarProperty Name="TEmptySeat" ColumnName="TEmptySeat" />
-          <ScalarProperty Name="TState" ColumnName="TState" />
-          <ScalarProperty Name="TStartTime" ColumnName="TStartTime" />
-          <ScalarProperty Name="TCreateTime" ColumnName="TCreateTime" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Employees">
       <EntityTypeMapping TypeName="MibarimModel.Employee">
         <MappingFragment StoreEntitySet="Employee">
@@ -1373,22 +1335,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <FunctionImportMapping FunctionImportName="GetAggregatedFilters" FunctionName="MibarimModel.Store.GetAggregatedFilters">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="MibarimModel.GetAggregatedFilters_Result">
-          <ScalarProperty Name="FilterId" ColumnName="FilterId" />
-          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-          <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
-          <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
-          <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
-          <ScalarProperty Name="LastTimeSet" ColumnName="LastTimeSet" />
-          <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
-          <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
-          <ScalarProperty Name="AggregatedTime" ColumnName="AggregatedTime" />
-          <ScalarProperty Name="co" ColumnName="co" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
     <EntitySetMapping Name="TmLocations">
       <EntityTypeMapping TypeName="MibarimModel.TmLocation">
         <MappingFragment StoreEntitySet="TmLocation">
@@ -1417,6 +1363,21 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="GetAggregatedFilters" FunctionName="MibarimModel.Store.GetAggregatedFilters">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="MibarimModel.GetAggregatedFilters_Result">
+          <ScalarProperty Name="FilterId" ColumnName="FilterId" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
+          <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
+          <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
+          <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+          <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
+          <ScalarProperty Name="AggregatedTime" ColumnName="AggregatedTime" />
+          <ScalarProperty Name="co" ColumnName="co" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="GetAggregatedTimes" FunctionName="MibarimModel.Store.GetAggregatedTimes">
       <ResultMapping>
         <ComplexTypeMapping TypeName="MibarimModel.GetAggregatedTimes_Result">
@@ -1425,8 +1386,8 @@
           <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
           <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
           <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
-          <ScalarProperty Name="LastTimeSet" ColumnName="LastTimeSet" />
           <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+          <ScalarProperty Name="RStartTime" ColumnName="RStartTime" />
           <ScalarProperty Name="AggregatedTime" ColumnName="AggregatedTime" />
           <ScalarProperty Name="co" ColumnName="co" />
         </ComplexTypeMapping>
@@ -1435,10 +1396,7 @@
     <EntitySetMapping Name="Filters">
       <EntityTypeMapping TypeName="MibarimModel.Filter">
         <MappingFragment StoreEntitySet="Filter">
-          <ScalarProperty Name="TripId" ColumnName="TripId" />
           <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
-          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-          <ScalarProperty Name="LastTimeSet" ColumnName="LastTimeSet" />
           <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
           <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
           <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
@@ -1448,11 +1406,48 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="vwDriverTrips">
+      <EntityTypeMapping TypeName="MibarimModel.vwDriverTrip">
+        <MappingFragment StoreEntitySet="vwDriverTrip">
+          <ScalarProperty Name="DrIsDeleted" ColumnName="DrIsDeleted" />
+          <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
+          <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
+          <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
+          <ScalarProperty Name="VerifiedLevel" ColumnName="VerifiedLevel" />
+          <ScalarProperty Name="PassPrice" ColumnName="PassPrice" />
+          <ScalarProperty Name="DriverPrice" ColumnName="DriverPrice" />
+          <ScalarProperty Name="DstMainStLng" ColumnName="DstMainStLng" />
+          <ScalarProperty Name="DstMainStLat" ColumnName="DstMainStLat" />
+          <ScalarProperty Name="DstMainStName" ColumnName="DstMainStName" />
+          <ScalarProperty Name="SrcStlng" ColumnName="SrcStlng" />
+          <ScalarProperty Name="SrcStLat" ColumnName="SrcStLat" />
+          <ScalarProperty Name="SrcStAdd" ColumnName="SrcStAdd" />
+          <ScalarProperty Name="SrcMainStGeo" ColumnName="SrcMainStGeo" />
+          <ScalarProperty Name="SrcMainStLng" ColumnName="SrcMainStLng" />
+          <ScalarProperty Name="SrcMainStLat" ColumnName="SrcMainStLat" />
+          <ScalarProperty Name="SrcMainStationId" ColumnName="SrcMainStationId" />
+          <ScalarProperty Name="SrcMainStName" ColumnName="SrcMainStName" />
+          <ScalarProperty Name="TripId" ColumnName="TripId" />
+          <ScalarProperty Name="CarPlateNo" ColumnName="CarPlateNo" />
+          <ScalarProperty Name="CarColor" ColumnName="CarColor" />
+          <ScalarProperty Name="CarType" ColumnName="CarType" />
+          <ScalarProperty Name="UserImageId" ColumnName="UserImageId" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="Gender" ColumnName="Gender" />
+          <ScalarProperty Name="Family" ColumnName="Family" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="DriverRouteId" ColumnName="DriverRouteId" />
+          <ScalarProperty Name="TEmptySeat" ColumnName="TEmptySeat" />
+          <ScalarProperty Name="TState" ColumnName="TState" />
+          <ScalarProperty Name="TStartTime" ColumnName="TStartTime" />
+          <ScalarProperty Name="TCreateTime" ColumnName="TCreateTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="vwFilters">
       <EntityTypeMapping TypeName="MibarimModel.vwFilter">
         <MappingFragment StoreEntitySet="vwFilter">
-          <ScalarProperty Name="TripId" ColumnName="TripId" />
-          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
           <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
           <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
           <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
@@ -1463,7 +1458,6 @@
           <ScalarProperty Name="SrcStLng" ColumnName="SrcStLng" />
           <ScalarProperty Name="SrcStLat" ColumnName="SrcStLat" />
           <ScalarProperty Name="SrcStName" ColumnName="SrcStName" />
-          <ScalarProperty Name="LastTimeSet" ColumnName="LastTimeSet" />
           <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="FilterId" ColumnName="FilterId" />
@@ -1473,14 +1467,12 @@
     <EntitySetMapping Name="vwFilterPlus">
       <EntityTypeMapping TypeName="MibarimModel.vwFilterPlu">
         <MappingFragment StoreEntitySet="vwFilterPlus">
-          <ScalarProperty Name="TripId" ColumnName="TripId" />
           <ScalarProperty Name="DstStName" ColumnName="DstStName" />
           <ScalarProperty Name="DstStLng" ColumnName="DstStLng" />
           <ScalarProperty Name="DstStLat" ColumnName="DstStLat" />
           <ScalarProperty Name="SrcStName" ColumnName="SrcStName" />
           <ScalarProperty Name="SrcStLng" ColumnName="SrcStLng" />
           <ScalarProperty Name="SrcStLat" ColumnName="SrcStLat" />
-          <ScalarProperty Name="LastTimeSet" ColumnName="LastTimeSet" />
           <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
           <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
           <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
@@ -1506,6 +1498,82 @@
           <ScalarProperty Name="Five" ColumnName="Five" />
           <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
           <ScalarProperty Name="FilterId" ColumnName="FilterId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FilterRequests">
+      <EntityTypeMapping TypeName="MibarimModel.FilterRequest">
+        <MappingFragment StoreEntitySet="FilterRequest">
+          <ScalarProperty Name="IsCarpool" ColumnName="IsCarpool" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="TripId" ColumnName="TripId" />
+          <ScalarProperty Name="RState" ColumnName="RState" />
+          <ScalarProperty Name="RStartTime" ColumnName="RStartTime" />
+          <ScalarProperty Name="RCreateTime" ColumnName="RCreateTime" />
+          <ScalarProperty Name="FilterId" ColumnName="FilterId" />
+          <ScalarProperty Name="FilterRequestId" ColumnName="FilterRequestId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwFilterRequests">
+      <EntityTypeMapping TypeName="MibarimModel.vwFilterRequest">
+        <MappingFragment StoreEntitySet="vwFilterRequest">
+          <ScalarProperty Name="IsCarpool" ColumnName="IsCarpool" />
+          <ScalarProperty Name="DstStLng" ColumnName="DstStLng" />
+          <ScalarProperty Name="DstStLat" ColumnName="DstStLat" />
+          <ScalarProperty Name="DstStName" ColumnName="DstStName" />
+          <ScalarProperty Name="SrcStLng" ColumnName="SrcStLng" />
+          <ScalarProperty Name="SrcStLat" ColumnName="SrcStLat" />
+          <ScalarProperty Name="SrcStName" ColumnName="SrcStName" />
+          <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+          <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
+          <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
+          <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
+          <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
+          <ScalarProperty Name="RState" ColumnName="RState" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="TripId" ColumnName="TripId" />
+          <ScalarProperty Name="RStartTime" ColumnName="RStartTime" />
+          <ScalarProperty Name="RCreateTime" ColumnName="RCreateTime" />
+          <ScalarProperty Name="FilterId" ColumnName="FilterId" />
+          <ScalarProperty Name="FilterRequestId" ColumnName="FilterRequestId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vwActiveTrips">
+      <EntityTypeMapping TypeName="MibarimModel.vwActiveTrip">
+        <MappingFragment StoreEntitySet="vwActiveTrips">
+          <ScalarProperty Name="DriverMobile" ColumnName="DriverMobile" />
+          <ScalarProperty Name="DriverFamily" ColumnName="DriverFamily" />
+          <ScalarProperty Name="DriverName" ColumnName="DriverName" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="DrIsDeleted" ColumnName="DrIsDeleted" />
+          <ScalarProperty Name="DriverRouteId" ColumnName="DriverRouteId" />
+          <ScalarProperty Name="TEmptySeat" ColumnName="TEmptySeat" />
+          <ScalarProperty Name="TState" ColumnName="TState" />
+          <ScalarProperty Name="TStartTime" ColumnName="TStartTime" />
+          <ScalarProperty Name="PassMobile" ColumnName="PassMobile" />
+          <ScalarProperty Name="PassName" ColumnName="PassName" />
+          <ScalarProperty Name="PassFamily" ColumnName="PassFamily" />
+          <ScalarProperty Name="IsCarpool" ColumnName="IsCarpool" />
+          <ScalarProperty Name="DstStLng" ColumnName="DstStLng" />
+          <ScalarProperty Name="DstStLat" ColumnName="DstStLat" />
+          <ScalarProperty Name="DstStName" ColumnName="DstStName" />
+          <ScalarProperty Name="SrcStLng" ColumnName="SrcStLng" />
+          <ScalarProperty Name="SrcStLat" ColumnName="SrcStLat" />
+          <ScalarProperty Name="SrcStName" ColumnName="SrcStName" />
+          <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+          <ScalarProperty Name="StationRouteId" ColumnName="StationRouteId" />
+          <ScalarProperty Name="DstMStationId" ColumnName="DstMStationId" />
+          <ScalarProperty Name="SrcMStationId" ColumnName="SrcMStationId" />
+          <ScalarProperty Name="FilterUserId" ColumnName="FilterUserId" />
+          <ScalarProperty Name="RState" ColumnName="RState" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="TripId" ColumnName="TripId" />
+          <ScalarProperty Name="RStartTime" ColumnName="RStartTime" />
+          <ScalarProperty Name="RCreateTime" ColumnName="RCreateTime" />
+          <ScalarProperty Name="FilterId" ColumnName="FilterId" />
+          <ScalarProperty Name="FilterRequestId" ColumnName="FilterRequestId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

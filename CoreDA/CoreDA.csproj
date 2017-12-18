@@ -133,6 +133,9 @@
     <Compile Include="Filter.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="FilterRequest.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="GenerateSimilarRoutes_Result.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
@@ -239,6 +242,9 @@
     <Compile Include="UserInfo.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="vwActiveTrip.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="vwBookedTrip.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
@@ -281,7 +287,16 @@
     <Compile Include="vwFilter.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="vwFilterBook.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="vwFilterPlu.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="vwFilterRequest.cs">
+      <DependentUpon>EFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="vwFilterRequestTrip.cs">
       <DependentUpon>EFModel.tt</DependentUpon>
     </Compile>
     <Compile Include="vwGroup.cs">

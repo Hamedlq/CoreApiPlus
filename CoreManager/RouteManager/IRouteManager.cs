@@ -59,13 +59,16 @@ namespace CoreManager.RouteManager
         PassRouteModel GetPassengerTrip(int userId, long FilterId);
         PaymentDetailModel RequestBooking(int userId, long modelTripId, long modelChargeAmount);
         PaymentDetailModel RequestPayBooking(int userId, long modelTripId, long modelChargeAmount);
+        PaymentDetailModel RequestPay(int userId, long modelTripId, long modelChargeAmount);
         List<StationRouteModel> GetStationRoutes();
         List<StationRouteModel> GetPassengerStationRoutes();
         long SetUserRoute(int userId, long modelStRouteId, long stationId);
         long SetRoute(int userId, long srcSubStId, long dstStId);
         List<DriverRouteModel> GetDriverRoutes(int userId);
+        List<DriverRouteModel> GetDriverNewRoutes(int userId);
         TripTimeModel SetDriverTrip(int userId, DriverRouteModel model);
         string InvokeTrips();
+        string InvokeFilters();
         bool DeleteDriverRoute(int userId, long modelDriverRouteId);
         bool DisableDriverTrip(int userId, DriverRouteModel model);
         DriverTripModel GetUserTrips(int userId);
@@ -99,8 +102,10 @@ namespace CoreManager.RouteManager
         List<SuggestModel> GetSuggestedRoutes();
         bool MakeStationRoutePlus();
         bool CancelFilter(int userId, FilterModel model);
-        TripTimeModel AcceptSuggestRoute(int userId, FilterModel model);
+        TripTimeModel AcceptSuggestRoute(int userId, FilterModel model,bool isAdmin);
         string SetUserNotifications();
-        
+        string SendNewBookedMessages();
+        //List<ContactPassengersModel> GetPassengersInfo();
+        List<ContactPassengersModel> GetPassengersInfo(int userId, DriverRouteModel model);
     }
 }

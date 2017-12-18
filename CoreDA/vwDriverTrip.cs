@@ -46,5 +46,6 @@ namespace CoreDA
         public long StationRouteId { get; set; }
         public long DstMStationId { get; set; }
         public long SrcMStationId { get; set; }
+        public bool DrIsDeleted { get; set; }
     }
 }
